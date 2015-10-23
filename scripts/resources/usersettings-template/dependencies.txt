@@ -1,0 +1,4 @@
+    compile 'com.avid.central.framework:RestCore'
+    compile 'com.avid.central.framework:ConfigurationService'
+    compile 'com.avid.central.framework:AuthenticationAPI'
+    compile 'javax.ws.rs:jsr311-api'

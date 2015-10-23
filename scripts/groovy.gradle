@@ -1,0 +1,27 @@
+subprojects {
+
+    project.ext.useIPCGroovy = {
+
+        apply plugin: 'groovy'
+
+        /*
+         * Groovy plugin for Gradle expects specific name of the Groovy JAR on the compile class path.
+         * Since Groovy JAR in the Core does not match these naming expectations,
+         * we explicitly update Groovy class path for the plugin so that
+         * it is able to discover Groovy JAR provided by the Core.
+         */
+        def groovyClassPathFiles = files(new File(rootProject.ipcDistLibDir, "org.codehaus.groovy.groovy-all.jar"))
+        compileGroovy {
+            groovyClasspath = groovyClassPathFiles
+        }
+        compileTestGroovy {
+            groovyClasspath = groovyClassPathFiles
+        }
+
+        dependencies {
+            providedCompile ipcDep("org.codehaus.groovy:groovy-all")
+        }
+
+    }
+
+}

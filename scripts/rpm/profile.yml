@@ -1,0 +1,4 @@
+name: "${profileName}"
+modules:
+  - ${pluginFolderName}
+optional: ${optional}

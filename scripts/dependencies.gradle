@@ -1,0 +1,37 @@
+
+// ===  resolveBundleDependencies ===
+subprojects {
+    afterEvaluate { project ->
+        /**
+         * Resolve dependencies for all bundles and copies non-ipc dependencies into the build/project-deps/ folder.
+         * The IPC idea run configuration will pick up the bundles from this directory to start the application.
+         */
+        task resolveBundleDependencies() << {
+            def list = configurations.compile.copy()
+
+            list = list.minus(configurations.buildOnly)
+
+            // Remove IPC provided dependencies.
+            list = list.filter { !it.path.startsWith(rootDir.path) }
+
+            copy {
+                from list
+                into rootProject.projectDependenciesDir
+            }
+        }
+
+        resolveBundleDependencies.onlyIf { project.has('osgiBundle') }
+
+        compileJava.dependsOn(resolveBundleDependencies)
+    }
+}
+
+
+
+// === cleanBundleDependencies ===
+
+task cleanBundleDependencies(type: Delete) {
+    delete project.projectDependenciesDir.path
+}
+
+clean.dependsOn(cleanBundleDependencies)

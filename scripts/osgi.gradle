@@ -1,0 +1,194 @@
+/**
+ * This method can be used to configure osgi sub projects.
+ * Usage:
+ *      osgiprojects { p -> // optional.
+ *          println name  // prints the name of the OSGi subproject.
+ *          println p.name  // prints the name of the OSGi subproject.
+ *}
+ *
+ * Please note: this method can only be used after gradle configuration phase.
+ */
+project.ext.osgiprojects = { c ->
+    configure(subprojects.findAll { it.has('osgiBundle') }) { p ->
+        def cl = c.curry(p)
+        cl.delegate = p
+        cl.resolveStrategy = DELEGATE_FIRST
+        cl()
+    }
+}
+
+class OsgiInfo {
+    def project;
+
+    OsgiInfo(project) {
+        this.project = project
+    }
+
+    private def bundleName;
+    private def symbolicName;
+
+    def getBundleName() {
+        return bundleName == null ? project.file(".").name : bundleName
+    }
+
+    void setBundleName(bundleName) {
+        this.bundleName = bundleName
+    }
+
+    def getSymbolicName() {
+        return symbolicName == null ? "${project.group}.${getBundleName()}" : symbolicName
+    }
+
+    void setSymbolicName(symbolicName) {
+        this.symbolicName = symbolicName
+    }
+
+
+    @Override
+    public String toString() {
+        return "OsgiInfo{" +
+                "bundleName=" + getBundleName() +
+                ", symbolicName=" + getSymbolicName() +
+                '}';
+    }
+}
+
+allprojects {
+
+    project.extensions.create("osgiInfo", OsgiInfo, project);
+
+    project.ext.useOSGi = { instructions ->
+
+        project.ext.prepareBndInstructions = {
+            if (!configurations.embedded.isEmpty()) {
+                def pathList = ["."]
+                configurations.embedded.each { pathList += "jar/" + it.name }
+                project.bndInstructions.'Bundle-ClassPath' = pathList.join(",")
+            }
+        }
+
+        def defaultInstructions = [
+                'Bundle-Name': osgiInfo.bundleName,
+                'Bundle-SymbolicName': osgiInfo.symbolicName,
+                // Make sure versions like: 1.0.0-SNAPSHOT or 1.0.0_SNAPSHOT will be converted to 1.0.0.SNAPSHOT
+                // since osgi can only handle properly defined versions.
+                'Bundle-Version': version.replaceAll("-SNAPSHOT", ".SNAPSHOT"),
+                'Service-Component': 'OSGI-INF/*.xml',
+                'Import-Package': '*',
+                'Private-Package': '*',
+                'Export-Package': "!*"
+        ]
+
+        project.ext.osgiBundle = true
+        project.ext.bndInstructions = instructions == null ?
+                defaultInstructions :
+                defaultInstructions + instructions;
+
+        apply plugin: 'osgi'
+
+        configurations {
+            // Needed for the src generator ant task.
+            scrAntLib
+
+            // Contains jars which should be embedded into the bundle.
+            // it will extend buildOnly to prevent that embedded jars will
+            // be copied into the dist directory.
+            embedded
+
+            //The build only config contains libraries
+            // which are not needed during runtime.
+            buildOnly {
+                extendsFrom configurations.embedded
+            }
+
+            providedCompile {
+                extendsFrom buildOnly
+            }
+
+            compile {
+                extendsFrom providedCompile
+            }
+        }
+
+        dependencies {
+            scrAntLib 'org.apache.felix:org.apache.felix.scr.ant:1.8.0'
+            scrAntLib 'org.osgi:org.osgi.compendium:4.3.1'
+
+            buildOnly 'org.apache.felix:org.apache.felix.scr.annotations:1.9.6'
+
+            buildOnly 'com.google.code.findbugs:jsr305:1.3.9'
+            buildOnly 'com.google.code.findbugs:annotations:1.3.9'
+        }
+
+
+        task genscr(dependsOn: [compileJava]) {
+            ext.sourceDir = sourceSets.main.output.classesDir
+
+            onlyIf { sourceDir.exists() }
+
+            doLast {
+                ant.taskdef resource: 'scrtask.properties', classpath: configurations.scrAntLib.asPath
+                ext.resourcesDir = new File(sourceSets.main.output.resourcesDir, "OSGI-INF")
+
+                ant.scr srcdir: sourceDir.path,
+                        // Note: destdir must be equal sourceDir because generator cannot
+                        // access classes from this module/bundle otherwise.
+                        destdir: sourceDir.path,
+                        classpath: configurations.compile.asPath,
+                        includes: "**/*.class",
+                        scanClasses: true,
+                        generateAccessors: false,
+                        strictMode: false,
+                        specVersion: "1.1"
+
+
+                def xmlFiles = resourcesDir.listFiles().findAll { f -> f.name.endsWith(".xml") }
+
+                if (xmlFiles.isEmpty()) {
+                    logger.info "Not a Service-Component"
+                } else {
+                    logger.info "Service-Component OSGI-INF/*.xml"
+                    jar {
+                        manifest {
+                            attributes("Service-Component": "OSGI-INF/*.xml")
+                        }
+                    }
+                }
+            }
+        }
+
+        task prepareBnd << {
+            prepareBndInstructions()
+            bndInstructions.each { key, value ->
+                jar.manifest.instructionReplace key, value
+            }
+        }
+
+
+        // BND tool does not allow to create bundles without classes.
+        // to overcome this issue we just provide a dummy class.
+        task fixNonClassJars << {
+            def dummyNeeded = true;
+            fileTree('build/classes/main/').visit { d ->
+                if (!d.file.isDirectory() && d.file.name.endsWith(".class")) {
+                    dummyNeeded = false
+                    d.stopVisiting()
+                }
+            }
+            if (dummyNeeded) {
+                copy {
+                    from rootProject.file('scripts/resources/dummy.class').path
+                    into 'build/classes/main/z/y/x'
+                }
+            }
+        }
+
+
+        jar {
+            dependsOn fixNonClassJars, genscr, prepareBnd
+            into('jar') {
+                from configurations.embedded
+            }
+        }
+    }
+}

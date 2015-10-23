@@ -1,0 +1,48 @@
+{
+    "header": {
+        "type": "split",
+        "orientation": "v",
+        "weight": "0.8",
+        "resizable": false,
+        "first": {
+            "type": "blank",
+            "headerHeight": 150
+        },
+        "second": {
+            "type": "av-layout-switcher",
+            "headerHeight": 150
+        }
+    },
+
+    "menubar": {
+        "searchEnabled": true,
+        "type": "menubar"
+    },
+
+    "content": {
+        "type": "split",
+        "orientation": "v",
+        "weight": "0.2",
+
+        "first": {
+            "type": "tabs",
+            "items": [
+                {
+                    "type": "av-locations",
+                    "closable": true
+                }
+            ]
+        },
+
+        "second": {
+			"type": "tabs",
+            "items": [
+                {
+                    "type": "av-asset-list",
+                    "closable": true
+                }
+            ]
+		}
+
+    }
+}

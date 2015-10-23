@@ -1,0 +1,13 @@
+<!-- localizedName value is a key in the UIPlugin.properties -->
+<Layout localizedName="layout.LAYOUT_ID.name" id="LAYOUT_ID">
+	<Model file="META-INF/layout/LAYOUT_ID.json"/>
+
+	<Views >
+    	<!-- Some default views -->
+        <View type="av-locations"/>
+        <View type="av-search"/>
+        <View type="av-asset-list"/>
+        <View type="av-layout-switcher"/>
+
+    </Views>
+</Layout>

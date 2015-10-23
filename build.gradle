@@ -1,0 +1,12 @@
+apply from: 'scripts/ipc.gradle'
+
+subprojects {
+    // Setup Artifact repositories.
+    repositories {
+        maven { url "http://central.maven.org/maven2" }
+    }
+
+    // Set up unit test dependencies.
+    test { useTestNG() }
+    dependencies { testCompile 'org.testng:testng:6.8' }
+}

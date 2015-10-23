@@ -1,0 +1,9 @@
+idea {
+    project {
+        ipr {
+            withXml {
+                it.node.component.find { it.@name == "ProjectRootManager" }."@project-jdk-name" = "Avid OpenJDK 7 Update 40 x64"
+            }
+        }
+    }
+}

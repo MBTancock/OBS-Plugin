@@ -1,0 +1,17 @@
+
+project.ext.readProperties = { path ->
+    Properties p = new Properties();
+
+    def inp = new FileInputStream(path as String)
+
+    try {
+        p.load(inp)
+    } finally {
+        inp.close()
+    }
+
+    def map = new HashMap()
+    map.putAll(p);
+
+    return map;
+}

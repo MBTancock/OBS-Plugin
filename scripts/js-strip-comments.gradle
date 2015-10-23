@@ -1,0 +1,158 @@
+import org.apache.commons.lang.StringUtils
+
+import javax.script.*
+import java.io.*
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.filefilter.DirectoryFileFilter
+import org.apache.commons.io.filefilter.AbstractFileFilter
+import com.google.javascript.jscomp.Compiler
+import com.google.javascript.jscomp.CompilerOptions
+import com.google.javascript.jscomp.CompilationLevel
+import com.google.javascript.jscomp.SourceFile
+import com.google.javascript.jscomp.Result
+import com.google.javascript.jscomp.WarningLevel
+
+import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
+import java.util.concurrent.CompletionService
+import java.util.concurrent.ExecutorCompletionService
+import java.util.concurrent.RejectedExecutionHandler
+import java.util.concurrent.TimeoutException
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }    
+    dependencies {      
+        classpath 'commons-io:commons-io:2.4'
+        classpath 'commons-lang:commons-lang:2.4'
+        classpath 'com.google.javascript:closure-compiler:v20140730'
+
+    }    
+}
+
+class FullPathRegexFileFilter extends AbstractFileFilter {
+    private def pattern
+
+    FullPathRegexFileFilter(def thePattern) {
+        pattern = thePattern
+    }
+
+    boolean accept(File directory, String name) {               
+        (directory.absolutePath + '\\' + name).matches(pattern)     
+    }
+}
+
+String extractCopyrightHeader(path) {
+    String input = new File(path).text
+    String firstMultilineComment = StringUtils.trimToEmpty(input.find('/\\*(?:.|[\\n\\r])*?\\*/'))
+    return firstMultilineComment.contains('Copyright') ? firstMultilineComment : ''
+}
+
+void stripCommentsInFile(path, executor, futures, logger) {
+
+    Compiler compiler = new Compiler()
+    CompilerOptions compilerOptions = new CompilerOptions()
+    CompilationLevel.WHITESPACE_ONLY.setOptionsForCompilationLevel(compilerOptions)
+    compilerOptions.prettyPrint = true
+    WarningLevel warnings = WarningLevel.QUIET
+    warnings.setOptionsForWarningLevel(compilerOptions)
+
+
+    Future handler = executor.submit(new Callable<Object>() {
+        def filePath
+        private input
+        private ctx        
+
+        @Override
+        def call() throws Exception {            
+            try {
+                SourceFile input = SourceFile.fromFile(path)
+                String copyright = extractCopyrightHeader(path)
+
+                logger.info "Stripping comments from ${path}"
+
+                compiler.compile([], [input], compilerOptions)
+                
+                def content = compiler.toSource()
+                [
+                        path   : path,
+                        content: copyright + '\n' + content
+                ]
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
+        }
+    })
+    futures.add([handler: handler, filePath: path])
+}
+
+
+task stripJSComments(description: "Removes comments from all javascript files recursively.") {
+    doLast {
+        if (!project.hasProperty('workingDir')) {
+            throw new GradleException('Working dir not specified. Usage: gradlew stripJSComments -PworkingDir=<root-folder>\n\n or \n\ngradlew stripJSComments -PworkingDir="<root-folder-1>;<root-folder-2>;....;<root-folder-n>"')
+        }
+
+        int availableProcessors = Runtime.getRuntime().availableProcessors()
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(availableProcessors, availableProcessors, 10000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(availableProcessors))
+
+        RejectedExecutionHandler block = new RejectedExecutionHandler() {
+            @Override
+            public void rejectedExecution(Runnable r, ThreadPoolExecutor ector) {
+                ector.getQueue().put(r);
+            }
+        }
+
+        executor.setRejectedExecutionHandler(block)
+
+        CompletionService<Object> ecs = new ExecutorCompletionService<>(executor)
+
+        List workingDirs = project.workingDir.split(';')
+
+        List futures = new ArrayList<>()
+
+        try {
+            workingDirs.each { workingDir ->
+                String splitter = "\\" + File.separator
+                Collection files = FileUtils.listFiles(
+                        new File(workingDir),
+                        new FullPathRegexFileFilter('.*' + splitter + 'src' + splitter + 'main' + splitter + '.*\\.js'),
+                        DirectoryFileFilter.DIRECTORY
+                );
+
+                files.each { file ->
+                    stripCommentsInFile(file.absolutePath, ecs, futures, logger)
+                }
+            }
+
+            futures.each {f ->
+                def future = f.handler
+                try {
+                    def result = future.get(6, TimeUnit.MINUTES)
+
+                    if (result) {
+                        FileWriter f0 = new FileWriter(result.path)
+                        f0.write(result.content)
+                        f0.close()
+                    }
+                } catch(TimeoutException e) {
+                    println 'Processing ' + f.filePath + ' timed out'
+                }
+
+            }
+        } finally {
+            futures.each { f ->
+                f.handler.cancel(true)
+            }
+        }
+
+    }
+}

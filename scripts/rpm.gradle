@@ -1,0 +1,116 @@
+
+// Since the rpmName is a base for another properties we had to introduce a lazy default mechanism.
+// this allows the user to change the rpmName without the need to adapt all other properties.
+task rpmLazyConfig << {
+    rpm {
+        if(rpmName == null) {
+            rpmName = project.name
+        }
+        if(rpmPluginSubPath == null) {
+            rpmPluginSubPath = "plugins/${rpmName}"
+        }
+        if(profileName == null) {
+            profileName = rpmName
+        }
+        if(rpmVersion == null) {
+            rpmVersion = project.version
+        }
+
+        // Make sure we have a proper version in case of -SNAPSHOT build
+        rpmVersion = rpmVersion.replaceAll("-SNAPSHOT", ".SNAPSHOT")
+    }
+}
+
+task rpmCopyBuildResources(dependsOn: rpmLazyConfig) << {
+    copy {
+        from rpm.specFile
+        into file('build/rpm-build/SPECS/')
+    }
+
+    copy {
+        from rpm.profile
+        expand([
+                profileName: rpm.profileName,
+                optional: rpm.profileOptional,
+                pluginFolderName: rpm.rpmName
+        ])
+        rename { "${rpm.rpmName}.yml" }
+        into file('build/rpm-build/SOURCES/profiles')
+    }
+}
+
+task rpmCopyJarsConfigure(dependsOn: rpmCopyBuildResources) << {
+    // We assume that all dependencies has been copied to the projectDependenciesDir.
+    def fileCollection = fileTree(projectDependenciesDir) {
+        include "*.jar"
+    }
+
+    osgiprojects {
+            fileCollection += files jar.archivePath
+    }
+
+    rpmCopyJars {
+        from fileCollection
+        into file('build/rpm-build/SOURCES')
+    }
+}
+
+task rpmCopyJars(type: Copy, dependsOn: rpmCopyJarsConfigure)
+
+
+
+task rpmBuild(dependsOn: [ rpmLazyConfig, rpmCopyJars]) << {
+
+    logger.info """ RPM Info:
+        Name:            ${rpm.rpmName}
+        Version:         ${rpm.rpmVersion}
+        Summary:         ${rpm.rpmSummary}
+        Discritpion:     ${rpm.rpmDescription}
+        Plugin Sub Path: ${rpm.rpmPluginSubPath}
+    """
+
+    ant.rpm(specFile: rpm.specFile.name,
+            topDir: file("build/rpm-build"),
+            cleanBuildDir: true,
+            failOnError: true,
+            command: [
+                    "-bb",
+                    "--define", "'PROJECT_NAME ${rpm.rpmName}'",
+                    "--define", "'PROJECT_VERSION ${rpm.rpmVersion}'",
+                    "--define", "'PROJECT_SUMMARY ${rpm.rpmSummary}'",
+                    "--define", "'PROJECT_DESC ${rpm.rpmDescription}'",
+                    "--define", "'PLUGIN_SUB_PATH ${rpm.rpmPluginSubPath}'"
+            ].join(" ")
+    )
+}
+
+
+
+task rpm(type: Copy, dependsOn: rpmBuild, description: "Creates a deployment RPM.", group: 'IPC RPM') {
+    // Project must be build before rpm can be created.
+    dependsOn(build)
+
+    ext.rpmName = null   // see rpmLazyConfig
+    ext.rpmVersion = null    // see rpmLazyConfig
+    ext.rpmDescription = "No Description"
+    ext.rpmSummary = "No Summary"
+    ext.specFile = file("scripts/rpm/plugin.spec")
+    ext.rpmPluginSubPath = null // see rpmLazyConfig
+
+    ext.profileName = null  // see rpmLazyConfig
+    ext.profileOptional = false
+    ext.profile = file("scripts/rpm/profile.yml")
+
+    from fileTree('build/rpm-build/RPMS/noarch/') {
+        include '**/*.rpm'
+    }
+
+    into file('build/rpms')
+}
+
+task cleanRPM(type: Delete, description: "Creates a deployment RPM.", group: 'IPC RPM') {
+    delete files('build/rpm-build')
+    delete files('build/rpms')
+}
+
+clean.dependsOn(cleanRPM)

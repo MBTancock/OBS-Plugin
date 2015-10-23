@@ -1,0 +1,126 @@
+/**
+ * Handles l10n processing.
+ */
+ext.languages = "fr;de;ja;zh;es;ko;it"
+
+def localFolder = "Locales"
+def exportDir = rootProject.file("build/l10n/l10n-export/${localFolder}")
+
+task l10nZipExport(type: Zip, group: "IPC L10N", description: "Zips Exported language files.") {
+    destinationDir = file('build/l10n/l10n-export')
+    archiveName = "${localFolder}.zip"
+    from project.fileTree(dir: exportDir)
+}
+
+subprojects {
+    def importPath = file("src/main/resources/l10n")
+    def langFiles = file("src/main/resources/l10n")
+    def languages = project.languages
+    def manifest = project.has("manifestPath")? file(project["manifestPath"]) : file("src/main/resources/META-INF/MANIFEST.MF")
+    def jarDir = file("build/libs/l10n")
+
+    def enabled = {
+        langFiles.exists() && !project.ext.properties.l10nDisabled
+    }
+
+    configurations {
+        l10nLib
+        l10n
+    }
+
+    dependencies {
+        l10nLib 'com.avid.central.tools:l10n-tools:2.0.7'
+        l10n fileTree(dir: jarDir, include: '*.jar')
+    }
+
+    task l10nImport(group: "IPC L10N", description: "Imports language files.") {
+        onlyIf enabled
+
+        doFirst {
+            def path = "build/l10n/l10n-import/${localFolder}"
+            def importSource = rootProject.file(path)
+            if (!importSource.exists()) {
+                throw new GradleScriptException("Can import language files since import source directory doesn't exists: ${path}", null)
+            }
+
+
+            ant.taskdef(
+                    name: "importL10N",
+                    classname: "com.avid.central.tools.l10n.task.ImportLanguageFilesTask",
+                    classpath: configurations.l10nLib.asPath
+            )
+
+
+            ant.importL10N(
+                    manifestFile: manifest,
+                    artifactDir: importSource,
+                    destDir: importPath,
+                    lang: languages,
+                    skipIfEquals: true
+            ) {
+                fileset(dir: langFiles) {
+                    include(name: '*.properties')
+                }
+                if (importPath.exists()) {
+                    fileset(dir: importPath) {
+                        include(name: '*.properties')
+                    }
+                }
+            }
+        }
+    }
+
+
+    task l10nExport(group: "IPC L10N", description: "Exports language files.") {
+        onlyIf enabled
+
+        doFirst {
+
+            ant.taskdef(
+                    name: "exportL10N",
+                    classname: "com.avid.central.tools.l10n.task.ExportLanguageFilesTask",
+                    classpath: configurations.l10nLib.asPath
+            )
+
+
+            ant.exportL10N(
+                    manifestFile: manifest,
+                    destDir: exportDir,
+                    lang: languages
+            ) {
+                fileset(dir: langFiles) {
+                    include(name: '*.properties')
+                }
+                if (importPath.exists()) {
+                    fileset(dir: importPath) {
+                        include(name: '*.properties')
+                    }
+                }
+            }
+        }
+    }
+
+    task l10nReport(group: "IPC L10N", description: "Creates a JUnit compatible Language file report.") {
+        onlyIf enabled
+        doFirst {
+            def reportDir = rootProject.file("build/l10n/l10n-report/${localFolder}")
+
+            ant.taskdef(
+                    name: "reportL10N",
+                    classname: "com.avid.central.tools.l10n.task.ReportTask",
+                    classpath: configurations.l10nLib.asPath
+            )
+
+            ant.reportL10N(destdir: reportDir, manifestFile: manifest, lang: languages) {
+                fileset(dir: langFiles) {
+                    include(name: '*.properties')
+                }
+                if (importPath.exists()) {
+                    fileset(dir: importPath) {
+                        include(name: '*.properties')
+                    }
+                }
+            }
+        }
+    }
+}

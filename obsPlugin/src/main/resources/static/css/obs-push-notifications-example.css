@@ -1,0 +1,144 @@
+/*
+ * Copyright 2013-2014 by Avid Technology, Inc.
+ */
+
+.av-push-notifications-example {
+    overflow: auto;
+}
+.av-push-notifications-example,
+#push-notifications-example,
+#push-notifications-example .x-panel-body {
+    background-color: #A1A1A1;
+}
+#push-notifications-example {
+    margin: 10px;
+    width: 400px;
+}
+.push-notifications-example .av-panel-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+.push-notifications-example .av-radio-item .x-form-check-wrap label.x-form-cb-label {
+    font-weight: normal;
+    margin: 0 39px 0 10px;
+    vertical-align: super;
+}
+.push-notifications-example .av-radio-item .x-form-check-wrap label.x-form-cb-label:last-child {
+    vertical-align: text-top;
+}
+.push-notifications-example .av-radio-item label.x-form-cb-label.av-browser-session-label {
+    margin-right: 12px;
+}
+.push-notifications-example .av-radio-item .radio-button-wrap {
+    margin-top: 5px;
+}
+.push-notifications-example .av-radio-item input[type=text] {
+    margin-top:2px;
+}
+.push-notifications-example .av-data-input {
+    width: 298px !important;
+}
+.push-notifications-example .av-radiogroup .x-column {
+    clear: both;
+    width: 314px !important;
+}
+.push-notifications-example #push-notifications-user-id,
+.push-notifications-example #push-notifications-browser-session-id {
+    width: 157px;
+    margin-left: 41px;
+}
+.push-notifications-example #push-notifications-browser-session-id {
+    margin-left: 0;
+}
+.push-notifications-example .av-radiogroup-wrap {
+    margin-top: 15px;
+    padding-left: 0 !important;
+}
+.push-notifications-example .av-radiogroup-wrap {
+    overflow: hidden;
+}
+.push-notifications-example .av-radiogroup-wrap,
+.push-notifications-example .av-radiogroup,
+.push-notifications-example .av-radiogroup .x-column-inner {
+    width: 315px !important;
+}
+.push-notifications-example .av-send-button, .push-notifications-example .av-clear-button {
+    float: right;
+}
+.push-notifications-example .av-clear-button {
+    margin-top: 3px;
+}
+.push-notifications-example .emulate-html-textarea {
+    border: 1px solid #5a5a5a;
+    border-radius: 3px;
+    padding-left: 0 !important;
+    margin: 5px 2px 0 46px;
+}
+.push-notifications-example .emulate-html-textarea div,
+.push-notifications-example .emulate-html-textarea pre {
+    -khtml-user-select: text;
+}
+.push-notifications-example .emulate-html-textarea > div {
+    overflow: auto;
+    width: auto !important;
+
+}
+.push-notifications-example .av-fieldset-output label {
+    padding-top: 0!important;
+    margin-top: -3px;
+}
+.push-notifications-example .av-fieldset-output .x-fieldset-bwrap {
+    margin: 3px 0 1px 0;
+}
+.push-notifications-example .av-fieldset-input .x-fieldset-bwrap {
+    margin-top: 3px;
+}
+.av-push-notifications-example input[type=text] {
+    font-size: 12px;
+}
+.push-notifications-example label[for=push-notifications-log] {
+    width: 40px !important;
+}
+.av-push-notifications-example .log-entry {
+    padding: 5px 0 5px 5px;
+    border-bottom: 1px solid #5a5a5a;
+}
+.av-push-notifications-example .log-entry:last-child {
+    border-bottom: none;
+}
+/* formatting log */
+.av-push-notifications-example .log-entry .main-message {
+    float: left;
+    width: 247px;
+}
+.av-push-notifications-example .log-entry > div:last-child {
+    clear: both;
+}
+.av-push-notifications-example .log-entry > div:first-child {
+    margin: 0 10px 0 0;
+    float: left;
+}
+/* end of formatting log */
+.push-notifications-example #push-notifications-browser-session-id[disabled] {
+    -khtml-user-select: none;
+}
+#push-notifications-example textarea {
+    background: none;
+    border-color: #5A5A5A;
+    border-radius: 3px;
+}
+#push-notifications-example textarea.x-form-focus {
+    background-color: #d4d4d4;
+}
+.push-notifications-example .av-textarea-input {
+    width: 303px !important;
+    height: 115px !important;
+    margin-top: 3px;
+}
+.push-notifications-example .x-form-item label[for=push-notifications-data].x-form-item-label {
+    padding-top: 0;
+}
+.push-notifications-example pre {
+    font: normal 12px Arial;
+}

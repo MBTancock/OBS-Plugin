@@ -1,0 +1,46 @@
+// Some verification helper tasks for the UIPlugin.xml
+import javax.xml.XMLConstants
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.SchemaFactory
+
+buildscript {
+    repositories {
+        mavenCentral()
+        dependencies { classpath 'org.jopendocument:isorelax-jaxp-bridge-ILM:1.1' }
+        dependencies { classpath 'com.admc:xcsde-rngval:0.1.0' }
+    }
+}
+
+// Needed for lazy dependency resolution.
+task configExtractSchema() << {
+    configurations { uiplugin { transitive = false } }
+    dependencies { uiplugin ipcDep('com.avid.central.framework:UIPlugin') }
+
+    extractSchema {
+        from({ zipTree(configurations.uiplugin.singleFile) }) {
+            include extractSchema.schemaFileInJar
+        }
+        into file("build/uiplugin")
+    }
+}
+
+task extractSchema(type: Copy, dependsOn: configExtractSchema) {
+    ext.schemaFileInJar = "com/avid/central/util/uiplugin/reader/UIPlugin.rng"
+    ext.schemaFile = file("build/uiplugin/${schemaFileInJar}")
+}
+
+subprojects {
+    task verifyUIPlugin(group: "IPC UIPlugin", description: "UIPlugin.xml schema verification", dependsOn: extractSchema) {
+        def uiplugin = file("src/main/resources/META-INF/UIPlugin.xml")
+        onlyIf { uiplugin.exists() }
+        doFirst {
+            def rng = extractSchema.schemaFile
+            def factory = SchemaFactory.newInstance(XMLConstants.RELAXNG_NS_URI)
+            def schema = factory.newSchema(new StreamSource(rng))
+            def validator = schema.newValidator()
+            validator.validate(new StreamSource(uiplugin))
+        }
+    }
+
+    check.dependsOn(verifyUIPlugin)
+}

@@ -1,0 +1,13 @@
+    <View type="VIEW_TYPE">
+        <!-- Set to 'false' to allow multi instances. -->   	
+		<Property name="singleton" value="true"/>
+
+        <!-- Set to 'false' to not show this view in the Pane menu -->
+        <Property name="showMenu" value="true"/>
+
+        <!-- Localized property value is a key in UIPlugin.properties -->
+        <Property name="@menuName" value="VIEW_TYPE.name"/>
+        
+        <Import type="js" path="js/VIEW_TYPE.js"/>
+        <Import type="css" path="css/VIEW_TYPE.css"/>
+    </View>

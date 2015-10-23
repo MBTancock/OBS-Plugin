@@ -1,0 +1,36 @@
+ext.BOOTSTRAP_VERSION = '0.4.11-SNAPSHOT'
+
+task bootstrapVersion(group: 'Bootstrap', description: 'Prints current Bootstrap version') << {
+    println "--------------------------------------------------"
+    println "Boostrap Version is ${BOOTSTRAP_VERSION}"
+    println "--------------------------------------------------"
+}
+
+task upgradeBootstrap(group: "Bootstrap", description: "Bootstrap upgrade. Will download specified Bootstrap version and extracts it.") << {
+
+    def version = System.getProperty("version")
+
+    if(!version) {
+        throw new InvalidUserDataException("Please provide a module name (e.g.: -Dversion=0.1.6-SNAPSHOT)")
+    }
+
+    configurations {
+        boostrap {
+            resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+            resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+        }
+    }
+
+    dependencies {
+        boostrap "com.avid.central.distribution:IPC-Bootstrap:${version}@zip"
+    }
+
+    copy {
+        from zipTree(configurations.boostrap.asPath)
+        into file('.')
+        // Exclude some files which will most likely cause conflicts.
+        exclude "settings.gradle"
+        exclude "project.properties"
+        exclude "build.gradle"
+    }
+}

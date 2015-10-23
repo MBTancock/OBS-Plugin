@@ -1,0 +1,90 @@
+
+def resource = { name ->
+    rootProject.file("scripts/resources/view-template/$name")
+}
+
+subprojects {
+    task createView() << {
+
+        if(project == rootProject) {
+            throw new GradleException("Task cannot be executed on the root project.")
+        }
+
+        def viewType = System.getProperty("viewType")
+        
+        if(!viewType) {
+            throw new InvalidUserDataException("Please provide a view type (e.g.: -DviewType=ExampleView)")
+        }
+
+        def bundleResources = { path ->
+            project.file("src/main/resources/$path")
+        }
+
+        def expandVariables = { text ->
+            return text.replaceAll("VIEW_TYPE", viewType)
+        }
+
+        // Copies and expand templates to destination.
+        def copy = { source, dest ->
+            dest.parentFile.mkdirs()
+            dest.write(expandVariables(source.text))
+        }
+
+        def check = { path -> 
+            def f = bundleResources(path)
+            if(f.exists()) {
+                throw new GradleException("Cannot create View because file already exists: " + f.getName());
+            }
+        }
+
+        // Check first if no resource with the name already exists.
+        check("static/css/$viewType/" + viewType + ".css")
+        check("static/js/$viewType/" + viewType + ".js")
+
+        def uiplugin = bundleResources("META-INF/UIPlugin.xml")
+        uiplugin.parentFile.mkdirs()
+
+        // Create UIPlugin.xml template.
+        if(!uiplugin.exists()) {
+            uiplugin.write('<UIPlugin bundlePath="static"></UIPlugin>')
+            println "Created UIPlugin.xml"
+        }
+
+        // Add view template to UIPlugin
+        def parser = new XmlParser()
+        def node = parser.parse(uiplugin)
+        node.append(parser.parseText(expandVariables(resource('view.xml').text)))
+
+        def writer = new FileWriter(uiplugin)
+        new XmlNodePrinter(new PrintWriter(writer)).print(node)
+        println "Added view to UIPlugin.xml"
+
+        // Create/update default language file
+        def l10n = bundleResources("l10n/UIPlugin.properties")
+        l10n.parentFile.mkdirs()
+        l10n.append("\n" + viewType + ".name=" + viewType)
+
+        println "Updated defaut language files: l10n/UIPlugin.properties"
+
+        // Create/update german language file
+        l10n = bundleResources("l10n/UIPlugin_de.properties")
+        l10n.parentFile.mkdirs()
+        l10n.append("\n" + viewType + ".name=" + viewType + "_de")
+
+        println "Updated german language files: l10n/UIPlugin_de.properties"
+
+        // Expand javascript and styleshit templates
+        copy(resource("view.css"),
+                bundleResources("static/css/" + viewType + ".css"))
+
+        println "Created view stylesheet: static/css/" + viewType + ".css"
+
+        copy(resource("view.js"),
+                bundleResources("static/js/" + viewType + ".js"))
+
+        println "Created view javascript: static/js/" + viewType + ".js"
+
+    }
+
+    createView.description = "Creates a new View (Pane). Parameter viewType is required (e.g.: -DviewType=view-type)"
+}

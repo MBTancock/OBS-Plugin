@@ -1,0 +1,92 @@
+/**
+ * Note: A task to mark release is not optimal because
+ *  - defined tasks are available after gradle configuration phase but version must be set before.
+ */
+task release {
+    group = 'IPC'
+    description = 'Release task has been removed since bootstrap 0.4.5, please use project property instead (e.g: ./gradlew stage -Prelease)'
+    doLast {
+        throw new Exception("Release task has been removed since bootstrap 0.4.5, please use project property instead (e.g: ./gradlew stage -Prelease)")
+    }
+}
+
+project.ext.isRelease = { project.has("release") }
+
+
+def checkRepoConfig = {
+    def message = ""
+    if(projectProperties.repoBase == null) {
+        message += """
+  - Please configure a baseRepo in project.properties, example:
+       repoBase=http://central.maven.org/maven2
+
+  The repository base will be used for snapshot and release repositories. It must end with a slash.
+"""
+    }
+
+    if(projectProperties.repoSnapshots == null) {
+        message += """
+  - Please configure a snapshot repository in the project.properties, example:
+      repoSnapshots=accurev.repo.gromit
+
+"""
+    }
+
+    if(projectProperties.repoReleases == null) {
+        message += """
+  - Please configure a release repository in the project.properties, example:
+      repoReleases=accurev.repo.gromit.releases
+
+"""
+    }
+
+    if(!message.isEmpty()) {
+        message = "Sorry for the inconvenience but Bootstrap 0.2.0 comes with a build-in feature which allows you to upload your project artifacts to a maven/Nexus repository.\n" +
+                "In order to make use of this feature you must configure repositories in the project.properties file. Following issues must be fixed:\n" + message
+
+        throw new IllegalArgumentException(message)
+    }
+}
+
+/**
+ * Configure publishing repositories.
+ */
+def configureRepository = { url ->
+    logger.info "Publishing Repo URL: ${url}"
+
+    subprojects {
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    repository(url: url) {
+                        authentication(userName: "admin", password: "password")
+                    }
+                    setUniqueVersion false
+                }
+            }
+        }
+
+    }
+}
+
+def configureReleaseRepo = {
+    def repoPublishBaseUrl = projectProperties.repoBase
+    def repoReleases = repoPublishBaseUrl + projectProperties.repoReleases
+    configureRepository(repoReleases)
+}
+
+def configureSnapshot = {
+    def repoPublishBaseUrl = projectProperties.repoBase
+    def repoSnapshots = repoPublishBaseUrl + projectProperties.repoSnapshots
+    configureRepository(repoSnapshots)
+}
+
+checkRepoConfig()
+if(isRelease()) {
+    configureReleaseRepo()
+} else {
+    configureSnapshot()
+}
+
+
+

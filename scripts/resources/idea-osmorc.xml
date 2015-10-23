@@ -1,0 +1,17 @@
+<facet type="Osmorc" name="OSGi">
+    <configuration manifestGenerationMode="Bnd" manifestLocation=""
+                   jarfileLocation="JAR_PATH"
+                   bundleSymbolicName="SYMBOLIC_NAME"
+                   bundleVersion="VERSION"
+                   bndFileLocation="idea/bnd.bnd"
+                   outputPathType="SpecificOutputPath"
+                   bundlorFileLocation=""
+                   bundleActivator=""
+                   ignoreFilePattern=""
+                   useProjectDefaultManifestFileLocation="true"
+                   alwaysRebuildBundleJAR="true"
+                   doNotSynchronizeWithMaven="true">
+        <additionalProperties/>
+        <additionalJARContents/>
+    </configuration>
+</facet>

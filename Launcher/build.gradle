@@ -1,0 +1,7 @@
+markAsInfrastructure()
+
+dependencies {
+    compile ipcDep('com.avid.central.framework:Launcher')
+    compile ipcDep('org.eclipse:osgi')
+}
+

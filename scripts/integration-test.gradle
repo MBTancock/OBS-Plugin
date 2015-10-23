@@ -1,0 +1,64 @@
+configurations {
+    integrationTestCompile {
+        extendsFrom testCompile
+    }
+    integrationTestRuntime {
+        extendsFrom integrationTestCompile, testRuntime
+    }
+}
+
+def sets = [ "java", "groovy", "scala", "resources" ]
+def sourceFolder = { set ->
+    "src/integration-test/$set"
+}
+
+sourceSets {
+    integrationTest { sourceSet ->
+        sets.each {
+            if (sourceSet.hasProperty(it)) {
+                sourceSet."$it".srcDir file(sourceFolder(it))
+            }
+        }
+    }
+}
+
+dependencies {
+    integrationTestCompile sourceSets.main.output
+    integrationTestCompile sourceSets.test.output
+    integrationTestCompile configurations.testCompile
+    integrationTestRuntime configurations.testRuntime
+}
+
+task integrationTest(type: Test) {
+    description = "Runs integration tests"
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+idea {
+    module {
+        scopes.TEST.plus += configurations.integrationTestCompile
+
+        /*
+         * Using direct XML update to write test source folders
+         * because default method of using `testSourceDirs += directory`
+         * (see http://www.gradle.org/docs/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html)
+         * ignores `src/test/groovy` as a test source directory for some reason.
+         */
+        iml {
+            withXml {
+                def newModuleRootManager = it.node.component.find { it.@name == "NewModuleRootManager" }
+                def content = newModuleRootManager.find { it.name() == "content" }
+                def parser = new XmlParser()
+
+                sets.collect { sourceFolder(it) }.
+                        each {
+                            def source = project.file(it)
+                            if (source.exists() && source.directory) {
+                                content.append(parser.parseText('<sourceFolder url="file://$MODULE_DIR$/' + it + '" isTestSource="true" />'))
+                            }
+                        }
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+// This class will gzip all static resources.
+subprojects {
+    task gzipResources(group: "IPC", description: "Compresses all css and js resources (part of build process)") {
+        def files = fileTree("build/resources/main") {
+            include '**/*.css'
+            include '**/*.js'
+        }
+
+        // Define input/outputs to speedup the process.
+        inputs.files { files }
+
+        outputs.files {
+            fileTree("build/resources/main") {
+                include '**/*.css.gz'
+                include '**/*.js.gz'
+            }
+        }
+
+        doFirst {
+            files.each {
+                if (!it.isDirectory()) {
+                    logger.info("gzip: ${it}")
+                    ant.gzip src: it, destfile: new File("${it.path}.gz").path
+                }
+            }
+        }
+    }
+
+    jar.dependsOn(gzipResources)
+}

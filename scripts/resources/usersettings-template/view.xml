@@ -1,0 +1,18 @@
+<View type="VIEW_TYPE">
+    
+    <!-- Mark view as user settings view. -->
+    <Property name="settings-type" value="user-settings"/>
+
+    <!-- View name for settings selector page -->
+    <Property name="@name" value="VIEW_TYPE.name"/>
+
+    <!-- Settings view must not be shown in the Panes menu. -->
+    <Property name="showMenu" value="false"/>
+
+    <!-- View is available for each user (not just admins). -->
+    <Property name="view-env" value="production"/>
+
+    <Property name="productId" value="PRODUCT_ID"/>
+
+    <Import type="js" path="js/VIEW_TYPE.js"/>
+</View>

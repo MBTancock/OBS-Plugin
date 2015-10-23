@@ -1,0 +1,99 @@
+
+
+// ======== IPC distribution repositories. ========
+repositories {
+    // First search in the ipc-repository directory for suitable IPC distribution (safe bandwidth)
+    ivy {
+        url "file://$rootDir/ipc-repository"
+        layout 'pattern', { artifact "[module]-[revision].[ext]" }
+    }
+}
+
+// Configuration for IPC distribution.
+configurations { ipcDistribution }
+
+// project.ipc will be set at build.gradle of the root project.
+dependencies { ipcDistribution project.ipc }
+
+// ========== Resolve IPC ==========
+task resolveIPC(
+        description: "Resolves a IPC distribution from the repository and installs it into the build directory.",
+        group: "IPC") {
+    def zipFile = new File(configurations.ipcDistribution.asPath)
+    def outputDir = rootProject.file('build/ipc-dist')
+    inputs.file zipFile
+    outputs.dir outputDir
+    doLast {
+        copy {
+            from zipTree(zipFile)
+            into outputDir
+        }
+    }
+    onlyIf {
+        !project.hasProperty("skipResolveIPC")
+    }
+}
+
+task ipcVersions(group: "IPC", description: "Shows all available IPC versions for the current configured repository.") << {
+
+    def dep = ipc.split("@").first()
+    def tokens = dep.split(":")
+
+    if (tokens.length == 3) {
+        def url = repositories.getByName("ipc-releases").url as String
+        url += "/" + tokens[0].replace(".", "/")
+        url += "/" + tokens[1]
+        url += "/maven-metadata.xml"
+
+        final xml = new XmlSlurper().parse(url)
+        println "Your   Version: ${tokens[2]}"
+        println "Latest Version: ${xml.versioning.latest}"
+        println "----------------------------------------"
+        xml.versioning.versions.version.each { println it }
+        println "----------------------------------------"
+
+    } else {
+        println "[ERROR] Cannot parse ipc dependency string: ${ipc}."
+    }
+}
+
+task ipcUpgradeToLatest(group: "IPC", description: "Upgrades IPC to the latest available version.") << {
+    def dep = ipc.split("@").first()
+    def tokens = dep.split(":")
+
+    if (tokens.length == 3) {
+        def url = repositories.getByName("ipc-releases").url as String
+        url += "/" + tokens[0].replace(".", "/")
+        url += "/" + tokens[1]
+        url += "/maven-metadata.xml"
+
+        final xml = new XmlSlurper().parse(url)
+
+        def latest = xml.versioning.latest
+
+        final props = file("project.properties")
+        def text = props.text.replaceAll("ipcDistribution=.*", "ipcDistribution=${tokens[0]}:${tokens[1]}:${latest}")
+        props.write(text)
+
+        println "[INFO] Updated project.properties. Upgraded to version: ${latest}"
+        println "[INFO] Execute 'gradlew clean resolveIPC idea' to finalize the change."
+
+    } else {
+        println "[ERROR] Cannot parse ipc dependency string: ${ipc}."
+    }
+}
+
+
+
+subprojects {
+    afterEvaluate { project ->
+        compileJava.dependsOn(rootProject.resolveIPC)
+    }
+}
+
+// ========= CLEAN ============
+task cleanIPC(type: Delete, description: "Removes the IPC distribution from the build directory.") {
+    delete rootProject.file('build/ipc-dist')
+}
+
+clean.dependsOn(cleanIPC)

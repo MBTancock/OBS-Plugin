@@ -1,0 +1,109 @@
+import groovy.text.SimpleTemplateEngine
+
+def findChild = { name, node ->
+    for (def child : node.children()) {
+        if (child.attribute('name') == name) {
+            return child
+        }
+    }
+    return null
+}
+def doesConfigRootExist = { node ->
+    return findChild('ProjectRunConfigurationManager', node) != null
+}
+
+def CONFIGURATION_DEVELOPMENT = "DEVELOPMENT"
+def CONFIGURATION_STAGING = "STAGING"
+
+def newRunConfig = { name, configuration, filter, String additionalPlugins = "", addParams = [] ->
+    if(additionalPlugins.length() > 0) {
+        additionalPlugins = "," + additionalPlugins
+    }
+
+    def params = ["-ea",
+            "-Xmx2048m",
+            "-XX:PermSize=256m",
+            "-XX:MaxPermSize=512m",
+            "-Dfile.encoding=UTF-8",
+            "-Djava.security.policy=./config/security.policy",
+            "-Djava.util.logging.config.file=./config/logging.properties",
+            "-Dvisualvm.display.name=IPC_IDEA",
+            "-Dfelix.fileinstall.dir=./config,../../config/$configuration/services,./lib,../project-deps,../../out/bundles${additionalPlugins}",
+            "-Dfelix.fileinstall.noInitialDelay=true",
+            "-Dfelix.fileinstall.filter=&quot;${filter}&quot;",
+            "-Dlogback.configurationFile=./config/logback.xml -DclientLoggingEnabled=false",
+            "-Dcom.avid.workgroup.statedir=.",
+            "-Dcom.avid.workgroup.appdatadir=&quot;${file('.').absolutePath}/Launcher/osgi&quot;",
+            "-Dcom.avid.central.logging.dir=./data/logs",
+            "-Dorg.eclipse.equinox.http.jetty.customizer.class=com.avid.central.jetty.Customizer",
+            "-Dcom.avid.central.discover.deployment.dirs=false",
+            "-Dfelix.fileinstall.tmpdir=tmp",
+            "-Djava.security.manager"
+    ]
+
+    params += addParams;
+
+    def engine = new SimpleTemplateEngine()
+    def text = rootProject.file("scripts/resources/ipc-runconfig.xml").text
+    def template = engine.createTemplate(text);
+
+    return new XmlParser().parseText(template.make(
+            ['vmParameters': params.join(" "), 'name': name ]).toString())
+}
+
+
+idea {
+    def filters = [
+            UMS: '^((?!((com\\.avid\\.central\\.framework\\.LocalAuthentication)|(org\\.eclipse\\.osgi\\.jar)|(org\\.apache\\.felix\\.org\\.apache\\.felix\\.(fileinstall|configadmin)\\.jar))).*$)|.*\\.(cfg|config)$',
+            Local: '^((?!((com\\.avid\\.uls)|(org\\.eclipse\\.osgi\\.jar)|(org\\.apache\\.felix\\.org\\.apache\\.felix\\.(fileinstall|configadmin)\\.jar))).*$)|.*\\.(cfg|config)$'
+    ]
+
+    def devParams = [
+            "-DdevResourceResolver.enabled=true",
+            "-DdevResourceResolver.modulePaths=&quot;${file('.').absolutePath}&quot;",
+            "-DdevResourceResolver.resourceSubPaths=src/main/resources"
+    ]
+
+    def noReloadParams = [
+            "-Dfelix.fileinstall.poll=0"
+    ]
+
+    project {
+        ipr {
+            //you can tinker with the output *.ipr file before it's written out
+            withXml {
+                def node = it.asNode()
+                if (!doesConfigRootExist(node)) {
+
+                    // Since core 2.1.0.16_v20140908_114202 mock modules are delivered in a plugin folder.
+                    def mockPlugin = "./plugins/core-mock"
+                    def umsPlugin = "./plugins/core-ums-auth"
+                    def localPlugin = "./plugins/core-local-auth"
+
+
+                    def parent = new XmlParser().parseText('<component name="ProjectRunConfigurationManager" />');
+
+                    parent.append(newRunConfig("Start IPC", CONFIGURATION_DEVELOPMENT, filters.Local, localPlugin))
+                    parent.append(newRunConfig("Start IPC (dev)", CONFIGURATION_DEVELOPMENT, filters.Local, localPlugin, devParams))
+                    parent.append(newRunConfig("Start IPC (dev + mock)", CONFIGURATION_DEVELOPMENT, filters.Local, [ localPlugin, mockPlugin ].join(","), devParams))
+                    parent.append(newRunConfig("Start Non-Reloadable IPC", CONFIGURATION_DEVELOPMENT, filters.Local, [ localPlugin, mockPlugin ].join(","), noReloadParams))
+
+                    parent.append(newRunConfig("Start IPC [UMS]", CONFIGURATION_DEVELOPMENT, filters.UMS, umsPlugin))
+                    parent.append(newRunConfig("Start IPC [UMS] (dev)", CONFIGURATION_DEVELOPMENT, filters.UMS, umsPlugin, devParams))
+                    parent.append(newRunConfig("Start IPC [UMS] (dev + mock)", CONFIGURATION_DEVELOPMENT, filters.UMS, [ umsPlugin, mockPlugin ].join(","), devParams))
+
+                    parent.append(newRunConfig("Start Non-Reloadable IPC [UMS]", CONFIGURATION_DEVELOPMENT, filters.UMS, [ umsPlugin, mockPlugin ].join(",") , noReloadParams))
+                    parent.append(newRunConfig("Start Non-Reloadable IPC [UMS] (staging)", CONFIGURATION_STAGING, filters.UMS, [ umsPlugin, mockPlugin ].join(",") , noReloadParams))
+
+                    node.append(parent)
+                }
+            }
+        }
+    }
+
+    module {
+        // Exclude infrastructure folders:
+        excludeDirs += file('gradle')
+        excludeDirs += file('ipc-repository')
+    }
+}

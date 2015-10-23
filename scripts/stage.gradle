@@ -1,0 +1,25 @@
+// === create deployment ZIP ===
+
+task configureStage() << {
+    // We assume that all dependencies has been copied to the projectDependenciesDir.
+    def fileCollection = files(rootProject.projectDependenciesDir)
+    osgiprojects {
+        fileCollection += files jar.archivePath
+    }
+    stage {
+        from fileCollection
+        into new File(ipcDistPluginsDir, "${project.group}.${project.name}")
+    }
+}
+
+subprojects {
+    configureStage.dependsOn(build)
+}
+
+
+task stage(
+        type: Sync,
+        dependsOn: configureStage,
+        description: "Staging of the project. ",
+        group: 'IPC'
+)

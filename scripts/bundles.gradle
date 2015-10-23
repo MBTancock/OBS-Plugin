@@ -1,0 +1,69 @@
+task createBundle << {
+    def moduleName = System.getProperty("bundleName")
+    def enableGroovy = Boolean.parseBoolean(System.getProperty("enableGroovy", Boolean.FALSE.toString()))
+    def addAccurevIgnore = Boolean.parseBoolean(System.getProperty("addAccurevIgnore", Boolean.FALSE.toString()))
+
+    if(!moduleName)
+        throw new InvalidUserDataException("Please provide a module name (e.g.: -DbundleName=MyModule)")
+
+    if (rootProject.name == moduleName) {
+        throw new IllegalArgumentException("It is not allowed to create bundle with same name as project. Please choose another bundle path or rename your root project")
+    }
+
+    def settingsFile = file("settings.gradle")
+    
+    if(!settingsFile.exists()) {
+        settingsFile.write("")
+        println "Created settings.gradle file"
+    }
+
+    if(settingsFile.text.contains("include '$moduleName'"))
+        throw new InvalidUserDataException("Module with name '$moduleName' already exists")
+
+    println "Create module: $moduleName"
+
+    def moduleRoot = file("./$moduleName")
+
+    def moduleFile =  { path ->
+        return new File(moduleRoot, path)
+    }
+
+    if (enableGroovy) {
+        moduleFile("src/main/groovy").mkdirs()
+        moduleFile("src/test/groovy").mkdirs()
+    }
+
+    moduleFile("src/main/java").mkdirs()
+    moduleFile("src/main/resources").mkdirs()
+    moduleFile("src/test/java").mkdirs()
+    moduleFile("src/test/resources").mkdirs()
+
+    println "Created src directories."
+
+    def buildFile = moduleFile("build.gradle")
+    def fileContent = "useOSGi()\n"
+    if (enableGroovy) {
+        fileContent += "useIPCGroovy()\n"
+    }
+    fileContent += '''
+dependencies {
+    // compile 'zz.yy.xx:Module:1.0.1'
+    // testCompile 'zz.yy.xx:Module:1.0.1'
+}
+'''
+    buildFile.write(fileContent)
+
+    if (addAccurevIgnore) {
+        moduleFile(".acignore").write("build\nidea\n*.iml\n")
+    }
+
+    println "Created $moduleName/build.gradle"
+
+    // Always add new line - gradle allows multiple include statements.
+    settingsFile.append("\ninclude '$moduleName'\n")
+
+    println "Updated settings.gradle: include '$moduleName'"
+}
+
+createBundle.description = "Creates a new bundle. Parameter bundleName is required (e.g.: -DbundleName=Bundle1 [-DenableGroovy=false] [-DaddAccurevIgnore=false])"
+createBundle.group = "IPC Tools"

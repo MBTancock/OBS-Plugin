@@ -1,0 +1,6 @@
+useOSGi()
+
+dependencies {
+    // compile 'zz.yy.xx:Module:1.0.1'
+    // testCompile 'zz.yy.xx:Module:1.0.1'
+}

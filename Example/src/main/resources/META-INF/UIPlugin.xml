@@ -1,0 +1,21 @@
+<UIPlugin bundlePath="static">
+  <View type="todos-view-type">
+    <Property name="singleton" value="true"/>
+    <Property name="showMenu" value="true"/>
+    <Property name="menuName" value="Todos"/>
+    <!-- -->
+    <Property name="productId" value="myproduct"/>
+    <Property name="view-env" value="production"/>
+    <Property name="example" value="true"/>
+
+    <Import type="js" path="js/todos/extensions.js"/>
+    <Import type="js" path="js/todos/model/todoItem.js"/>
+    <Import type="js" path="js/todos/todosViewModel.js"/>
+    <Import type="js" path="js/todos/todos-view-type.js"/>
+    <Import type="css" path="css/mam-view-type.css"/>
+  </View>
+
+  <ViewExtension type="av-search">
+    <Import type="js" path="js/searchPlugin/search-plugin.js"/>
+  </ViewExtension>
+</UIPlugin>

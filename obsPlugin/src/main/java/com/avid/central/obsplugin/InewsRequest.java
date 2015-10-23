@@ -1,0 +1,35 @@
+package com.avid.central.obsplugin;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.UUID;
+
+/**
+ * Created by Administrator on 03/10/2015.
+ */
+@XmlRootElement(name = "inewsrequest")
+@XmlAccessorType(XmlAccessType.NONE)
+public class InewsRequest {
+    @XmlElement(required = true)
+    private String queue;
+    @XmlElement(required = true)
+    private Boolean export;
+
+    public String getQueue() {
+        return this.queue;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
+    }
+
+    public Boolean getExport() {
+        return this.export;
+    }
+
+    public void setExport(Boolean export) {
+        this.export = export;
+    }
+}

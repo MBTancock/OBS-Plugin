@@ -1,0 +1,31 @@
+
+// === create deployment ZIP ===
+
+task configureDeploymentZip() << {
+    // We assume that all dependencies has been copied to the projectDependenciesDir.
+    def fileCollection = files(rootProject.projectDependenciesDir)
+
+    osgiprojects { fileCollection += files jar.archivePath }
+
+    deploymentZip {
+        from fileCollection
+        baseName = rootProject.name
+        destinationDir = rootProject.file("build/deployment")
+    }
+}
+
+task deploymentZip(
+        type: Zip,
+        dependsOn: configureDeploymentZip,
+        description: "Creates a deployment zip (build/deployment/<rootProject.name>.zip) which contains all project OSGi bundles and dependecies.",
+        group: 'IPC'
+)
+
+// === Clean deployment ZIP ===
+
+task cleanDeployment(type: Delete) << {
+    delete project.file("build/deployment")
+}
+
+clean.dependsOn(cleanDeployment)
+deploymentZip.dependsOn(build)

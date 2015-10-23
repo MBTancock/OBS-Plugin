@@ -1,0 +1,133 @@
+
+def resource = { name -> rootProject.file("scripts/resources/usersettings-template/$name") }
+
+subprojects {
+    task createUserSettingsView(group: "IPC Tools", description: "Creates a new user settings view (template). Parameter 'viewType' is requiered (e.g.: -DviewType=product-usersettings)") << {
+
+        if(project == rootProject) {
+            throw new GradleException("Task cannot be executed on the root project.")
+        }
+
+        def viewType = System.getProperty("viewType")
+        
+        if(!viewType) {
+            throw new InvalidUserDataException("Please provide a view type (e.g.: -DviewType=ExampleView)")
+        }
+
+        def productId = System.getProperty("productId")
+        if(!productId) {
+            productId = project.group
+        }
+
+        // Package for java files.
+        def pkg = project.group + "." + viewType
+        pkg = pkg.replaceAll("-", "\\.")
+
+        def bundleResources = { path -> project.file("src/main/resources/$path") }
+        def bundleJava = { path -> project.file("src/main/java/$path") }
+
+        def expandVariables = { text ->
+            return text.replaceAll("VIEW_TYPE", viewType)
+                    .replaceAll("PRODUCT_ID", productId)
+                    .replaceAll("PACKAGE", pkg)
+        }
+
+        def expandFile = { file ->
+            def text = expandVariables(file.text)
+            file.write(text)
+        }
+
+        // Copies and expand templates to destination.
+        def copy = { source, dest ->
+            dest.parentFile.mkdirs()
+            dest.write(expandVariables(source.text))
+        }
+
+        def check = { path -> 
+            def f = bundleResources(path)
+            if(f.exists()) {
+                throw new GradleException("Cannot create View because file already exists: " + f.getName());
+            }
+        }
+
+        // Check first if no resource with the name already exists.
+        check("static/css/$viewType/" + viewType + ".css")
+        check("static/js/$viewType/" + viewType + ".js")
+
+        def uiplugin = bundleResources("META-INF/UIPlugin.xml")
+        uiplugin.parentFile.mkdirs()
+
+        // Create UIPlugin.xml template.
+        if(!uiplugin.exists()) {
+            uiplugin.write('<UIPlugin bundlePath="static"></UIPlugin>')
+            println "Created UIPlugin.xml"
+        }
+
+        // Add view template to UIPlugin
+        def parser = new XmlParser()
+        def node = parser.parse(uiplugin)
+        node.append(parser.parseText(expandVariables(resource('view.xml').text)))
+
+        def writer = new FileWriter(uiplugin)
+        new XmlNodePrinter(new PrintWriter(writer)).print(node)
+        println "Added view to UIPlugin.xml"
+
+        // Create/update default language file
+        def l10n = bundleResources("l10n/UIPlugin.properties")
+        l10n.parentFile.mkdirs()
+        
+        l10n.append("\n" + expandVariables(
+            resource("lang.properties").text))
+
+        println "Updated defaut language files: l10n/UIPlugin.properties"
+
+        // Create/update german language file
+        l10n = bundleResources("l10n/UIPlugin_de.properties")
+        l10n.parentFile.mkdirs()
+        
+        l10n.append("\n" + expandVariables(
+            resource("lang_de.properties").text))
+
+        println "Updated german language files: l10n/UIPlugin_de.properties"
+
+        copy(resource("view.js"),
+                bundleResources("static/js/" + viewType + ".js"))
+
+        println "Created view javascript: static/js/" + viewType + ".js"
+
+
+        def pkgDir = pkg.replaceAll("\\.", "/")
+
+        def resourceProvider = bundleJava("$pkgDir/ResourceProvider.java")
+
+        copy(resource("ResourceProvider.java"), resourceProvider);
+        expandFile(resourceProvider)
+
+        println "Created ResourceProvider: $resourceProvider.path"
+
+        def usresource = bundleJava("$pkgDir/UserSettingsResource.java")
+
+        copy(resource("UserSettingsResource.java"), usresource);
+        expandFile(bundleJava("$pkgDir/UserSettingsResource.java"))
+
+        println "Created UserSettingsResource: $usresource.path"
+
+        def build = project.file("build.gradle").text
+
+        def idx = build.indexOf("dependencies {")
+        if(idx > -1) {
+            idx += "dependencies {".length()
+
+            def deps = resource("dependencies.txt").text
+            project.file("build.gradle").write(
+                new StringBuilder(build).insert(idx, "\n//Auto generated \n" + deps + "\n" ).toString())
+        }
+
+
+        //dependencies {
+
+    }
+
+    createView.description = "Creates a new View (Pane). Parameter viewType is required (e.g.: -DviewType=view-type)"
+    createView.group = "IPC Tools"
+}

@@ -1,0 +1,31 @@
+allprojects {
+    apply plugin: 'idea'
+
+    project.ext.markAsInfrastructure = {
+        project.ext.infrastructure = true
+        idea {
+            module {
+                inheritOutputDirs = false
+                outputDir = rootProject.file("out/infrastructure/$name")
+                testOutputDir = rootProject.file("out/infrastructure/$name")
+            }
+        }
+    }
+
+    idea {
+        module {
+            iml {
+                // Default IDEA plugin behavior has changed between Gradle 1.7 and Gradle 1.12.
+                // Now module dependencies are not exported by default, so we have to force it.
+                whenMerged { module ->
+                    module.dependencies*.exported = true
+                }
+            }
+        }
+    }
+
+}
+
+apply from: 'scripts/idea-runconfig.gradle'
+apply from: 'scripts/idea-osmorc.gradle'
+apply from: 'scripts/idea-jdk.gradle'

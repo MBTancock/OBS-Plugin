@@ -1,0 +1,111 @@
+apply from: 'scripts/helper-functions.gradle'
+apply from: 'scripts/bootstrap-version.gradle'
+
+// Read projectProperties and set defaults.
+def properties = project.readProperties(project.file("project.properties"))
+project.ext.projectProperties = properties
+project.ext.ipc = "${properties.ipcDistribution}@zip"
+
+// Specify properties which are needed by subscripts.
+rootProject.ext.projectDependenciesDir = rootProject.file('build/project-deps/')
+
+rootProject.ext.ipcDistDir = file("$rootDir/build/ipc-dist")
+
+rootProject.ext.ipcDistPluginsDir = file("$ipcDistDir/plugins")
+
+// Location of 'lib' directory within IPC Distribution
+rootProject.ext.ipcDistLibDir = file("$ipcDistDir/lib")
+
+
+// The ipcDep should be used to build IPC dependencies strings.
+// Example usage:
+//      dependencies {
+//         compile ipcDep('com.avid.central.framework:UICore')
+//      }
+// Since Bootstrap 0.1.6
+ext.ipcDep = { name ->
+    // Current implementation will just return the name.
+    // It is recommended to use the method anyway since we might provide in the
+    // future dependencies with versions. This method would be able to resolve the
+    // correct version automatically.
+    name
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    //The following two lines are needed to compile with german umlauts
+    compileTestJava.options.encoding = 'utf-8'
+    compileJava.options.encoding = 'utf-8'
+
+    sourceCompatibility = projectProperties.sourceCompatibility
+    group = projectProperties.defaultGroup
+
+    // Setup Artifact repositories.
+    repositories {
+        // First try to resolve dependency from IPC runtime.
+        ivy {
+            url rootProject.ipcDistLibDir
+            layout 'pattern', {
+                // The IPC distribution does not contain any versions.
+                artifact "[organisation].[module].[ext]"
+            }
+        }
+    }
+}
+
+// Since Core 2.1.0.22_v20141001_160727 is mock, ums- and local-auth in a plugin directory.
+// The plugin directory must be part of the local repository for projects which depends on
+// settings and ums artifacts.
+
+// Make sure IPC is resolved (because else no plugin dirs are available) before configuring plugin directories
+task configurePluginRepos(dependsOn: 'resolveIPC') << {
+    allprojects {
+        repositories {
+            // Add a new repository for each plugin directory.
+            ipcDistPluginsDir.listFiles().each { pluginDir ->
+                ivy {
+                    url pluginDir
+                    layout 'pattern', {
+                        // The IPC distribution does not contain any versions.
+                        artifact "[organisation].[module].[ext]"
+                    }
+                }
+            }
+        }
+    }
+}
+
+allprojects {
+    build.dependsOn configurePluginRepos
+}
+
+apply from: 'scripts/release.gradle'
+apply from: 'scripts/version.gradle'
+apply from: 'scripts/bundles.gradle'
+apply from: 'scripts/bundle-view.gradle'
+apply from: 'scripts/bundle-usersettings.gradle'
+apply from: 'scripts/bundle-layout.gradle'
+apply from: 'scripts/osgi.gradle'
+apply from: 'scripts/ipc-dist.gradle'
+apply from: 'scripts/dependencies.gradle'
+apply from: 'scripts/deployment.gradle'
+apply from: 'scripts/stage.gradle'
+apply from: 'scripts/uiplugin.gradle'
+apply from: 'scripts/gzip.gradle'
+apply from: 'scripts/idea.gradle'
+apply from: 'scripts/rpm.gradle'
+apply from: 'scripts/l10n.gradle'
+apply from: 'scripts/groovy.gradle'
+apply from: 'scripts/js-strip-comments.gradle'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
+
+// Root project is infrastructure.
+markAsInfrastructure()
+
+// We do not want to upload the Launcher.
+project('Launcher').tasks.uploadArchives.setEnabled(false)

@@ -1,0 +1,85 @@
+subprojects {
+    task createLayout(group: "IPC Tools", description: "Creates a new layout. Parameter 'layoutId' is required (e.g.: -layoutId=product-layoutId) ") << {
+
+    	def layoutId = System.getProperty("layoutId")
+    	if(project == rootProject) { throw new GradleException("Task cannot be executed on the root project.") }
+		if(!layoutId) { throw new InvalidUserDataException("Please provide a layoutId (e.g.: -DlayoutId=example-layout)") }
+
+
+		def bundleResources = { path -> project.file("src/main/resources/$path") }
+		def scriptResource = { name -> rootProject.file("scripts/resources/layout-template/$name") }
+        def expandVariables = { text -> return text.replaceAll("LAYOUT_ID", layoutId) }
+        
+        def parseXmlTemplate = { path -> 
+        	def parser = new XmlParser()
+        	def layout = scriptResource("layout.xml").text
+        	return parser.parseText(expandVariables(layout))
+        }
+
+		// Copies and expand templates to destination.
+        def copy = { source, dest ->
+            dest.parentFile.mkdirs()
+            dest.write(expandVariables(source.text))
+        }
+
+        def check = { path -> 
+            def f = bundleResources(path)
+            if(f.exists()) {
+                throw new GradleException("Cannot create View because file already exists: " + f.getName());
+            }
+        }
+
+                // Check first if no resource with the name already exists.
+
+        def layoutJson = "META-INF/layout/" + layoutId + ".json"
+
+        check(layoutJson)
+
+		copy(scriptResource("layout.json"), bundleResources(layoutJson))
+
+        def uiplugin = bundleResources("META-INF/UIPlugin.xml")
+        uiplugin.parentFile.mkdirs()
+
+        // Create UIPlugin.xml template.
+        if(!uiplugin.exists()) {
+            uiplugin.write('<UIPlugin bundlePath="static"><Layouts></Layouts></UIPlugin>')
+            println "Created UIPlugin.xml"
+        }
+
+        // Add view template to UIPlugin
+        def parser = new XmlParser()
+        def node = parser.parse(uiplugin)
+        def layoutNode = parseXmlTemplate("layout.xml")
+
+        def added = false
+        node.each {
+        	if(!added && it.name() == "Layouts") {
+        		it.append(layoutNode)
+        		added =  true
+        	}
+        	return added
+        }
+
+        if(!added) { node.appendNode("Layouts").append(layoutNode) }
+
+        def writer = new FileWriter(uiplugin)
+        new XmlNodePrinter(new PrintWriter(writer)).print(node)
+
+
+        // Create/update default language file
+        def l10n = bundleResources("l10n/UIPlugin.properties")
+        l10n.parentFile.mkdirs()
+
+        l10n.append("\nlayout." + layoutId + ".name=" + layoutId)
+
+        println "Updated defaut language files: l10n/UIPlugin.properties"
+
+        // Create/update german language file
+        l10n = bundleResources("l10n/UIPlugin_de.properties")
+        l10n.parentFile.mkdirs()
+        l10n.append("\nlayout." + layoutId + ".name=" + layoutId + "_de")
+
+        println "Updated german language files: l10n/UIPlugin_de.properties"
+    }
+
+}

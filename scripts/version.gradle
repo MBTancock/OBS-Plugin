@@ -1,0 +1,37 @@
+/**
+ * Contains basic version handling and validation.
+ * A bootstrap user has two ways to define a version:
+ *      1. project.properties
+ *      2. Command parameter (-PdefaultVersion)
+ *
+ * Expected is a version in the default maven snapshot format: 0.0.0-SNAPSHOT
+ *
+ * The -SNAPSHOT part will be replaced by .v{yyyyMMdd_HHmmss} if release mode is enabled.
+ */
+def validateVersion(version, isRelease) {
+    if (isRelease) {
+        assert version ==~ /\d+\.\d+\.\d+\.[^.]+/: "Release build, Invalid version format, expected format: '0.0.0.0' given: '${version}'"
+    } else {
+        assert version ==~ /\d+\.\d+\.\d+-SNAPSHOT/: "Snapshot build, Invalid version format, expected format: '0.0.0-SNAPSHOT' given: '${version}'"
+    }
+}
+
+// By default use version from project.properties
+def finalVersion = projectProperties.defaultVersion
+if (project.has("defaultVersion")) {
+    // If user define -PdefaultVersion than use this version preferred.
+    logger.debug("Version from project.properties has been explicit overwirtten, version: ${defaultVersion}")
+    finalVersion = defaultVersion
+}
+
+if (isRelease()) {
+    logger.debug("Release build replace -SNAPSHOT with timestamp.")
+    def timestamp = new Date().format("yyyyMMdd_HHmmss")
+    finalVersion = finalVersion.replace("-SNAPSHOT", ".v" + timestamp)
+    logger.info("Release mode, version: ${finalVersion}")
+}
+
+validateVersion(finalVersion, isRelease());
+
+// Finally set version to all modules.
+allprojects { version = finalVersion }
