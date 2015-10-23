@@ -1,18 +1,28 @@
 <UIPlugin bundlePath="static">
-  <View type="av-assets-drag-and-drop">
-    <Property name="productId" value="browse"/>
-
-    <Property name="showMenu" value="true"/>
-    <Property name="singleton" value="true"/>
-    <Property name="@menuName" value="CutSheet Export"/>
-    <Property name="@name" value="CutSheetExport"/>
-    <Property name="example" value="true"/>
-
-    <Import type="css" path="css/assetDND.css"/>
-    <Import type="js" path="js/OBS.AssetDND.DragZone.js"/>
-    <Import type="js" path="js/OBS.AssetDND.View.js"/>
-    <Import type="js" path="js/ObsTest2.js"/>
+  <View type="obsPane">
+    <Property name="productId" value="obsPlugin"/>
+    <Property name="view-env" value="production"/>
+    <Property name="view-vendor" value="broadcastmediasolutions"/>
+    <Property name="view-mode" value="factory"/>
+    <Property name="@menuName" value="obsPane.name"/>
+    <Property name="showMenu" value="false"/>
+    <Import type="js" path="js/events/obsPane.js"/>
+    <Import type="css" path="css/obsPane.css"/>
   </View>
+  <!--<View type="av-assets-drag-and-drop">-->
+    <!--<Property name="productId" value="browse"/>-->
+
+    <!--<Property name="showMenu" value="true"/>-->
+    <!--<Property name="singleton" value="true"/>-->
+    <!--<Property name="@menuName" value="CutSheet Export"/>-->
+    <!--<Property name="@name" value="CutSheetExport"/>-->
+    <!--<Property name="example" value="true"/>-->
+
+    <!--<Import type="css" path="css/assetDND.css"/>-->
+    <!--<Import type="js" path="js/OBS.AssetDND.DragZone.js"/>-->
+    <!--<Import type="js" path="js/OBS.AssetDND.View.js"/>-->
+    <!--<Import type="js" path="js/ObsTest2.js"/>-->
+  <!--</View>-->
   <View type="system-settings-obs-view">
     <Property name="settings-type" value="system-settings"/>
     <Property name="showMenu" value="false"/>
@@ -22,25 +32,25 @@
     <Import type="js" path="js/configuration/SystemSettingsObsView.js"/>
     <Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>    <!--<Import type="css" path="css/styles.css"/>-->
   </View>
-  <View type="obs-push-notifications-example">
-    <Property name="productId" value="core"/>
+  <!--<View type="obs-push-notifications-example">-->
+    <!--<Property name="productId" value="core"/>-->
 
-    <Property name="example" value="true"/>
+    <!--<Property name="example" value="true"/>-->
 
-    <Property name="name" value="Cutsheet Notify"/>
-    <Property name="extensionType" value="common"/>
-    <Property name="showMenu" value="true"/>
-    <Property name="singleton" value="true"/>
+    <!--<Property name="name" value="Cutsheet Notify"/>-->
+    <!--<Property name="extensionType" value="common"/>-->
+    <!--<Property name="showMenu" value="true"/>-->
+    <!--<Property name="singleton" value="true"/>-->
 
-    <Property name="view-vendor" value="avid"/>
-    <Property name="view-env" value="production"/>
+    <!--<Property name="view-vendor" value="avid"/>-->
+    <!--<Property name="view-env" value="production"/>-->
 
 
-    <Property name="menuName" value="Cutsheet Notifications"/>
+    <!--<Property name="menuName" value="Cutsheet Notifications"/>-->
 
-    <Import type="css" path="css/obs-push-notifications-example.css"/>
-    <Import type="js" path="js/cutsheet/PushNotificationExample.js"/>
-  </View>
+    <!--<Import type="css" path="css/obs-push-notifications-example.css"/>-->
+    <!--<Import type="js" path="js/cutsheet/PushNotificationExample.js"/>-->
+  <!--</View>-->
   <ViewExtension type="av-asset-list">
     <Import type="js" path="js/export/asset-menu.js"/>
     <Import type="js" path="js/export/datamodel/inewsRequest.js"/>
