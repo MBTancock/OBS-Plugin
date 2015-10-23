@@ -1,6 +1,9 @@
 useOSGi()
 
 dependencies {
-    // compile 'zz.yy.xx:Module:1.0.1'
-    // testCompile 'zz.yy.xx:Module:1.0.1'
+    compile ipcDep('com.avid.central.framework:RestCore')
+    compile ipcDep("com.avid.central.framework:AuthenticationAPI")
+    compile ipcDep('javax.ws.rs:jsr311-api')
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.0.5'
+    compile 'joda-time:joda-time:2.8.2'
 }
