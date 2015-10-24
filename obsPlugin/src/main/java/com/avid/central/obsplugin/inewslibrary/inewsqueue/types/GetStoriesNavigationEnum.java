@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "GetStoriesNavigationEnum")
+@XmlType(name = "GetStoriesNavigationEnum", namespace = "http://avid.com/inewsqueue/types")
 @XmlEnum
 public enum GetStoriesNavigationEnum {
 

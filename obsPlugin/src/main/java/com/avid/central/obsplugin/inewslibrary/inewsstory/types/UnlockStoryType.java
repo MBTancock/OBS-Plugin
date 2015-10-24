@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UnlockStoryType")
+@XmlType(name = "UnlockStoryType", namespace = "http://avid.com/inewsstory/types")
 public class UnlockStoryType {
 
 

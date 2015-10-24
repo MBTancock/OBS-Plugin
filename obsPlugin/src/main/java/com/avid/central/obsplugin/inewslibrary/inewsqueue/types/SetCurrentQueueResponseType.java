@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import com.avid.central.obsplugin.inewslibrary.inewssystem.types.ExtensionType;
 import org.w3c.dom.Element;
 
 
@@ -38,7 +37,7 @@ import org.w3c.dom.Element;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SetCurrentQueueResponseType", propOrder = {
+@XmlType(name = "SetCurrentQueueResponseType", namespace = "http://avid.com/inewsqueue/types", propOrder = {
     "extension",
     "any"
 })
@@ -91,8 +90,8 @@ public class SetCurrentQueueResponseType {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Object }
      * {@link Element }
+     * {@link Object }
      * 
      * 
      */

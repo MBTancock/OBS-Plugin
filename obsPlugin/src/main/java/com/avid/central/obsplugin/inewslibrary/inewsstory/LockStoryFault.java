@@ -2,7 +2,7 @@
 package com.avid.central.obsplugin.inewslibrary.inewsstory;
 
 import javax.xml.ws.WebFault;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryFaultType;
+import com.avid.central.obsplugin.inewslibrary.inewsstory.types.*;
 
 
 /**

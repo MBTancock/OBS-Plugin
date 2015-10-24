@@ -55,22 +55,18 @@ public class ExportConfiguration {
     public String day_id;
 
     //    Field Definitions
-    public String start_time_field;
     public String duration_field;
-    public String type_field;
-    public String subject_field;
     public String info_field;
-    public String video_id_field;
-    public String story_id_field;
-    public String event_feed_field;
-    public String upmix_field;
-    public String com_en_field;
-    public String com_es_field;
-    public String com_ar_field;
-    public String runup_field;
+    public String modified_field;
     public String rundown_field;
-    public String coverage_start_field;
-    public String coverage_end_field;
+    public String runup_field;
+    public String start_time_field;
+    public String story_id_field;
+    public String subject_field;
+    public String type_field;
+    public String update_field;
+    public String upmix_field;
+    public String video_id_field;
 
     public ExportConfiguration() {
     }

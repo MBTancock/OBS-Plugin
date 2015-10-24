@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
-import com.avid.central.obsplugin.inewslibrary.inewssystem.types.ExtensionType;
 import org.w3c.dom.Element;
 
 
@@ -47,7 +46,7 @@ import org.w3c.dom.Element;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "StoryType", propOrder = {
+@XmlType(name = "StoryType", namespace = "http://avid.com/inewsstory/types", propOrder = {
     "fullPath",
     "queueLocator",
     "storyAsNSML",

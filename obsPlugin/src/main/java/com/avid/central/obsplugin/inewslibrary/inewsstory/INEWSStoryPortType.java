@@ -7,14 +7,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.DeleteStoryResponseType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.DeleteStoryType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryResponseType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.SaveStoryResponseType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.SaveStoryType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.UnlockStoryResponseType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.UnlockStoryType;
+import com.avid.central.obsplugin.inewslibrary.inewsstory.types.*;
 
 
 /**
@@ -26,15 +19,16 @@ import com.avid.central.obsplugin.inewslibrary.inewsstory.types.UnlockStoryType;
 @WebService(name = "INEWSStoryPortType", targetNamespace = "http://avid.com/inewsstory")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
-    com.avid.central.obsplugin.inewslibrary.inewsstory.types.ObjectFactory.class,
-    com.avid.central.obsplugin.inewslibrary.inewssystem.types.ObjectFactory.class
+    ObjectFactory.class
 })
 public interface INEWSStoryPortType {
 
 
     /**
      * 
-     *         This request acquires an edit lock on the requested story and sets it as the current story against which all other story mutation requests will work.  
+     *         This request acquires an edit lock on the requested story and sets it as the current story against which all other story mutation requests will work.  Any currently
+     *         held edit lock will be released.  For example, if you edit lock the FORM area of a story, then request the edit lock for the BODY area of the story,
+     *         your edit lock on the FORM will be released before the BODY edit lock is obtained.
      *         
      *         If a connection was not previously established, or the connection to the iNEWS server has been lost a ConnectionFault will be returned.  If an error occurs locking the story, a LockStoryFault will be returned.
      *       
@@ -42,8 +36,8 @@ public interface INEWSStoryPortType {
      * @param body
      * @return
      *     returns com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryResponseType
-     * @throws LockStoryFault
      * @throws ConnectionFault
+     * @throws LockStoryFault
      */
     @WebMethod(operationName = "LockStory")
     @WebResult(name = "LockStoryResponse", targetNamespace = "http://avid.com/inewsstory/types", partName = "body")

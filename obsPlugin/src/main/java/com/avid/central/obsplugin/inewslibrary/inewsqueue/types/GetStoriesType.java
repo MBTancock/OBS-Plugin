@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetStoriesType", propOrder = {
+@XmlType(name = "GetStoriesType", namespace = "http://avid.com/inewsqueue/types", propOrder = {
     "numberOfStoriesToGet",
     "isStoryBodyIncluded",
     "navigation"

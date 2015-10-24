@@ -2,7 +2,7 @@
 package com.avid.central.obsplugin.inewslibrary.inewsstory;
 
 import javax.xml.ws.WebFault;
-import com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectionFaultType;
+import com.avid.central.obsplugin.inewslibrary.inewsstory.types.*;
 
 
 /**
@@ -46,7 +46,7 @@ public class ConnectionFault
     /**
      * 
      * @return
-     *     returns fault bean: package com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectionFaultType
+     *     returns fault bean: com.avid.central.obsplugin.inewslibrary.inewsstory.types.ConnectionFaultType
      */
     public ConnectionFaultType getFaultInfo() {
         return faultInfo;

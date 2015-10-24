@@ -30,22 +30,18 @@
             "name_id",
             "date_id",
             "day_id",
-            "start_time_field",
             "duration_field",
-            "type_field",
-            "subject_field",
             "info_field",
-            "video_id_field",
-            "story_id_field",
-            "event_feed_field",
-            "upmix_field",
-            "com_en_field",
-            "com_es_field",
-            "com_ar_field",
-            "runup_field",
+            "modified_field",
             "rundown_field",
-            "coverage_start_field",
-            "coverage_end_field"
+            "runup_field",
+            "start_time_field",
+            "story_id_field",
+            "subject_field",
+            "type_field",
+            "update_field",
+            "upmix_field",
+            "video_id_field"
         ];
         
         AV.ns("AV.obsPlugin.datamodel");
@@ -83,22 +79,18 @@
                 this.name_id = ko.observable("");
                 this.date_id = ko.observable("");
                 this.day_id = ko.observable("");
-                this.start_time_field = ko.observable("");
                 this.duration_field = ko.observable("");
-                this.type_field = ko.observable("");
-                this.subject_field = ko.observable("");
                 this.info_field = ko.observable("");
-                this.video_id_field = ko.observable("");
-                this.story_id_field = ko.observable("");
-                this.event_feed_field = ko.observable("");
-                this.upmix_field = ko.observable("");
-                this.com_en_field = ko.observable("");
-                this.com_es_field = ko.observable("");
-                this.com_ar_field = ko.observable("");
-                this.runup_field = ko.observable("");
+                this.modified_field = ko.observable("");
                 this.rundown_field = ko.observable("");
-                this.coverage_start_field = ko.observable("");
-                this.coverage_end_field = ko.observable("");
+                this.runup_field = ko.observable("");
+                this.start_time_field = ko.observable("");
+                this.story_id_field = ko.observable("");
+                this.subject_field = ko.observable("");
+                this.type_field = ko.observable("");
+                this.update_field = ko.observable("");
+                this.upmix_field = ko.observable("");
+                this.video_id_field = ko.observable("");
             if (data) {
                 this.inws_ws_srvr(data.inws_ws_srvr);
                 this.inws_ws_port(data.inws_ws_port);
@@ -124,6 +116,8 @@
                 this.name_id(data.name_id);
                 this.date_id(data.date_id);
                 this.day_id(data.day_id);
+                this.update_field = data.update_field;
+                this.modified_field = data.modified_field;
                 this.start_time_field(data.start_time_field);
                 this.duration_field(data.duration_field);
                 this.type_field(data.type_field);
@@ -131,15 +125,9 @@
                 this.info_field(data.info_field);
                 this.video_id_field(data.video_id_field);
                 this.story_id_field(data.story_id_field);
-                this.event_feed_field(data.event_feed_field);
                 this.upmix_field(data.upmix_field);
-                this.com_en_field(data.com_en_field);
-                this.com_es_field(data.com_es_field);
-                this.com_ar_field(data.com_ar_field);
                 this.runup_field(data.runup_field);
                 this.rundown_field(data.rundown_field);
-                this.coverage_start_field(data.coverage_start_field);
-                this.coverage_end_field(data.coverage_end_field);
             }
         };
 

@@ -25,42 +25,54 @@ public class inewsResource {
 
     public inewsResource() {
         _exportData = null;
-        _configuration = new ExportConfiguration();
-//        _configuration.mdsMode = false;
-//        _configuration.fields.ComArField = "v-offtubear";
-//        _configuration.fields.ComEnField = "v-offtubeen";
-//        _configuration.fields.ComEsField = "v-offtubesp";
-//        _configuration.fields.CoverageEndField = "v-covend";
-//        _configuration.fields.CoverageStartField = "v-covstart";
-//        _configuration.fields.DurationField = "total-time";
-//        _configuration.fields.EventFeedField = "v-eventfeed";
-//        _configuration.fields.InfoField = "v-info";
-//
-//        _configuration.fields.RundownField = "v-rundown";
-//        _configuration.fields.RunupField = "v-runup";
-//        _configuration.fields.StartTimeField = "cume-time";
-//        _configuration.fields.StoryIDField = "v-storyid";
-//        _configuration.fields.SubjectField = "title";
-//        _configuration.fields.TypeField = "v-type";
-//        _configuration.fields.UpmixField = "v-upmix";
-//        _configuration.fields.VideoIDField = "mos-title";
-//
-//        _configuration.definitions.DateID = "Date";
-//        _configuration.definitions.DayID = "Day";
-//        _configuration.definitions.NameID = "Name";
-//        _configuration.definitions.ObsChannelID = "OBSChannelName";
-//
-//        _configuration.export.FTPServer = "wysdomserver";
-//        _configuration.export.FTPPort = 21;
-//        _configuration.export.FTPUser = "administrator";
-//        _configuration.export.FTPPassword = "is-admin";
-//        _configuration.export.FTPFolder = "nas";
-//
-//        _configuration.inews.iNEWSWebServicesServer = "ftsserver";
-//        _configuration.inews.iNEWSWebServicesPort = 8080;
-//        _configuration.inews.iNEWSServer = "inews";
-//        _configuration.inews.iNEWSUser = "avstar";
-//        _configuration.inews.iNEWSPassword = "avstar";
+        try
+        {
+            _configuration = ExportConfiguration.Open("D:/obsconfig.xml");
+        }
+        catch (Exception ex) {
+            // failed to open it so create a default version
+            _configuration = new ExportConfiguration();
+            _configuration.duration_field = "total-time";
+            _configuration.info_field = "v-info";
+
+            _configuration.rundown_field = "v-rundown";
+            _configuration.runup_field = "v-runup";
+            _configuration.start_time_field = "cume-time";
+            _configuration.story_id_field = "v-storyid";
+            _configuration.subject_field = "title";
+            _configuration.type_field = "v-type";
+            _configuration.upmix_field = "v-upmix";
+            _configuration.video_id_field = "mos-title";
+
+            _configuration.date_id = "Date";
+            _configuration.day_id = "Day";
+            _configuration.name_id = "Name";
+            _configuration.obs_channel_id = "OBSChannelName";
+
+            _configuration.onc_ftp_srvr = "wysdomserver";
+            _configuration.onc_ftp_port = 21;
+            _configuration.onc_ftp_login = "administrator";
+            _configuration.onc_ftp_pwd = "is-admin";
+            _configuration.onc_ftp_path = "nas";
+
+            _configuration.mds_ftp_srvr = "wysdomserver";
+            _configuration.mds_ftp_port = 21;
+            _configuration.mds_ftp_login = "administrator";
+            _configuration.mds_ftp_pwd = "is-admin";
+            _configuration.mds_ftp_path = "nas";
+
+            _configuration.inws_ws_srvr = "ftsserver";
+            _configuration.inws_ws_port = 8080;
+            _configuration.inws_server = "inews2";
+            _configuration.inws_login = "avstar";
+            _configuration.inws_pwd = "avstar";
+
+            _configuration.iplay_ws_srvr = "ftsserver";
+            _configuration.iplay_ws_port = 8080;
+            _configuration.iplay_workgroup = "WYSDOM";
+            _configuration.iplay_login = "avstar";
+            _configuration.iplay_pwd = "avstar";
+        }
     }
 
     @GET
@@ -138,7 +150,7 @@ public class inewsResource {
                 List<com.avid.central.obsplugin.inewslibrary.nsml.Nsml> listing = queue.GetRundown(request.getQueue(), true);
 
                 ExportStories ex = new ExportStories();
-                _exportData = ex.ProcessRundown(listing, _configuration, true); //TODO mds mode
+                _exportData = ex.ProcessRundown(listing, _configuration, false); //TODO mds mode
 
                 response.setFileName(_exportData.FileName);
                 response.setResult(1);

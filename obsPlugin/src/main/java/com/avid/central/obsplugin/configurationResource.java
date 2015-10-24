@@ -1,8 +1,16 @@
 package com.avid.central.obsplugin;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
+import com.avid.central.obsplugin.inewslibrary.ExportStories;
+import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
+import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
+import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
 
 import javax.ws.rs.*;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
 
 /**
  * Created by Administrator on 16/10/2015.
@@ -25,13 +33,7 @@ public class configurationResource {
         {
             // failed to open it so create a default version
             _configuration = new ExportConfiguration();
-            _configuration.com_ar_field = "v-offtubear";
-            _configuration.com_en_field = "v-offtubeen";
-            _configuration.com_es_field = "v-offtubesp";
-            _configuration.coverage_end_field = "v-covend";
-            _configuration.coverage_start_field = "v-covstart";
             _configuration.duration_field = "total-time";
-            _configuration.event_feed_field = "v-eventfeed";
             _configuration.info_field = "v-info";
 
             _configuration.rundown_field = "v-rundown";
@@ -75,8 +77,32 @@ public class configurationResource {
     }
     @GET
     @Path("/")
-    public ExportConfiguration get() {
+    public ExportConfiguration get_configuration() {
         return _configuration;
+    }
+
+    @GET
+    @Path("/inews")
+    public String test_inews() {
+        return test_inews_connection();
+    }
+
+    @GET
+    @Path("/interplay")
+    public String test_interplay() {
+        return test_interplay_connection();
+    }
+
+    @GET
+    @Path("/onc")
+    public String test_onc() {
+        return test_onc_connection();
+    }
+
+    @GET
+    @Path("/mds")
+    public String test_mds() {
+        return test_mds_connection();
     }
 
     @POST
@@ -91,4 +117,153 @@ public class configurationResource {
         }
         return "OK";
     }
+
+    String test_inews_connection()
+    {
+        String response = "Connection Failed";
+        boolean connected = false;
+        iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
+
+        try {
+            // first connect to iNEWS
+            inews.Connect(_configuration.inws_server, _configuration.inws_login, _configuration.inws_pwd);
+            connected = true;
+
+            // try and list the root folder
+            List<String> listing = inews.ListFolder("");
+
+            // folder listed ok, can we use the later GetQueueRecords command?
+            iNEWS_Queue queue = new iNEWS_Queue(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
+            queue.CheckForGetRecords();
+            response = "iNEWS Connection Successful";
+         }
+        catch (Exception ex) {
+            response = ex.getMessage();
+            if (response.toLowerCase().contains("getqueuerecords"))
+            {
+                response = "The iNEWS Connection succeeded but the web services version is inadequate.\r\n\r\nPlease ensure that iNEWS web services version 1.3 or later is installed.";
+            }
+        }
+
+        finally
+        {
+        if (connected)
+        {
+        try
+        {
+        inews.Disconnect();
+        }
+        catch (Exception ex){}
+        }
+        }
+        return response;
+    }
+
+    String test_interplay_connection()
+    {
+        return "OK";
+    }
+
+    String test_onc_connection()
+    {
+        String response = "Connection Failed";
+
+        // check for valid configuration
+        if (null == _configuration ||
+                _configuration.onc_ftp_path.length() == 0 ||
+                _configuration.onc_ftp_pwd.length() == 0 ||
+                _configuration.onc_ftp_port == 0 ||
+                _configuration.onc_ftp_login.length() == 0 ||
+                _configuration.onc_ftp_srvr.length() == 0)
+        {
+            return "The ONC FTP settings are not valid\r\n\r\nPlease update the configuration.";
+        }
+
+        // now try ftp
+        try
+        {
+            // create simple ftp client to export the data
+            // build the url
+            StringBuilder sb = new StringBuilder();
+            sb.append("ftp://");
+            sb.append(_configuration.onc_ftp_login);
+            sb.append(":");
+            sb.append(_configuration.onc_ftp_pwd);
+            sb.append("@");
+            sb.append(_configuration.onc_ftp_srvr);
+            sb.append(":");
+            sb.append(_configuration.onc_ftp_port);
+            sb.append("/");
+            sb.append(_configuration.onc_ftp_path);
+            sb.append("/ftp_test_file.xml");
+            URL url = new URL(sb.toString());
+
+            // open the connection
+            URLConnection urlc = url.openConnection();
+            OutputStream os = urlc.getOutputStream();
+
+            // write the data
+            os.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
+            os.flush();
+            os.close();
+
+            response = "ONC FTP Connection Successful.";
+            }
+        catch (Exception ex)
+        {
+            response = ex.getMessage();
+        }
+        return response;
+    }
+
+    String test_mds_connection()
+    {
+        String response = "Connection Failed";
+
+        // check for valid configuration
+        if (null == _configuration ||
+                _configuration.mds_ftp_path.length() == 0 ||
+                _configuration.mds_ftp_pwd.length() == 0 ||
+                _configuration.mds_ftp_port == 0 ||
+                _configuration.mds_ftp_login.length() == 0 ||
+                _configuration.mds_ftp_srvr.length() == 0)
+        {
+            return "The ONC FTP settings are not valid\r\n\r\nPlease update the configuration.";
+        }
+
+        // now try ftp
+        try
+        {
+            // create simple ftp client to export the data
+            // build the url
+            StringBuilder sb = new StringBuilder();
+            sb.append("ftp://");
+            sb.append(_configuration.mds_ftp_login);
+            sb.append(":");
+            sb.append(_configuration.mds_ftp_pwd);
+            sb.append("@");
+            sb.append(_configuration.mds_ftp_srvr);
+            sb.append(":");
+            sb.append(_configuration.mds_ftp_port);
+            sb.append("/");
+            sb.append(_configuration.mds_ftp_path);
+            sb.append("/ftp_test_file.xml");
+            URL url = new URL(sb.toString());
+
+            // open the connection
+            URLConnection urlc = url.openConnection();
+            OutputStream os = urlc.getOutputStream();
+
+            // write the data
+            os.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
+            os.flush();
+            os.close();
+
+            response = "MDS FTP Connection Successful.";
+        }
+        catch (Exception ex)
+        {
+            response = ex.getMessage();
+        }
+        return response;    }
 }

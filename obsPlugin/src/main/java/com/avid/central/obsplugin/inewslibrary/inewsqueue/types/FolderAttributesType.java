@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="ProductionLock" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="Indexed" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="ShowsTextTimingClocks" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="Monitored" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="CanOrder" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="CanEnterRemove" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="CanKillAll" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
@@ -59,7 +60,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "FolderAttributesType", propOrder = {
+@XmlType(name = "FolderAttributesType", namespace = "http://avid.com/inewsqueue/types", propOrder = {
     "folderFullName",
     "inverted",
     "locked",
@@ -84,6 +85,7 @@ import javax.xml.bind.annotation.XmlType;
     "productionLock",
     "indexed",
     "showsTextTimingClocks",
+    "monitored",
     "canOrder",
     "canEnterRemove",
     "canKillAll",
@@ -140,6 +142,8 @@ public class FolderAttributesType {
     protected boolean indexed;
     @XmlElement(name = "ShowsTextTimingClocks")
     protected boolean showsTextTimingClocks;
+    @XmlElement(name = "Monitored")
+    protected boolean monitored;
     @XmlElement(name = "CanOrder")
     protected boolean canOrder;
     @XmlElement(name = "CanEnterRemove")
@@ -541,6 +545,22 @@ public class FolderAttributesType {
      */
     public void setShowsTextTimingClocks(boolean value) {
         this.showsTextTimingClocks = value;
+    }
+
+    /**
+     * Gets the value of the monitored property.
+     * 
+     */
+    public boolean isMonitored() {
+        return monitored;
+    }
+
+    /**
+     * Sets the value of the monitored property.
+     * 
+     */
+    public void setMonitored(boolean value) {
+        this.monitored = value;
     }
 
     /**

@@ -112,6 +112,15 @@
                             name: 'inws_pwd',
                             inputType: 'password',
                             allowBlank: false
+                        },
+                        {
+                            xtype: 'button',
+                            editable: false,
+                            text: 'Test Connection',
+                            margin: '10 0 0 45',
+                            handler: function () {
+                                test_inews();
+                            }
                         }
                     ]
                 },
@@ -156,6 +165,15 @@
                             name: 'iplay_pwd',
                             inputType: 'password',
                             allowBlank: false
+                        },
+                        {
+                            xtype: 'button',
+                            editable: false,
+                            text: 'Test Connection',
+                            margin: '10 0 0 45',
+                            handler: function () {
+                                test_interplay();
+                            }
                         }
                     ]
                 },
@@ -200,6 +218,15 @@
                             name: 'onc_ftp_pwd',
                             inputType: 'password',
                             allowBlank: false
+                        },
+                        {
+                            xtype: 'button',
+                            editable: false,
+                            text: 'Test Connection',
+                            margin: '10 0 0 45',
+                            handler: function () {
+                                test_onc_ftp();
+                            }
                         }
                     ]
                 },
@@ -244,6 +271,15 @@
                             name: 'mds_ftp_pwd',
                             inputType: 'password',
                             allowBlank: false
+                        },
+                        {
+                            xtype: 'button',
+                            editable: false,
+                            text: 'Test Connection',
+                            margin: '10 0 0 45',
+                            handler: function () {
+                                test_mds_ftp();
+                            }
                         }
                     ]
                 },
@@ -293,26 +329,74 @@
                     items: [
                         {
                             xtype: 'textfield',
-                            name: 'duration_field',
                             fieldLabel: 'Duration',
+                            name: 'duration_field',
                             allowBlank: false
                         },
                         {
                             xtype: 'textfield',
-                            fieldLabel: 'VideoID',
+                            fieldLabel: 'Info',
+                            name: 'info_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Modified',
+                            name: 'modified_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Rundown',
+                            name: 'rundown_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Runup',
+                            name: 'runup_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Start Time',
+                            name: 'start_time_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Story ID',
+                            name: 'story_id_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Subject',
+                            name: 'subject_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Type',
+                            name: 'type_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Update',
+                            name: 'update_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Upmix',
+                            name: 'upmix_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Video ID',
                             name: 'video_id_field',
-                            allowBlank: false
-                        },
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Coverage Start',
-                            name: 'coverage_start_field',
-                            allowBlank: false
-                        },
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Coverage End',
-                            name: 'coverage_end_field',
                             allowBlank: false
                         }
                     ]
@@ -324,9 +408,9 @@
             // inews bindings
             $('input[name="inws_ws_srvr"]').attr('data-bind', 'textInput: inws_ws_srvr');
             $('input[name="inws_ws_port"]').attr('data-bind', 'value: inws_ws_port');
-            $('input[name="inws_server"]').attr('data-bind', 'textInput: inws_server');
-            $('input[name="inws_login"]').attr('data-bind', 'textInput: inws_login');
-            $('input[name="inws_pwd"]').attr('data-bind', 'textInput: inws_pwd');
+            $('input[name="inws_server"]').attr('data-bind', 'value: inws_server');
+            $('input[name="inws_login"]').attr('data-bind', 'value: inws_login');
+            $('input[name="inws_pwd"]').attr('data-bind', 'value: inws_pwd');
             
             // interplay bindings
             $('input[name="iplay_ws_srvr"]').attr('data-bind', 'value: iplay_ws_srvr');
@@ -357,9 +441,17 @@
 
             // field identifier bindings
             $('input[name="duration_field"]').attr('data-bind', 'value: duration_field');
+            $('input[name="info_field"]').attr('data-bind', 'value: info_field');
+            $('input[name="modified_field"]').attr('data-bind', 'value: modified_field');
+            $('input[name="rundown_field"]').attr('data-bind', 'value: rundown_field');
+            $('input[name="runup_field"]').attr('data-bind', 'value: runup_field');
+            $('input[name="start_time_field"]').attr('data-bind', 'value: start_time_field');
+            $('input[name="story_id_field"]').attr('data-bind', 'value: story_id_field');
+            $('input[name="subject_field"]').attr('data-bind', 'value: subject_field');
+            $('input[name="type_field"]').attr('data-bind', 'value: type_field');
+            $('input[name="update_field"]').attr('data-bind', 'value: update_field');
+            $('input[name="upmix_field"]').attr('data-bind', 'value: upmix_field');
             $('input[name="video_id_field"]').attr('data-bind', 'value: video_id_field');
-            $('input[name="coverage_start_field"]').attr('data-bind', 'value: coverage_start_field');
-            $('input[name="coverage_end_field"]').attr('data-bind', 'value: coverage_end_field');
 
                  try {
                     var elem = panel.getEl();
@@ -425,14 +517,94 @@
                     model.day_id(res.day_id);
 
                     model.duration_field(res.duration_field);
+                    model.info_field(res.info_field);
+                    model.modified_field(res.modified_field);
+                    model.rundown_field(res.rundown_field);
+                    model.runup_field(res.runup_field);
+                    model.start_time_field(res.start_time_field);
+                    model.story_id_field(res.story_id_field);
+                    model.subject_field(res.subject_field);
+                    model.type_field(res.type_field);
+                    model.update_field(res.update_field);
+                    model.upmix_field(res.upmix_field);
                     model.video_id_field(res.video_id_field);
-                    model.coverage_end_field(res.coverage_end_field);
-                    model.coverage_start_field(res.coverage_start_field);
                     return true;
                 }
             )
                 .fail(function(res){
                     AV.Utilities.showErrorMessage("Problem reading settings");
+                    return false;
+                })
+        }
+
+        function test_inews()
+        {
+            $.ajax("/api/obsdetails/inews/", {
+                method: "GET",
+                dataType: "text"
+            })
+                .done(function (res) {
+                    AV.Utilities.showInfoMessage(res, "Test Result");
+                })
+                .fail(function(res){
+                    AV.Utilities.showErrorMessage("Problem performing test");
+                    return false;
+                })
+        }
+
+        function test_interplay()
+        {
+            $.ajax("/api/obsdetails/interplay/", {
+                method: "GET",
+                dataType: "text"
+            })
+                .done(function (res) {
+                    AV.Utilities.showInfoMessage(res, "Test Result");
+                })
+                .fail(function(res){
+                    AV.Utilities.showErrorMessage("Problem performing test");
+                    return false;
+                })
+        }
+
+        function test_onc_ftp()
+        {
+            var wb = AV.DialogBox.createDialogBox({
+                height: 100,
+                width: 200,
+                title: "In Progress",
+                maximizable: false,
+                modal: false,
+                html: "Please wait while the rundown is processed"
+            });
+            wb.show();
+
+            $.ajax("/api/obsdetails/onc/", {
+                method: "GET",
+                dataType: "text"
+            })
+                .done(function (res) {
+                    AV.Utilities.showInfoMessage(res, "Test Result");
+                })
+                .fail(function(res){
+                    AV.Utilities.showErrorMessage("Problem performing test");
+                    return false;
+                })
+
+            wb.hide();
+        }
+
+        function test_mds_ftp()
+        {
+            $.ajax("/api/obsdetails/mds/", {
+                method: "GET",
+                dataType: "text"
+            })
+                .done(function (res) {
+                    AV.Utilities.showInfoMessage(res, "Test Result");
+                })
+                .fail(function(res){
+                    AV.Utilities.showErrorMessage("Problem performing test");
                     return false;
                 })
         }

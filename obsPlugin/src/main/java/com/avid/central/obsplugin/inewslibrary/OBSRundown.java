@@ -14,10 +14,11 @@ import org.joda.time.format.DateTimeFormatter;
  * @author Administrator
  */
 public class OBSRundown {
-   public String ChannelID = "";
+    public String ChannelID = "";
     public String ChannelName = "";
     public String Day = "";
     public String Date = "";
+    public String Title = "";
     public int RundownStartTime = -1;
     public int RundownEndTime = -1;
 

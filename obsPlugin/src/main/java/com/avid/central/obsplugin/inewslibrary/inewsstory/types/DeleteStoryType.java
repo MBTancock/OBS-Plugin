@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeleteStoryType", propOrder = {
+@XmlType(name = "DeleteStoryType", namespace = "http://avid.com/inewsstory/types", propOrder = {
     "queueFullName",
     "queueLocator"
 })

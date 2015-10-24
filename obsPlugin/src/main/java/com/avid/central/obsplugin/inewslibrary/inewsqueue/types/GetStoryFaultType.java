@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
-import com.avid.central.obsplugin.inewslibrary.inewssystem.types.ExtensionType;
 import org.w3c.dom.Element;
 
 
@@ -45,12 +44,12 @@ import org.w3c.dom.Element;
     "extension",
     "any"
 })
-@XmlRootElement(name = "GetStoryFaultType")
+@XmlRootElement(name = "GetStoryFaultType", namespace = "http://avid.com/inewsqueue/types")
 public class GetStoryFaultType {
 
-    @XmlElement(name = "Message", required = true)
+    @XmlElement(name = "Message", namespace = "http://avid.com/inewsqueue/types", required = true)
     protected String message;
-    @XmlElement(name = "Extension")
+    @XmlElement(name = "Extension", namespace = "http://avid.com/inewsqueue/types")
     protected ExtensionType extension;
     @XmlAnyElement(lax = true)
     protected List<Object> any;
@@ -123,8 +122,8 @@ public class GetStoryFaultType {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Object }
      * {@link Element }
+     * {@link Object }
      * 
      * 
      */

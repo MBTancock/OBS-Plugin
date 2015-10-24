@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetAttributesType", propOrder = {
+@XmlType(name = "GetAttributesType", namespace = "http://avid.com/inewsqueue/types", propOrder = {
     "fullName"
 })
 public class GetAttributesType {

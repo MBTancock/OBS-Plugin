@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import com.avid.central.obsplugin.inewslibrary.inewssystem.types.ExtensionType;
 import org.w3c.dom.Element;
 
 
@@ -37,7 +36,7 @@ import org.w3c.dom.Element;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "LockStoryResponseType", propOrder = {
+@XmlType(name = "LockStoryResponseType", namespace = "http://avid.com/inewsstory/types", propOrder = {
     "extension",
     "any"
 })

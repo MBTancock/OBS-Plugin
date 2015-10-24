@@ -220,17 +220,6 @@ public class ExportStories {
                         videoID = "";
                     }
 
-                    // get the EventFeed
-                    String eventFeed = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.event_feed_field);
-                    if (mdsMode) {
-                        if (null == eventFeed) {
-                            throw new Exception("Invalid story, no event feed");
-                        }
-                        if (eventFeed.length() == 0) {
-                            throw new Exception("Invalid story, empty event feed field");
-                        }
-                    }
-
                     // get the Upmix
                     String upMix = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
                     if (mdsMode) {
@@ -240,24 +229,6 @@ public class ExportStories {
                         if (upMix.length() == 0) {
                             throw new Exception("Invalid story, empty upmix field");
                         }
-                    }
-
-                    // get ComEN
-                    String comEn = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.com_en_field);
-                    if (null == comEn || comEn.isEmpty()) {
-                        comEn = "00";
-                    }
-
-                    // get ComES
-                    String comEs = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.com_es_field);
-                    if (null == comEs || comEs.isEmpty()) {
-                        comEs = "00";
-                    }
-
-                    // get ComAR
-                    String comAr = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.com_ar_field);
-                    if (null == comAr || comAr.isEmpty()) {
-                        comAr = "00";
                     }
 
                     // get Runup
@@ -303,13 +274,8 @@ public class ExportStories {
                         exportData.Warning = "No Viz Cue";
                     }
 
-                    // get the start time
-                    String coverageStartTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.coverage_start_field);
-                    String coverageEndTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.coverage_end_field);
-
                     // Story looks OK so add it to the export
                     OBSStory obsStory = new OBSStory();
-                    obsStory.Title = subject;
                     obsStory.Type = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.type_field);
                     obsStory.StoryStartTime = currentStartTime;
                     obsStory.StoryDuration = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.duration_field);
@@ -317,24 +283,10 @@ public class ExportStories {
 
                     if (mdsMode) {
                         obsStory.StoryID = storyID;
-                        obsStory.EventFeed = eventFeed;
                         obsStory.Upmix = upMix == "1";
-                        obsStory.ComEn = comEn;
-                        obsStory.ComEs = comEs;
-                        obsStory.ComAr = comAr;
                         obsStory.Runout = rundown;
                         obsStory.Runup = runup;
                         obsStory.Graphics = vizGrapics;
-
-                        if (null != coverageStartTime && !coverageStartTime.isEmpty()) {
-                            Duration coverageStart = new Duration(Integer.parseInt(coverageStartTime));
-                            obsStory.CoverageStartTime = coverageStart.toString();
-                        }
-
-                        if (null != coverageEndTime && !coverageEndTime.isEmpty()) {
-                            Duration coverageEnd = new Duration(Integer.parseInt(coverageEndTime));
-                            obsStory.CoverageEndTime = coverageEnd.toString();
-                        }
                     }
 
                     // need to get the story body free of all formatting

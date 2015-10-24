@@ -194,23 +194,16 @@ public class ExportRundown {
                     break;
             }
 
-            obsStory.setTitle(story.Title);
             obsStory.setVideoID(story.VideoID);
             obsStory.setStoryID(story.StoryID);
             obsStory.setScriptInfo(story.ScriptInfo);
 
             if (isMds) {
                 // data only exported for MDS
-                obsStory.setEventFeed(story.EventFeed);
                 obsStory.setComUpmix(story.Upmix);
-                obsStory.setComEN(story.ComEn);
-                obsStory.setComES(story.ComEs);
-                obsStory.setComAR(story.ComAr);
                 obsStory.setCuesheet(story.CueSheet);
                 obsStory.setRunout(story.Runout);
                 obsStory.setRunup(story.Runup);
-                obsStory.setCoverageStartTime(story.CoverageStartTime);
-                obsStory.setCoverageEndTime(story.CoverageEndTime);
 
                         //TODO
                         /*

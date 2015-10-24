@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SaveStoryType", propOrder = {
+@XmlType(name = "SaveStoryType", namespace = "http://avid.com/inewsstory/types", propOrder = {
     "storyNSML"
 })
 public class SaveStoryType {

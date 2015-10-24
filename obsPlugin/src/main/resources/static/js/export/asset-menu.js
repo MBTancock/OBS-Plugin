@@ -68,7 +68,7 @@
                 $.ajax("/api/inews/", {
                     method: "POST",
                     contentType: "application/json",
-                    data: ko.toJSON(inews),
+                    data: JSON.stringify(inews),
                     dataType: "json",
                 })
                     .done (function(res) {
@@ -98,7 +98,7 @@
                                     $.ajax("/api/inews/", {
                                         method: "POST",
                                         contentType: "application/json",
-                                        data: ko.toJSON(inews),
+                                        data: JSON.stringify(inews),
                                         dataType: "json",
                                     })
                                         .done (function(res)
@@ -134,7 +134,7 @@
                             maximizable: false,
                             modal: true,
                             footerActions: actions,
-                            html: "Export " + queueToExport + " as " + res.filename + "?"
+                            html: "Export <h1>" + queueToExport + "</h1> as " + res.filename + "?"
                         });
                         dlg.show();
 

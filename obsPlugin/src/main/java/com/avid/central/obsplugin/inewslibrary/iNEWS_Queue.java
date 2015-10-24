@@ -47,6 +47,22 @@ public class iNEWS_Queue {
         _port = service.getINEWSQueuePort();
     }
 
+    public boolean CheckForGetRecords()
+    {
+        com.avid.central.obsplugin.inewslibrary.inewsqueue.types.GetQueueRecordsType getRecords = new com.avid.central.obsplugin.inewslibrary.inewsqueue.types.GetQueueRecordsType();
+        getRecords.setNumberOfRecordsToGet(10);
+        getRecords.setReset(true);
+        try
+        {
+            com.avid.central.obsplugin.inewslibrary.inewsqueue.types.GetQueueRecordsResponseType response =  _port.getQueueRecords(getRecords);
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public List<com.avid.central.obsplugin.inewslibrary.nsml.Nsml> GetRundown(String path, boolean getBody) {
         List<com.avid.central.obsplugin.inewslibrary.nsml.Nsml> listing = null;
 
@@ -85,7 +101,7 @@ public class iNEWS_Queue {
                 com.avid.central.obsplugin.inewslibrary.inewsqueue.types.GetStoriesResponseType stories = _port.getStories(getStories);
 
                 // process this batch of stories
-                for (com.avid.central.obsplugin.inewslibrary.inewsstory.types.StoryType story : stories.getStories()) {
+                for (com.avid.central.obsplugin.inewslibrary.inewsqueue.types.StoryType story : stories.getStories()) {
 
                     String storyAsNsml = story.getStoryAsNSML();
 

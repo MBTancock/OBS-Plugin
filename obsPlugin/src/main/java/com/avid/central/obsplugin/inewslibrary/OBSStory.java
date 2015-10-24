@@ -12,21 +12,16 @@ import java.util.List;
  */
 public class OBSStory
     {
+        public boolean Update;
         public int StoryStartTime = 0;
         public int StoryDuration = 0;
+        public String Modified;
         public String Type = "";
-        public String Title = "";
         public String VideoID;
         public String StoryID;
-        public String EventFeed;
         public boolean Upmix;
-        public String ComEn;
-        public String ComEs;
-        public String ComAr;
         public String Runup;
         public String Runout;
-        public String CoverageStartTime;
-        public String CoverageEndTime;
 
         public String ScriptInfo = "";
         public String CueSheet = "";

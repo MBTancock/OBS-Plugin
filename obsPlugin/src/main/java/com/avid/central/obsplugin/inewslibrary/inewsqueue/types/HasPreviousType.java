@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "HasPreviousType")
+@XmlType(name = "HasPreviousType", namespace = "http://avid.com/inewsqueue/types")
 public class HasPreviousType {
 
 

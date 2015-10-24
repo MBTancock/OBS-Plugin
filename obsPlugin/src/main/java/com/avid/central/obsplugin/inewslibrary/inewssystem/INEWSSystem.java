@@ -11,6 +11,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 
 
+
 /**
  * 
  *       The INEWSSystem is the service that is used to perform operations against an INEWS database directly.  It is also 
@@ -24,7 +25,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "INEWSSystem", targetNamespace = "http://avid.com/inewssystem", wsdlLocation = "http://ftsserver:8080/inewswebservice/services/inewssystem?wsdl")
+@WebServiceClient(name = "INEWSSystem", targetNamespace = "http://avid.com/inewssystem", wsdlLocation = "file:/D:/NetBeans%20Projects/iNEWS/WSDLs/inewssystem.wsdl")
 public class INEWSSystem
     extends Service
 {
@@ -37,7 +38,7 @@ public class INEWSSystem
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://ftsserver:8080/inewswebservice/services/inewssystem?wsdl");
+            url = new URL("file:/D:/NetBeans%20Projects/iNEWS/WSDLs/inewssystem.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
