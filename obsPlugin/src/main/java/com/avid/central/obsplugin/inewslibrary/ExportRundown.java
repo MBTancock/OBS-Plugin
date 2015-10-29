@@ -5,27 +5,24 @@
  */
 package com.avid.central.obsplugin.inewslibrary;
 
+import com.avid.central.obsplugin.inewslibrary.VizGraphic.mos;
 import com.avid.central.obsplugin.inewslibrary.rundown.Rundown;
 import com.avid.central.obsplugin.inewslibrary.rundown.Rundown.StorySession;
 import com.avid.central.obsplugin.inewslibrary.rundown.Rundown.StorySession.Story;
-import com.avid.central.obsplugin.inewslibrary.rundown.StoryType;
-import java.io.File;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.joda.time.format.DateTimeFormat;
 
 /**
- *
  * @author Administrator
  */
 public class ExportRundown {
@@ -38,7 +35,7 @@ public class ExportRundown {
         Stories = new ArrayList<OBSStory>();
     }
 
-        // generates a file name according to the defineed rules
+    // generates a file name according to the defineed rules
     // <OBS ONC Channel Name*>_<YYYYMMDD>_<StartTime>_<EndTime>.xml
     public String GenerateFileName() {
         String fileName = Rundown.ChannelID;
@@ -58,6 +55,7 @@ public class ExportRundown {
         Rundown exportRundown = new Rundown();
 
         exportRundown.setOBSChannelId(Rundown.ChannelID);
+        exportRundown.setTitle(Rundown.Title);
         exportRundown.setDay(Rundown.Day);
         exportRundown.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(Rundown.GetFileDate().toGregorianCalendar()));
         exportRundown.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
@@ -76,158 +74,45 @@ public class ExportRundown {
             obsStory.setStartTime(story.GetStartTime());
             obsStory.setDuration(story.GetDuration());
 
-            switch (story.Type.toUpperCase()) {
-                case "ATMOSPHERE":
-                    obsStory.setType(StoryType.ATMOSPHERE);
-                    break;
-
-                case "BEAUTY":
-                    obsStory.setType(StoryType.BEAUTY);
-                    break;
-
-                case "CLOSE":
-                    obsStory.setType(StoryType.CLOSE);
-                    break;
-
-                case "COMING UP":
-                    obsStory.setType(StoryType.COMING_UP);
-                    break;
-
-                case "FEATURE":
-                    obsStory.setType(StoryType.FEATURE);
-                    break;
-
-                case "GRAPHIC":
-                    obsStory.setType(StoryType.GRAPHIC);
-                    break;
-
-                case "HIGHLIGHTS":
-                    obsStory.setType(StoryType.HIGHLIGHTS);
-                    break;
-
-                case "HISTORICAL":
-                    obsStory.setType(StoryType.HISTORICAL);
-                    break;
-
-                case "INTERVIEW":
-                    obsStory.setType(StoryType.INTERVIEW);
-                    break;
-
-                case "INTERVIEWS":
-                    obsStory.setType(StoryType.INTERVIEWS);
-                    break;
-
-                case "INTRO":
-                    obsStory.setType(StoryType.INTRO);
-                    break;
-
-                case "IOD":
-                    obsStory.setType(StoryType.IOD);
-                    break;
-
-                case "LIVE":
-                    obsStory.setType(StoryType.LIVE);
-                    break;
-
-                case "MONTAGE":
-                    obsStory.setType(StoryType.MONTAGE);
-                    break;
-
-                case "OPENING":
-                    obsStory.setType(StoryType.OPENING);
-                    break;
-
-                case "PROMOS":
-                    obsStory.setType(StoryType.PROMOS);
-                    break;
-
-                case "REPLAY":
-                    obsStory.setType(StoryType.REPLAY);
-                    break;
-
-                case "SPORT":
-                    obsStory.setType(StoryType.SPORT);
-                    break;
-
-                case "STF":
-                    obsStory.setType(StoryType.STF);
-                    break;
-
-                case "TIMESHIFT":
-                    obsStory.setType(StoryType.TIMESHIFT);
-                    break;
-
-                case "VARIOUS":
-                    obsStory.setType(StoryType.VARIOUS);
-                    break;
-
-                case "TRANSITION":
-                    obsStory.setType(StoryType.TRANSITION);
-                    break;
-
-                case "REVIEW":
-                    obsStory.setType(StoryType.REVIEW);
-                    break;
-
-                case "HISTORIC":
-                    obsStory.setType(StoryType.HISTORIC);
-                    break;
-
-                case "TORCH":
-                    obsStory.setType(StoryType.TORCH);
-                    break;
-
-                case "CEREMONY":
-                    obsStory.setType(StoryType.CEREMONY);
-                    break;
-
-                case "MEDALS":
-                    obsStory.setType(StoryType.MEDALS);
-                    break;
-
-                case "PROFILE":
-                    obsStory.setType(StoryType.PROFILE);
-                    break;
-
-                default:
-                    obsStory.setType(StoryType.FILLER);
-                    break;
+            if (null == story.Type) {
+                obsStory.setType("Filler");
+            } else {
+                obsStory.setType(story.Type);
             }
 
             obsStory.setVideoID(story.VideoID);
-            obsStory.setStoryID(story.StoryID);
             obsStory.setScriptInfo(story.ScriptInfo);
 
             if (isMds) {
                 // data only exported for MDS
                 obsStory.setComUpmix(story.Upmix);
                 obsStory.setCuesheet(story.CueSheet);
-                obsStory.setRunout(story.Runout);
-                obsStory.setRunup(story.Runup);
 
-                        //TODO
-                        /*
-                 obsStory. = new List<RundownStoryGraphic>();
-                 if (null != story.Graphics)
-                 {
-                 foreach (var graphic in story.Graphics)
-                 {
-                 var rsg = new RundownStoryGraphic
-                 {
-                 GraphTemplate = graphic.Template,
-                 GraphDuration = graphic.Duration,
-                 GraphOffset_IN = graphic.OffsetIn,
-                 GraphOffset_OUT = graphic.OffsetOut
-                 };
+                // add the graphic objects
+                if (null != story.Graphics) {
+                    for (mos graphic : story.Graphics) {
+                        Story.Graphic storyGraphic = new Story.Graphic();
 
-                 obsStory.Graphic.Add(rsg);
-                 }
-                 }
-                 */
+                        storyGraphic.setGraphPage(graphic.objID);
+                        storyGraphic.setGraphDuration(graphic.vizDur);
+                        storyGraphic.setGraphOffsetIN(graphic.vizTCin);
+                        storyGraphic.setGraphOffsetOUT(graphic.vizTCout);
+
+                        obsStory.getGraphic().add(storyGraphic);
+                    }
+                }
+            }
+            else
+            {
+                if (story.Update)
+                {
+                    obsStory.setUpdated(true);
+                    obsStory.setModified(story.Modified);
+                }
             }
 
-            // TODO Add the story
-            stories.add(obsStory);
+            // add the story
+             stories.add(obsStory);
         }
 
         // serialise the rundown

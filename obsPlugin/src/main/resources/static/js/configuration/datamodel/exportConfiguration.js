@@ -26,10 +26,12 @@
             "mds_ftp_login",
             "mds_ftp_pwd",
             "mds_ftp_path",
+            "obs_export_role",
             "obs_channel_id",
-            "name_id",
+            "title_id",
             "date_id",
             "day_id",
+            "viz_id",
             "duration_field",
             "info_field",
             "modified_field",
@@ -75,10 +77,12 @@
                 this.mds_ftp_login = ko.observable("");
                 this.mds_ftp_pwd = ko.observable("");
                 this.mds_ftp_path = ko.observable("");
+                this.obs_export_role = ko.observable("");
                 this.obs_channel_id = ko.observable("");
-                this.name_id = ko.observable("");
+                this.title_id = ko.observable("");
                 this.date_id = ko.observable("");
                 this.day_id = ko.observable("");
+                this.viz_id = ko.observable("");
                 this.duration_field = ko.observable("");
                 this.info_field = ko.observable("");
                 this.modified_field = ko.observable("");
@@ -112,10 +116,12 @@
                 this.mds_ftp_login(data.mds_ftp_login);
                 this.mds_ftp_pwd(data.mds_ftp_pwd);
                 this.mds_ftp_path(data.mds_ftp_path);
+                this.obs_export_role(data.obs_export_role);
                 this.obs_channel_id(data.obs_channel_id);
-                this.name_id(data.name_id);
+                this.title_id(data.title_id);
                 this.date_id(data.date_id);
                 this.day_id(data.day_id);
+                this.viz_id(data.viz_id);
                 this.update_field = data.update_field;
                 this.modified_field = data.modified_field;
                 this.start_time_field(data.start_time_field);

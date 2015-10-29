@@ -275,11 +275,29 @@
                         {
                             xtype: 'button',
                             editable: false,
+                            name: 'mds_test',
                             text: 'Test Connection',
                             margin: '10 0 0 45',
                             handler: function () {
                                 test_mds_ftp();
                             }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'fieldset',
+                    title: 'Export Authorisation',
+                    layout: 'column',
+                    defaults: {
+                        labelWidth: 160,
+                        labelAlign: 'right'
+                    },
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Exporters Role',
+                            name: 'obs_export_role',
+                            allowBlank: false
                         }
                     ]
                 },
@@ -300,8 +318,8 @@
                         },
                         {
                             xtype: 'textfield',
-                            fieldLabel: 'Name',
-                            name: 'name_id',
+                            fieldLabel: 'Title',
+                            name: 'title_id',
                             allowBlank: false
                         },
                         {
@@ -314,6 +332,12 @@
                             xtype: 'textfield',
                             fieldLabel: 'Day',
                             name: 'day_id',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Viz Graphic',
+                            name: 'viz_id',
                             allowBlank: false
                         }
                     ]
@@ -433,11 +457,15 @@
             $('input[name="mds_ftp_pwd"]').attr('data-bind', 'value: mds_ftp_pwd');
             $('input[name="mds_ftp_path"]').attr('data-bind', 'value: mds_ftp_path');
 
+            // autorisation binding
+            $('input[name="obs_export_role"]').attr('data-bind', 'value: obs_export_role');
+
             // definitions binding
             $('input[name="obs_channel_id"]').attr('data-bind', 'value: obs_channel_id');
-            $('input[name="name_id"]').attr('data-bind', 'value: name_id');
+            $('input[name="title_id"]').attr('data-bind', 'value: title_id');
             $('input[name="date_id"]').attr('data-bind', 'value: date_id');
             $('input[name="day_id"]').attr('data-bind', 'value: day_id');
+            $('input[name="viz_id"]').attr('data-bind', 'value: viz_id');
 
             // field identifier bindings
             $('input[name="duration_field"]').attr('data-bind', 'value: duration_field');
@@ -511,10 +539,13 @@
                     model.mds_ftp_pwd(res.mds_ftp_pwd);
                     model.mds_ftp_path(res.mds_ftp_path);
 
+                    model.obs_export_role(res.obs_export_role);
+
                     model.obs_channel_id(res.obs_channel_id);
-                    model.name_id(res.name_id);
+                    model.title_id(res.title_id);
                     model.date_id(res.date_id);
                     model.day_id(res.day_id);
+                    model.viz_id(res.viz_id);
 
                     model.duration_field(res.duration_field);
                     model.info_field(res.info_field);
@@ -539,29 +570,45 @@
 
         function test_inews()
         {
+             AV.messages.WaitBox.show({title: "Checking iNEWS Connection",
+                content: "Please wait while the iNEWS connection is checked",
+                isDelayed: true
+            });
+
             $.ajax("/api/obsdetails/inews/", {
                 method: "GET",
                 dataType: "text"
             })
                 .done(function (res) {
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showInfoMessage(res, "Test Result");
                 })
                 .fail(function(res){
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showErrorMessage("Problem performing test");
                     return false;
                 })
+
+
         }
 
         function test_interplay()
         {
+            AV.messages.WaitBox.show({title: "Checking Interplay Connection",
+                content: "Please wait while the Interplay connection is checked",
+                isDelayed: true
+            });
+
             $.ajax("/api/obsdetails/interplay/", {
                 method: "GET",
                 dataType: "text"
             })
                 .done(function (res) {
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showInfoMessage(res, "Test Result");
                 })
                 .fail(function(res){
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showErrorMessage("Problem performing test");
                     return false;
                 })
@@ -569,41 +616,44 @@
 
         function test_onc_ftp()
         {
-            var wb = AV.DialogBox.createDialogBox({
-                height: 100,
-                width: 200,
-                title: "In Progress",
-                maximizable: false,
-                modal: false,
-                html: "Please wait while the rundown is processed"
+            AV.messages.WaitBox.show({title: "Checking ONC FTP Connection",
+                content: "Please wait while the ONC FTP Connection is checked",
+                isDelayed: true
             });
-            wb.show();
 
             $.ajax("/api/obsdetails/onc/", {
                 method: "GET",
                 dataType: "text"
             })
                 .done(function (res) {
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showInfoMessage(res, "Test Result");
                 })
                 .fail(function(res){
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showErrorMessage("Problem performing test");
                     return false;
                 })
 
-            wb.hide();
         }
 
         function test_mds_ftp()
         {
+            AV.messages.WaitBox.show({title: "Checking ONC MDS Connection",
+                content: "Please wait while the MDS FTP Connection is checked",
+                isDelayed: true
+            });
+
             $.ajax("/api/obsdetails/mds/", {
                 method: "GET",
                 dataType: "text"
             })
                 .done(function (res) {
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showInfoMessage(res, "Test Result");
                 })
                 .fail(function(res){
+                    AV.messages.WaitBox.hide();
                     AV.Utilities.showErrorMessage("Problem performing test");
                     return false;
                 })

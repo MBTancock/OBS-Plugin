@@ -7,6 +7,8 @@
         id: "com.avid.central.obsplugin.exportrundown",
         text: "Export Rundown",
 
+        confirmDlog: undefined,
+
         // This code is called when your menu item is initialized.
         init: function (config) {
             this.view = config.component;
@@ -29,126 +31,165 @@
             //    return false;
             //}
             //
-            return selection.firstItem().type == "folder" || selection.firstItem().type == "Queue";
+            return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
         },
 
         // handle the menu click
         handler: function (selection) {
-            // for each selected queue perform the export
-            // there should only be one as the enable logic traps multiple selections
-            selection.getItems().forEach(function(item) {
+            try {
+                // for each selected queue perform the export
+                // there should only be one as the enable logic traps multiple selections
+                selection.getItems().forEach(function (item) {
 
-                var queueToExport = "ARCHIVE.SOCHI2014.ONC.RUNDOWNS.00.0000";
-                if (item.type == "Queue")
-                {
-                    // strip off leading "SERVER:"
-                    queueToExport = item.id.substring(item.id.indexOf(":") + 1);
+                    var queueToExport = item.type == "folder" ? "ONC.RUNDOWNS.00.0000" : "MDS.MX1.00";
+                    if (item.type == "Queue") {
+                        // strip off leading "SERVER:"
+                        queueToExport = item.id.substring(item.id.indexOf(":") + 1);
 
-                    // strip off trailng "|Queue"
-                    queueToExport = queueToExport.substr(0, queueToExport.lastIndexOf("|"));
-                }
-
-                // create an iNEWS request with the path to the queue
-                var inews = new AV.obsPlugin.datamodel.InewsRequest({
-                    queue: queueToExport,
-                    export: false
-                })
-
-                var wb = AV.DialogBox.createDialogBox({
-                    height: 100,
-                    width: 200,
-                    title: "In Progress",
-                    maximizable: false,
-                    modal: false,
-                    html: "Please wait while the rundown is processed"
-                });
-                wb.show();
-
-                // post the request to create the export data
-                $.ajax("/api/inews/", {
-                    method: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(inews),
-                    dataType: "json",
-                })
-                    .done (function(res) {
-                    // the request will return an InewsResponse item which will tell us whether the queue is exportable or not
-                    // if it is exportable it will provide the file name of the export
-                    // if it cannot be exported there will be an error message explaining why
-
-                    wb.hide();
-
-                    // show dialog based on result of the call
-                    if (0 == res.result)
-                    {
-                        // oh dear, we can't export it
-                        AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
+                        // strip off trailng "|Queue"
+                        queueToExport = queueToExport.substr(0, queueToExport.lastIndexOf("|"));
                     }
-                    else {
-                        // ok, we can export it, show the export confirmation dialog
-                        var actions = [
-                            new Ext.Action({
-                                handler: function () {
-                                    dlg.close();
 
-                                    // create a new request to export the data
-                                    inews.export = true;
-                                    inews.queue = res.filename;
+                    // create an iNEWS request with the path to the queue
+                    // it may seem excessive to use a model for a single string
+                    // but the API doesn't seem to like POST with text
+                    // maybe because of the in-built user session data
+                    var inews = new AV.obsPlugin.datamodel.InewsRequest({
+                        queue: queueToExport
+                    })
 
-                                    $.ajax("/api/inews/", {
-                                        method: "POST",
-                                        contentType: "application/json",
-                                        data: JSON.stringify(inews),
-                                        dataType: "json",
-                                    })
-                                        .done (function(res)
-                                        {
-                                            if (0 == res.result)
-                                            {
-                                                // oh dear, we can't export it
-                                                AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
-                                            }
-                                            else
-                                            {
-                                                AV.Utilities.showInfoMessage(res.message, "Export Complete");
-                                            }
+                    //var wb = AV.messages.WaitBox.getDialog();
+                    AV.messages.WaitBox.show({
+                        title: "Processing Rundown",
+                        content: "Please wait while " + queueToExport + " is processed",
+                        isDelayed: true
+                    });
+
+                    // post the request to create the export data
+                    $.ajax("/api/inews/", {
+                        method: "POST",
+                        contentType: "application/json",
+                        data: inews.toJs(),
+                        dataType: "json",
+                    })
+                        .done(function (res) {
+                            // the request will return an InewsResponse item which will tell us whether the queue is exportable or not
+                            // if it is exportable it will provide the details of the export
+                            // if it cannot be exported there will be an error message explaining why
+
+                            AV.messages.WaitBox.hide();
+                            var response = new AV.obsPlugin.datamodel.InewsResponse(res);
+
+                            switch (response.result)
+                            {
+                                case 1: // setup succeeded
+                                        // show the export confirmation dialog
+                                    var actions = [
+                                        new Ext.Action({
+                                            handler: function () {
+                                                dlg.close();
+
+                                                //var wb = AV.messages.WaitBox.getDialog();
+                                                AV.messages.WaitBox.show({
+                                                    title: "Processing Rundown",
+                                                    content: "Please wait while " + queueToExport + " is processed",
+                                                    isDelayed: true
+                                                });
+
+                                                var path = "/api/inews/" + response.id;
+                                                $.ajax(path, {
+                                                    method: "GET",
+                                                    dataType: "json",
+                                                })
+                                                    .done(function (res) {
+                                                        AV.messages.WaitBox.hide();
+                                                        var response = new AV.obsPlugin.datamodel.InewsResponse(res);
+
+                                                        if (0 == response.result) {
+                                                            // oh dear, we can't export it
+                                                            AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
+                                                        }
+                                                        else {
+                                                            var html = new String("Filename: <b>");
+                                                            html = html.concat(response.filename);
+                                                            html = html.concat("</b><BR><BR>Location: <b>")
+                                                            html = html.concat(response.location);
+                                                            html = html.concat("</b>");
+                                                            var moreActions = [
+                                                                new Ext.Action({
+                                                                    handler: function () {
+                                                                        confirmDlog.close();
+                                                                        confirmDlog = undefined;
+                                                                    },
+                                                                    text: "OK"
+                                                                })
+                                                                ];
+
+                                                                confirmDlog = AV.DialogBox.createDialogBox({
+                                                                height: 120,
+                                                                width: 350,
+                                                                title: response.rundown + " Export Complete",
+                                                                maximizable: false,
+                                                                modal: true,
+                                                                footerActions: moreActions,
+                                                                html: html,
+                                                            });
+                                                            confirmDlog.show();
+                                                        }
+                                                    })
+
+                                            },
+                                            text: "Export"
+                                        }),
+
+                                        new Ext.Action({
+                                            handler: function () {
+                                                dlg.close();
+                                                var path = "/api/inews/" + response.id;
+                                                $.ajax(path, {
+                                                    method: "DELETE",
+                                                    dataType: "json",
+                                                })
+                                                    .success(function (res) {
+                                                        var rtn = res;
+                                                    })
+                                                    .error(function (res) {
+                                                        var rtn = res;
+                                                    })
+                                            },
+                                            text: "Cancel"
                                         })
+                                    ];
 
-                                },
-                                text: "Export"
-                            }),
+                                    var dlg = AV.DialogBox.createDialogBox({
+                                        height: 200,
+                                        width: 400,
+                                        title: "Confirm OBS XML Export",
+                                        maximizable: false,
+                                        modal: true,
+                                        footerActions: actions,
+                                        html: response.toHtml()
+                                    });
+                                    dlg.show();
+                                    break;
 
-                            new Ext.Action({
-                                handler: function () {
-                                    dlg.close();
-                                },
-                                text: "Cancel"
-                            })
-                        ];
+                                case 2: // not authorized
+                                    AV.Utilities.showErrorMessage("Sorry but you are not permitted to export rundowns", "Export Not Allowed");
+                                    break;
 
-
-                        var dlg = AV.DialogBox.createDialogBox({
-                            height: 100,
-                            width: 300,
-                            title: "Confirm Rundown Export",
-                            maximizable: false,
-                            modal: true,
-                            footerActions: actions,
-                            html: "Export <h1>" + queueToExport + "</h1> as " + res.filename + "?"
-                        });
-                        dlg.show();
-
-                    }
-
-                })
+                                default: // generic error
+                                    AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
+                                    break;
+                            }
+                        })
 
 
-
-                //AV.Utilities.showInfoMessage(item.id, item.name);
-//            MessageBox.alert(item.name);
-//            alert(item.name);
-                console.log(item);
-            });
+                    console.log(item);
+                });
+            }
+            catch (ex) {
+                AV.messages.WaitBox.hide();
+            }
         }
     });
 

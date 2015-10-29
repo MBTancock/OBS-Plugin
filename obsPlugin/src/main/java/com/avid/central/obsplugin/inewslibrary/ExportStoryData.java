@@ -5,20 +5,66 @@
  */
 package com.avid.central.obsplugin.inewslibrary;
 
+import com.avid.central.obsplugin.InewsResponse;
+
+import java.util.UUID;
+
 /**
  *
  * @author Administrator
  */
 public class ExportStoryData {
-    public String StoryAsXml;
-    public String FileName;
-    public String Warning;
-    public boolean Success;
+    private UUID id;
+    private boolean mdsMode;
+    private String rundownAsXml;
+    private InewsResponse response;
+
 
     public ExportStoryData() {
-        this.StoryAsXml = null;
-        this.FileName = null;
-        this.Warning = null;
-        this.Success = false;
+        this.id = null;
+        this.mdsMode = false;
+        this.rundownAsXml = null;
+        this.response = new InewsResponse();
+    }
+
+    public UUID getID()
+    {
+        return this.id;
+    }
+
+    public void setID(UUID id)
+    {
+        this.id = id;
+        this.response.setID(id);
+    }
+
+    public boolean getMdsMode()
+    {
+        return this.mdsMode;
+    }
+
+    public void setMdsMode(boolean mdsMode)
+    {
+        this.mdsMode = mdsMode;
+    }
+
+    public String getRundownAsXml()
+    {
+        return this.rundownAsXml;
+    }
+
+    public void setRundownAsXml(String rundownAsXml)
+    {
+        this.rundownAsXml = rundownAsXml;
+    }
+
+    public InewsResponse getResponse()
+    {
+        return this.response;
+    }
+
+    public void setResponse(InewsResponse response)
+    {
+        this.response = response;
     }
 }

@@ -1,10 +1,8 @@
 package com.avid.central.obsplugin;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
-import com.avid.central.obsplugin.inewslibrary.ExportStories;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
-import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
 
 import javax.ws.rs.*;
 import java.io.OutputStream;
@@ -27,7 +25,7 @@ public class configurationResource {
         // try and read the configuration from disk...
         try
         {
-            _configuration = ExportConfiguration.Open("D:/obsconfig.xml");
+            _configuration = ExportConfiguration.Open();
         }
         catch (Exception ex)
         {
@@ -45,10 +43,12 @@ public class configurationResource {
             _configuration.upmix_field = "v-upmix";
             _configuration.video_id_field = "mos-title";
 
+            _configuration.obs_export_role = "Exporters";
+
             _configuration.date_id = "Date";
             _configuration.day_id = "Day";
-            _configuration.name_id = "Name";
-            _configuration.obs_channel_id = "OBSChannelName";
+            _configuration.title_id = "Name";
+            _configuration.obs_channel_id = "OBSChannelID";
 
             _configuration.onc_ftp_srvr = "wysdomserver";
             _configuration.onc_ftp_port = 21;
@@ -64,7 +64,7 @@ public class configurationResource {
 
             _configuration.inws_ws_srvr = "ftsserver";
             _configuration.inws_ws_port = 8080;
-            _configuration.inws_server = "inews2";
+            _configuration.inws_server = "inews";
             _configuration.inws_login = "avstar";
             _configuration.inws_pwd = "avstar";
 
@@ -109,7 +109,7 @@ public class configurationResource {
      public String post(ExportConfiguration config) {
         _configuration = config;
         try {
-            _configuration.Save("D:/obsconfig.xml");
+            _configuration.Save();
         }
         catch (Exception ex)
         {

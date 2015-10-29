@@ -6,30 +6,36 @@
 package com.avid.central.obsplugin.inewslibrary;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
+import com.avid.central.obsplugin.inewslibrary.VizGraphic.AttachmentContent;
+import com.avid.central.obsplugin.inewslibrary.VizGraphic.mos;
+import com.avid.central.obsplugin.inewslibrary.nsml.ApContent;
+import com.avid.central.obsplugin.inewslibrary.nsml.AttachmentType;
 import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
 import com.avid.central.obsplugin.inewslibrary.nsml.Nsml.Aeset.Ae;
 import com.avid.central.obsplugin.inewslibrary.nsml.Nsml.Body.P;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 /**
- *
  * @author Administrator
  */
 public class ExportStories {
 
     /* ******************************************************* Rules for parsing rundown for a rundown export ********************************************************* */
     /* XML tag              iNews criteria                                                                      Can be empty    Action if Empty                         */
-    /* OBSChannelID	    break story with "OBSChannelName" in info field, value is in Subject field  	No	        Warn user, don't export                 */
-    /* Name	            break story with "Name" in Info field, date is in Subject field             	No          	Warn user, don't export                 */
+    /* OBSChannelID	        break story with "OBSChannelName" in info field, value is in Subject field  	No	        Warn user, don't export                 */
+    /* Title	            break story with "Title" in Info field, data is in Subject field             	No          	Warn user, don't export                 */
     /* Date                 break story with "Date" in Info field, date is in Subject field                     Yes             Warn user, pre-fill with current date   */
     /* StartTime            the first break story in rundown with a value in Start time field format: HH:MM:SS	No              Warn user, don't export                 */
-    /* EndTime              the last break story in rundown with a value in Start time field format: HH:MM:SS	No              Warn user, don't export                 */
+    /* EndTime              the last break story in rundown with a value in End time field format: HH:MM:SS	No              Warn user, don't export                 */
     /* **************************************************************************************************************************************************************** */
 
     /* ******************************************************* Rules for parsing stories for a rundown export ********************************************************* */
@@ -44,7 +50,7 @@ public class ExportStories {
     // the rundown is the list of stories passed in as stories
     // from this identify significant parameters based on the rules defined above
     // returns the rundown as an XML string and the filename to be used in the fileName parameter
-    public ExportStoryData ProcessRundown(List<Nsml> stories, ExportConfiguration config, boolean mdsMode) {
+    public ExportStoryData ProcessRundown(List<Nsml> stories, ExportConfiguration config) {
         ExportStoryData exportData = new ExportStoryData();
 
         // create a new OBS_Export
@@ -66,7 +72,7 @@ public class ExportStories {
             // go through stories and decide what to do with each
             for (Nsml story : stories) {
                 // TODO
-                List<OBSGraphic> vizGrapics = new ArrayList<OBSGraphic>();
+                List<mos> vizGrapics = new ArrayList<mos>();
 
                 // is this a break story?
                 if (story.getHead().getMeta().isBreak()) {
@@ -74,36 +80,40 @@ public class ExportStories {
                     // need to get the content of the info Field
                     String info = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.info_field);
                     if (null == info) {
-                        throw new Exception("Invalid story, no info");
+                        throw new Exception("The rundown is invalid: the designated info field was not found");
                     }
 
                     String subject = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.subject_field);
                     if (null == subject) {
-                        throw new Exception("Invalid story, no subject");
+                        throw new Exception("The rundown is invalid: the designated subject field was not found");
                     }
 
                     String startTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
                     if (null == startTime) {
-                        throw new Exception("Invalid story, no start time");
+                        throw new Exception("The rundown is invalid: the designated start time field was not found");
                     }
 
                     // is it one of our "special" fields
                     if (info.equals(config.obs_channel_id)) {
                         if (subject.length() == 0) {
                             // the channelID is missing so abort the export
-                            throw new Exception("Invalid story, empty channel ID field");
+                            throw new Exception("The rundown is invalid: the rundown Channel ID is missing");
                         }
 
                         // this is the Story that contains the channel ID
                         _export.Rundown.ChannelID = subject;
-                    } else if (info.equals(config.name_id)) {
+
+                        // determine the mode
+                        exportData.setMdsMode(subject.toUpperCase().startsWith("MX"));
+
+                    } else if (info.equals(config.title_id)) {
                         if (subject.length() == 0) {
                             // the rundown name is missing so abort the export
-                            throw new Exception("Invalid story, empty channel name field");
+                            throw new Exception("The rundown is invalid: the rundown Channel Name is missing");
                         }
 
                         // this is the Story that contains the rundown name
-                        _export.Rundown.ChannelName = subject;
+                        _export.Rundown.Title = subject;
                     } else if (info.equals(config.day_id)) {
                         // this is the Story that contains the rundown day
                         _export.Rundown.Day = subject;
@@ -112,7 +122,7 @@ public class ExportStories {
                             // log a warning here (no date specified)
                             // set date to today's date
                             _export.Rundown.Day = String.format("Day %1$02d", DateTime.now().dayOfMonth());
-                            exportData.Warning = "Empty day field";
+                            exportData.getResponse().setMessage("The day information was missing from the rundown");
                         }
                     } else if (info.equals(config.date_id)) {
                         // this is the Story that contains the rundown date
@@ -123,7 +133,7 @@ public class ExportStories {
                             // set date to today's date
                             DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-mm-dd");
                             _export.Rundown.Date = _export.Rundown.Day = DateTime.now().toString(dtf);
-                            exportData.Warning = "Empty date field";
+                            exportData.getResponse().setMessage("The date information was missing from the rundown");
                         }
                     }
 
@@ -148,160 +158,203 @@ public class ExportStories {
 
                         lastStoryWasBreak = true;
                     }
-                } else if (!story.getHead().getMeta().isFloat()) {
-                    // this is not a floated Story so we must have passed the "header"
-                    // if we haven't validated the "header" at this point then now is the time to do so!
-                    if (!headerValid) {
-                        if (-1 == _export.Rundown.RundownStartTime) {
-                            // the start time has not been set so abort the export
-                            throw new Exception("Invalid story, empty start time field");
+                } else {
+                    if (!story.getHead().getMeta().isFloat()) {
+                        // this is not a floated Story so we must have passed the "header"
+                        // if we haven't validated the "header" at this point then now is the time to do so!
+                        if (!headerValid) {
+                            if (-1 == _export.Rundown.RundownStartTime) {
+                                // the start time has not been set so abort the export
+                                throw new Exception("The rundown is invalid: the rundown start time is missing");
+                            }
+
+                            headerValid = true;
                         }
 
-                        headerValid = true;
-                    }
+                        // every time we encounter a non-break, non-floated Story reset the rundown end time to unspecified
+                        // it should get set to the correct value by the final break Story
+                        _export.Rundown.RundownEndTime = -1;
 
-                    // every time we encounter a non-break, non-floated Story reset the rundown end time to unspecified
-                    // it should get set to the correct value by the final break Story
-                    _export.Rundown.RundownEndTime = -1;
+                        // get the subject
+                        String subject = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.subject_field);
+                        if (null == subject) {
+                            throw new Exception("The rundown is invalid: the designated subject field was not found");
+                        }
 
-                    // get the subject
-                    String subject = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.subject_field);
-                    if (null == subject) {
-                        throw new Exception("Invalid story, no subject");
-                    }
+                        if (subject.length() == 0) {
+                            throw new Exception("The rundown is invalid: at least one story is missing its Subject details");
+                        }
 
-                    if (subject.length() == 0) {
-                        throw new Exception("Invalid story, empty subject field");
-                    }
+                        // check for an update and retrieve modification time
+                        String updatedTimestamp = null;
+                        int update = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.update_field);
+                        DateTime modificationTime = GetFieldDateValue(story.getFields().getStringOrBooleanOrDate(), config.modified_field);
+                        if (null != modificationTime)
+                        {
+                            DateTimeFormatter fmt = ISODateTimeFormat.dateHourMinuteSecond();
+                            updatedTimestamp = modificationTime.toString(fmt);
+                        }
 
-                    // get the start time
-                    String startTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
+                        // get the start time
+                        String startTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
 
-                    // do we have start time data?
-                    if (startTime != null && !startTime.isEmpty()) {
-                        // update the running start time
-                        if (startTime.charAt(0) == '@') {
-                            // we have an absolute start time
-                            currentStartTime = Integer.parseInt(startTime.substring(1));
+                        // do we have start time data?
+                        if (startTime != null && !startTime.isEmpty()) {
+                            // update the running start time
+                            if (startTime.charAt(0) == '@') {
+                                // we have an absolute start time
+                                currentStartTime = Integer.parseInt(startTime.substring(1));
+                            } else {
+                                // start time is relative to start of show
+                                currentStartTime = Integer.parseInt(startTime.substring(1)) + _export.Rundown.RundownStartTime;
+                            }
                         } else {
-                            // start time is relative to start of show
-                            currentStartTime = Integer.parseInt(startTime.substring(1)) + _export.Rundown.RundownStartTime;
+                            // no start time specified so we need to get it from the previous item
+                            // if there are not yet any stories in the list then just use the start time we are carrying forward
+                            if (_export.Stories.size() > 0 && !lastStoryWasBreak) {
+                                // there is at least one Story
+                                currentStartTime += _export.Stories.get(_export.Stories.size() - 1).StoryDuration;
+                            }
                         }
-                    } else {
-                        // no start time specified so we need to get it from the previous item
-                        // if there are not yet any stories in the list then just use the start time we are carrying forward
-                        if (_export.Stories.size() > 0 && !lastStoryWasBreak) {
-                            // there is at least one Story
-                            currentStartTime += _export.Stories.get(_export.Stories.size() - 1).StoryDuration;
+
+                        // get the StoryID
+                        String storyID = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.story_id_field);
+                        if (exportData.getMdsMode()) {
+                            if (null == storyID) {
+                                throw new Exception("The rundown is invalid: the designated StoryID field was not found");
+                            }
+                            if (storyID.length() == 0) {
+                                throw new Exception("The rundown is invalid: at least one story is missing its StoryID details");
+                            }
                         }
-                    }
 
-                    // get the StoryID
-                    String storyID = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.story_id_field);
-                    if (mdsMode) {
-                        if (null == storyID) {
-                            throw new Exception("Invalid story, no story ID");
+                        // get the VideoID
+                        String videoID = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.video_id_field);
+                        if (exportData.getMdsMode()) {
+                            if (null == videoID) {
+                                throw new Exception("The rundown is invalid: the designated VideoID field was not found");
+                            }
+                            if (videoID.length() == 0) {
+                                throw new Exception("The rundown is invalid: at least one story is missing its VideoID details");
+                            }
+                        } else if (null == videoID || videoID.isEmpty()) {
+                            videoID = "";
                         }
-                        if (storyID.length() == 0) {
-                            throw new Exception("Invalid story, empty story ID field");
+
+                        // get the Upmix
+                        String upMix = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
+                        if (exportData.getMdsMode()) {
+                            if (null == upMix) {
+                                throw new Exception("The rundown is invalid: the designated upmix field was not found");
+                            }
+                            if (upMix.length() == 0) {
+                                throw new Exception("The rundown is invalid: at least one story is missing its upmix details");
+                            }
                         }
-                    }
 
-                    // get the VideoID
-                    String videoID = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.video_id_field);
-                    if (mdsMode) {
-                        if (null == videoID) {
-                            throw new Exception("Invalid story, no video ID");
+                        // get Runup
+                        String runup = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.runup_field);
+                        if (null == runup || runup.isEmpty()) {
+                            runup = "0";
                         }
-                        if (videoID.length() == 0) {
-                            throw new Exception("Invalid story, empty video ID field");
+
+                        // get Rundown
+                        String rundown = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.rundown_field);
+                        if (null == rundown || rundown.isEmpty()) {
+                            rundown = "0";
                         }
-                    } else if (null == videoID || videoID.isEmpty()) {
-                        videoID = "";
-                    }
 
-                    // get the Upmix
-                    String upMix = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
-                    if (mdsMode) {
-                        if (null == upMix) {
-                            throw new Exception("Invalid story, no upmix");
+                        // get VIZ production cue
+                        // are there any anchored elements?
+                        if (exportData.getMdsMode()) {
+                            if (null != story.getAeset() && story.getAeset().getAe().size() > 0) {
+                                // is there one for VIZ?
+                                for (Ae ae : story.getAeset().getAe()) {
+
+                                    for (Object ap : ae.getMcOrAp()) {
+                                        if (ap.getClass() != Nsml.Aeset.Ae.Mc.class) {
+                                            continue;
+                                        }
+
+                                        Nsml.Aeset.Ae.Mc mc = (Nsml.Aeset.Ae.Mc) ap;
+                                        for (Object content : mc.getAp()) {
+                                            if (content.getClass() != ApContent.class) {
+                                                continue;
+                                            }
+
+                                            ApContent apContent = (ApContent) content;
+                                            for (Object data : apContent.getContent()) {
+                                                if (data.getClass() == String.class) {
+                                                    String graphic = (String) data;
+                                                    if (!graphic.contains(config.viz_id)) {
+                                                        continue;
+                                                    }
+
+                                                    for (AttachmentType at : story.getAesetAtts().getAttachment()) {
+                                                        if (mc.getIdref().equals(at.getId())) {
+                                                            // found it!
+                                                            String graphicData = at.getValue();
+                                                            if (graphicData != null) {
+                                                                try {
+                                                                    AttachmentContent ac = AttachmentContent.Parse(graphicData);
+                                                                    if (ac != null) {
+                                                                        vizGrapics.add(ac.mos);
+                                                                    }
+                                                                } catch (Exception ex) {
+                                                                    String s = ex.getMessage();
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (0 == vizGrapics.size()) {
+                                exportData.getResponse().setMessage("At least one story is missing its graphic element");
+                            }
                         }
-                        if (upMix.length() == 0) {
-                            throw new Exception("Invalid story, empty upmix field");
+
+                        // Story looks OK so add it to the export
+                        OBSStory obsStory = new OBSStory();
+                        obsStory.Type = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.type_field);
+                        obsStory.StoryStartTime = currentStartTime;
+                        obsStory.StoryDuration = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.duration_field);
+                        obsStory.VideoID = videoID;
+
+                        if (exportData.getMdsMode()) {
+                            obsStory.StoryID = storyID;
+                            obsStory.Upmix = upMix == "1";
+                            obsStory.Runout = rundown;
+                            obsStory.Runup = runup;
+                            obsStory.Graphics = vizGrapics;
                         }
-                    }
-
-                    // get Runup
-                    String runup = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.runup_field);
-                    if (null == runup || runup.isEmpty()) {
-                        runup = "0";
-                    }
-
-                    // get Rundown
-                    String rundown = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.rundown_field);
-                    if (null == rundown || rundown.isEmpty()) {
-                        rundown = "0";
-                    }
-
-                    // get VIZ production cue
-                    // are there any anchored elements?
-                    if (mdsMode && null != story.getAeset() && story.getAeset().getAe().size() > 0) {
-                        // is there one for VIZ?
-                        for (Ae ae : story.getAeset().getAe()) {
-                            //TODO
-                                /*
-                             if (ae..Contains(config.VizID))
-                             {
-                             // we have a VIZ cue, look for its attachment
-                             if (null == st.Attachments || st.Attachments.Count <= 0) continue;
-                             foreach (String at in st.Attachments)
-                             {
-                             if (ae.idref != at.id) continue;
-                             // this is the attachment for this VIZ cue
-                             // create a graphic element for it
-                             String graphic = GetGraphicData(at.data);
-                             if (null != graphic)
-                             {
-                             vizGrapics.Add(graphic);
-                             }
-                             }
-                             }
-                             */
+                        else
+                        {
+                            if (null != updatedTimestamp)
+                            {
+                                obsStory.Modified = updatedTimestamp;
+                                obsStory.Update = true;
+                            }
                         }
-                    }
 
-                    if (0 == vizGrapics.size()) {
-                        exportData.Warning = "No Viz Cue";
-                    }
+                        // need to get the story body free of all formatting
+                        String storyBody = GetStoryBody(story);
 
-                    // Story looks OK so add it to the export
-                    OBSStory obsStory = new OBSStory();
-                    obsStory.Type = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.type_field);
-                    obsStory.StoryStartTime = currentStartTime;
-                    obsStory.StoryDuration = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.duration_field);
-                    obsStory.VideoID = videoID;
-
-                    if (mdsMode) {
-                        obsStory.StoryID = storyID;
-                        obsStory.Upmix = upMix == "1";
-                        obsStory.Runout = rundown;
-                        obsStory.Runup = runup;
-                        obsStory.Graphics = vizGrapics;
-                    }
-
-                    // need to get the story body free of all formatting
-                    String storyBody = GetStoryBody(story);
-
-                    //TODO
-//                        int cueSheetLocation = story.getBody()..IndexOf("[CUESHEET INFO]", StringComparison.Ordinal);
-                    int cueSheetLocation = 0;
-                    String scriptInfo = null;
-                    String cueSheet = null;
-
-                    // look for a Cue Sheet section
-                    if (cueSheetLocation > 0) {
-                        // there is a cue sheet so leave it out of the script info
                         //TODO
+//                        int cueSheetLocation = story.getBody()..IndexOf("[CUESHEET INFO]", StringComparison.Ordinal);
+                        int cueSheetLocation = 0;
+                        String scriptInfo = null;
+                        String cueSheet = null;
+
+                        // look for a Cue Sheet section
+                        if (cueSheetLocation > 0) {
+                            // there is a cue sheet so leave it out of the script info
+                            //TODO
                             /*
                          scriptInfo = st.body.Substring(0, cueSheetLocation);
 
@@ -311,20 +364,21 @@ public class ExportStories {
                          cueSheet = st.body.Substring(cueSheetLocation + Properties.Resources.CueSheetIdentifier.length());
                          }
                          */
-                    } else {
-                        // no cue sheet so use story body "as is"
-                        //TODO
-                        scriptInfo = storyBody;
+                        } else {
+                            // no cue sheet so use story body "as is"
+                            //TODO
+                            scriptInfo = storyBody;
+                        }
+
+                        obsStory.ScriptInfo = scriptInfo;
+                        if (exportData.getMdsMode()) {
+                            obsStory.CueSheet = cueSheet;
+                        }
+
+                        _export.Stories.add(obsStory);
+
+                        lastStoryWasBreak = false;
                     }
-
-                    obsStory.ScriptInfo = scriptInfo;
-                    if (mdsMode) {
-                        obsStory.CueSheet = cueSheet;
-                    }
-
-                    _export.Stories.add(obsStory);
-
-                    lastStoryWasBreak = false;
                 }
 
             }
@@ -332,40 +386,50 @@ public class ExportStories {
             // check that we have an end time
             if (-1 == _export.Rundown.RundownEndTime) {
                 // nope, reject this one
-                throw new Exception("Invalid story : empty end time field");
+                throw new Exception("The rundown is invalid: the rundown end time is missing");
             }
 
             // check for Channel ID
             if (_export.Rundown.ChannelID.length() == 0) {
-                throw new Exception("Invalid story : empty channel ID field");
+                throw new Exception("The rundown is invalid: the rundown Channel ID is missing");
             }
 
             // check for Channel Name
-            if (_export.Rundown.ChannelName.length() == 0) {
-                throw new Exception("Invalid story : empty channel name field");
+            if (_export.Rundown.Title.length() == 0) {
+                throw new Exception("The rundown is invalid: the rundown Title is missing");
             }
 
             // check for Date
             if (_export.Rundown.Date.length() == 0) {
                 // log a warning here (no date specified)
                 // set date to today's date
-                _export.Rundown.Date = DateTime.now().toString("mmddyy");
-                exportData.Warning = "Empty date field";
+                _export.Rundown.Date = DateTime.now().toString("dd MMM yyyy");
+                exportData.getResponse().setMessage("The date information was missing from the rundown");
+            } else {
+                exportData.getResponse().setDate(_export.Rundown.Date);
             }
 
             // check for Day
             if (_export.Rundown.Day.length() == 0) {
                 // log a warning here (no day specified)
                 // set date to today's date
-                _export.Rundown.Day = _export.Rundown.Day = String.format("Day%1$02d", DateTime.now().dayOfMonth().get());
-                exportData.Warning = "Empty day field";
+                _export.Rundown.Day = String.format("Day%1$02d", DateTime.now().dayOfMonth().get());
+                exportData.getResponse().setMessage("The day information was missing from the rundown");
+            } else {
+                exportData.getResponse().setDay(_export.Rundown.Day);
             }
 
-            exportData.StoryAsXml = _export.GenerateXML(mdsMode);
-            exportData.FileName = _export.GenerateFileName();
-            exportData.Success = true;
+            exportData.setRundownAsXml(_export.GenerateXML(exportData.getMdsMode()));
+
+            exportData.getResponse().setChannelID(_export.Rundown.ChannelID);
+            exportData.getResponse().setStartTime(_export.Rundown.GetStartTime());
+            exportData.getResponse().setEndTime(_export.Rundown.GetEndTime());
+            exportData.getResponse().setTitle(_export.Rundown.Title);
+
+            exportData.getResponse().setFileName(_export.GenerateFileName());
+            exportData.getResponse().setResult(1);
         } catch (Exception ex) {
-            exportData.Warning = ex.getMessage();
+            exportData.getResponse().setMessage(ex.getMessage());
         }
 
         return exportData;
@@ -435,6 +499,20 @@ public class ExportStories {
         return 0;
     }
 
+    public DateTime GetFieldDateValue(List<Object> fields, String id) {
+        for (Object field : fields) {
+            if (field instanceof Nsml.Fields.Date) {
+                Nsml.Fields.Date dateField = (Nsml.Fields.Date) field;
+
+                if (id.equals(dateField.getId())) {
+                     return new DateTime(dateField.getValue().longValue() * 1000L);
+                }
+            }
+        }
+
+        return null;
+    }
+
     private String GetStoryBody(Nsml story) {
         StringBuilder sb = new StringBuilder();
 
@@ -458,16 +536,16 @@ public class ExportStories {
             }
             sb.append(content);
         } else if (content.getClass() == JAXBElement.class) {
-            javax.xml.bind.JAXBElement element = (JAXBElement)content;
-             
-            if (element.getValue().getClass() == com.avid.central.obsplugin.inewslibrary.nsml.TextContent.class)
-            {
-                com.avid.central.obsplugin.inewslibrary.nsml.TextContent tc = (com.avid.central.obsplugin.inewslibrary.nsml.TextContent)element.getValue();
-            for (Serializable moreContent : tc.getContent()) {
+            javax.xml.bind.JAXBElement element = (JAXBElement) content;
 
-                ParseContent(moreContent, sb);
+            if (element.getValue().getClass() == com.avid.central.obsplugin.inewslibrary.nsml.TextContent.class) {
+                com.avid.central.obsplugin.inewslibrary.nsml.TextContent tc = (com.avid.central.obsplugin.inewslibrary.nsml.TextContent) element.getValue();
+                for (Serializable moreContent : tc.getContent()) {
 
-            }}
+                    ParseContent(moreContent, sb);
+
+                }
+            }
         }
     }
 }

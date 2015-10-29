@@ -14,8 +14,6 @@ import java.util.UUID;
 public class InewsRequest {
     @XmlElement(required = true)
     private String queue;
-    @XmlElement(required = true)
-    private Boolean export;
 
     public String getQueue() {
         return this.queue;
@@ -23,13 +21,5 @@ public class InewsRequest {
 
     public void setQueue(String queue) {
         this.queue = queue;
-    }
-
-    public Boolean getExport() {
-        return this.export;
-    }
-
-    public void setExport(Boolean export) {
-        this.export = export;
     }
 }

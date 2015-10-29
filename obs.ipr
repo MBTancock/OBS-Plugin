@@ -174,7 +174,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Example/Example.iml" filepath="$PROJECT_DIR$/Example/Example.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/obs.iml" filepath="$PROJECT_DIR$/obs.iml" />
       <module fileurl="file://$PROJECT_DIR$/obsPlugin/obsPlugin.iml" filepath="$PROJECT_DIR$/obsPlugin/obsPlugin.iml" />
@@ -408,26 +407,10 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="commons-net:commons-net:3.3" type="repository">
-      <properties maven-id="commons-net:commons-net:3.3" />
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/commons-net/commons-net/3.3/commons-net-3.3.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="joda-time:joda-time:2.8.2" type="repository">
       <properties maven-id="joda-time:joda-time:2.8.2" />
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/joda-time/joda-time/2.8.2/joda-time-2.8.2.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="li.rudin.mavenjs:knockout:3.1.0" type="repository">
-      <properties maven-id="li.rudin.mavenjs:knockout:3.1.0" />
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/li/rudin/mavenjs/knockout/3.1.0/knockout-3.1.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

@@ -5,6 +5,8 @@
  */
 package com.avid.central.obsplugin.inewslibrary;
 
+import com.avid.central.obsplugin.inewslibrary.VizGraphic.mos;
+
 import java.util.List;
 /**
  *
@@ -26,7 +28,7 @@ public class OBSStory
         public String ScriptInfo = "";
         public String CueSheet = "";
 
-        public List<OBSGraphic> Graphics;
+        public List<mos> Graphics;
 
         public String GetDuration()
         {

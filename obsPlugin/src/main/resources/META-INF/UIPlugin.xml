@@ -5,11 +5,12 @@
     <Property name="view-vendor" value="broadcastmediasolutions"/>
     <Property name="view-mode" value="factory"/>
     <Property name="@menuName" value="obsPane.name"/>
-    <Property name="showMenu" value="false"/>
-    <Import type="js" path="js/events/obsPane.js"/>
-    <Import type="css" path="css/obsPane.css"/>
+    <Property name="showMenu" value="true"/>
+    <Import type="js" path="js/events/obsDND.View.js"/>
+    <Import type="js" path="js/events/obsDND.DragZone.js"/>
+    <Import type="css" path="css/obsDND.css"/>
   </View>
-  <!--<View type="av-assets-drag-and-drop">-->
+  <!--<View type="obs-assets-drag-and-drop">-->
     <!--<Property name="productId" value="browse"/>-->
 
     <!--<Property name="showMenu" value="true"/>-->

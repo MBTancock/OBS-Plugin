@@ -16,18 +16,27 @@
                 var localizeUI = this.getLocalization(),
                         that = this;
                 this.displayContainer = this.createDisplayContainer();
-                //this.dom()[0].appendChild(this.dragContainer);
+                this.dragContainer = this.createDragContainer();
+                this.dom()[0].appendChild(this.dragContainer);
                 this.dom()[0].appendChild(this.displayContainer);
-                //this.dragZone = new AV.AssetDND.DragZone(this.dragContainer.firstChild, {
-                //    ddGroup: "AssetListDD",
-                //    callbackFn: function(data){that.dropCallback(data);}
-                //});
+                this.dragZone = new AV.AssetDND.DragZone(this.dragContainer.firstChild, {
+                    ddGroup: "AssetListDD",
+                    callbackFn: function(data){that.dropCallback(data);}
+                });
             },
 
             dropCallback: function(data){
                 if(data && data.id){
                     this.display(data.id);
                 }
+            },
+
+            createDragContainer: function(){
+                var localizeUI = this.getLocalization();
+                var dragContainer = document.createElement('div');
+                dragContainer.className = 'drag-container';
+                dragContainer.innerHTML = '<div class="drag-el"><span>' + localizeUI("assetDragAndDropView.dragMsg") + '</span></div>';
+                return dragContainer;
             },
 
             createDisplayContainer: function(){
@@ -91,5 +100,5 @@
             return item.nodes[0].id;
         }
     };
-    AV.ViewManager.addViewFactory("av-assets-drag-and-drop", AV.AssetDND.View);
+    AV.ViewManager.addViewFactory("obs-assets-drag-and-drop", AV.AssetDND.View);
 })();

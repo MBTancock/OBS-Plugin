@@ -15,7 +15,6 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class OBSRundown {
     public String ChannelID = "";
-    public String ChannelName = "";
     public String Day = "";
     public String Date = "";
     public String Title = "";
