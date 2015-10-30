@@ -12,6 +12,15 @@
                 this.name("obsDNDView");
             },
 
+            subscribeToStorySelectionChange: function () {
+                var self = this;
+                this.view.addListener('storyselection', function (payload) {
+                    var loadSelectedStory = function(){
+                        AV.Utilities.showInfoMessage("Got a notification");
+                    };
+                }, self, {buffer: 300});
+            },
+
             onRender: function() {
                 var that = this;
                 this.dragContainer = this.createDragContainer();
@@ -22,6 +31,7 @@
                     ddGroup: "AssetListDD", // queueGridDDGroup
                     callbackFn: function(data){that.dropCallback(data);}
                 });
+                this.subscribeToStorySelectionChange();
             },
 
             dropCallback: function(data){

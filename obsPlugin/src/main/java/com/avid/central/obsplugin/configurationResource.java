@@ -3,6 +3,7 @@ package com.avid.central.obsplugin;
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
+//import org.apache.commons.net.ftp.FTPClient;
 
 import javax.ws.rs.*;
 import java.io.OutputStream;
@@ -182,7 +183,12 @@ public class configurationResource {
         // now try ftp
         try
         {
-            // create simple ftp client to export the data
+//            FTPClient ftp = new FTPClient();
+//            ftp.connect(_configuration.onc_ftp_srvr);
+//            ftp.login(_configuration.onc_ftp_login, _configuration.onc_ftp_pwd);
+//            ftp.disconnect();
+
+             // create simple ftp client to export the data
             // build the url
             StringBuilder sb = new StringBuilder();
             sb.append("ftp://");

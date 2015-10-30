@@ -51,7 +51,7 @@
                 if (panel.isValid()) {
                     var server = model.iplay_ws_srvr();
                     savesettings();
-                    this.isFormDirty = false;
+                    this.setDirty(false);
                     callback(true);
                 } else {
                     // ensure that API will be notified of something went wrong
@@ -62,8 +62,7 @@
             // place your form reverting logic here
             revert: function (callback) {
                 callback(setvalues());
-                this.isFormDirty = false;
-                this.setDirty(this.isFormDirty);
+                this.setDirty(false);
             }
 
         });

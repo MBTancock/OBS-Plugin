@@ -10,20 +10,15 @@
     <Import type="js" path="js/events/obsDND.DragZone.js"/>
     <Import type="css" path="css/obsDND.css"/>
   </View>
-  <!--<View type="obs-assets-drag-and-drop">-->
-    <!--<Property name="productId" value="browse"/>-->
-
-    <!--<Property name="showMenu" value="true"/>-->
-    <!--<Property name="singleton" value="true"/>-->
-    <!--<Property name="@menuName" value="CutSheet Export"/>-->
-    <!--<Property name="@name" value="CutSheetExport"/>-->
-    <!--<Property name="example" value="true"/>-->
-
-    <!--<Import type="css" path="css/assetDND.css"/>-->
-    <!--<Import type="js" path="js/OBS.AssetDND.DragZone.js"/>-->
-    <!--<Import type="js" path="js/OBS.AssetDND.View.js"/>-->
-    <!--<Import type="js" path="js/ObsTest2.js"/>-->
-  <!--</View>-->
+  <View type="cutSheet">
+    <Property name="productId" value="obsPlugin"/>
+    <Property name="view-env" value="production"/>
+    <Property name="view-vendor" value="broadcastmediasolutions"/>
+    <Property name="view-mode" value="factory"/>
+    <Property name="@menuName" value="CutSheet"/>
+    <Property name="showMenu" value="true"/>
+    <Import type="js" path="js/cutsheet/cutSheet.js"/>
+   </View>
   <View type="system-settings-obs-view">
     <Property name="settings-type" value="system-settings"/>
     <Property name="showMenu" value="false"/>
