@@ -3,10 +3,8 @@ useOSGi()
 dependencies {
     compile ipcDep('com.avid.central.framework:RestCore')
     compile ipcDep("com.avid.central.framework:AuthenticationAPI")
-    compile ipcDep('com.avid.central.settings:settings-instances-api')
-    compile ipcDep("com.avid.central.framework:general-settings")
     compile ipcDep('javax.ws.rs:jsr311-api')
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.0.5'
-    compile 'joda-time:joda-time:2.8.2'
-//    compile 'commons-net:commons-net:3.3'
+    compile ipcDep('com.fasterxml.jackson.core:jackson-annotations')
+    compile ipcDep('joda-time:joda-time')
+    compile 'commons-net:commons-net:3.3'
 }
