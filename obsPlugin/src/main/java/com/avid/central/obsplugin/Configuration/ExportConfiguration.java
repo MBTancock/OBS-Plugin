@@ -8,6 +8,10 @@ package com.avid.central.obsplugin.Configuration;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -169,6 +173,15 @@ public class ExportConfiguration {
         jc = JAXBContext.newInstance(ExportConfiguration.class);
         marshaller = jc.createMarshaller();
 
+        try
+        {
+            CreateDirectory();
+        }
+        catch (UnsupportedOperationException | IOException | SecurityException ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
+
         File configFile = new File(GetFileName());
         configFile.delete();
         configFile.createNewFile();
@@ -190,15 +203,33 @@ public class ExportConfiguration {
         return configuration;
     }
 
+    private static void CreateDirectory() throws UnsupportedOperationException, IOException, SecurityException
+    {
+        String sep = System.getProperty("file.separator");
+        try {
+            if (sep.equals("\\"))
+            {
+                File configDirectory = new File("D:/obs_settings");
+                Files.createDirectory(configDirectory.toPath());
+            }
+            else {
+                File configDirectory = new File("/opt/avid/avid-interplay-central/plugins/obs/settings");
+                Files.createDirectory(configDirectory.toPath());
+            }
+        }
+        catch (FileAlreadyExistsException fx) {
+        }
+    }
+
     private static String GetFileName()
     {
         String sep = System.getProperty("file.separator");
         if (sep.equals("\\"))
         {
-            return "D:/obsconfig.xml";
+            return "D:/obs_settings/obsconfig.xml";
         }
 
-        return "/opt/avid/avid-interplay-central/plugins/obs/obsconfig.xml";
+        return "/opt/avid/avid-interplay-central/plugins/obs/settings/obsconfig.xml";
     }
 
 }
