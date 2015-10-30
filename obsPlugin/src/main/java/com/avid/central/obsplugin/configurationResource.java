@@ -3,7 +3,7 @@ package com.avid.central.obsplugin;
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
-//import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClient;
 
 import javax.ws.rs.*;
 import java.io.OutputStream;
@@ -181,43 +181,36 @@ public class configurationResource {
         }
 
         // now try ftp
+        FTPClient ftp = null;
         try
         {
-//            FTPClient ftp = new FTPClient();
-//            ftp.connect(_configuration.onc_ftp_srvr);
-//            ftp.login(_configuration.onc_ftp_login, _configuration.onc_ftp_pwd);
-//            ftp.disconnect();
-
-             // create simple ftp client to export the data
-            // build the url
-            StringBuilder sb = new StringBuilder();
-            sb.append("ftp://");
-            sb.append(_configuration.onc_ftp_login);
-            sb.append(":");
-            sb.append(_configuration.onc_ftp_pwd);
-            sb.append("@");
-            sb.append(_configuration.onc_ftp_srvr);
-            sb.append(":");
-            sb.append(_configuration.onc_ftp_port);
-            sb.append("/");
-            sb.append(_configuration.onc_ftp_path);
-            sb.append("/ftp_test_file.xml");
-            URL url = new URL(sb.toString());
-
-            // open the connection
-            URLConnection urlc = url.openConnection();
-            OutputStream os = urlc.getOutputStream();
-
-            // write the data
-            os.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
-            os.flush();
-            os.close();
-
+            ftp = new FTPClient();
+            ftp.connect(_configuration.onc_ftp_srvr);
+            ftp.login(_configuration.onc_ftp_login, _configuration.onc_ftp_pwd);
+            StringBuilder fp = new StringBuilder();
+            fp.append(_configuration.onc_ftp_path);
+            fp.append("/ftp_test_file.xml");
+            OutputStream fs = ftp.storeFileStream(fp.toString());
+            fs.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
+            fs.flush();
+            fs.close();
+            ftp.deleteFile(fp.toString());
             response = "ONC FTP Connection Successful.";
             }
         catch (Exception ex)
         {
             response = ex.getMessage();
+        }
+        finally
+        {
+            if (null != ftp && ftp.isConnected())
+            {
+                try
+                {
+                    ftp.disconnect();
+                }
+                catch (Exception ex){}
+            }
         }
         return response;
     }
@@ -238,38 +231,36 @@ public class configurationResource {
         }
 
         // now try ftp
+        FTPClient ftp = null;
         try
         {
-            // create simple ftp client to export the data
-            // build the url
-            StringBuilder sb = new StringBuilder();
-            sb.append("ftp://");
-            sb.append(_configuration.mds_ftp_login);
-            sb.append(":");
-            sb.append(_configuration.mds_ftp_pwd);
-            sb.append("@");
-            sb.append(_configuration.mds_ftp_srvr);
-            sb.append(":");
-            sb.append(_configuration.mds_ftp_port);
-            sb.append("/");
-            sb.append(_configuration.mds_ftp_path);
-            sb.append("/ftp_test_file.xml");
-            URL url = new URL(sb.toString());
-
-            // open the connection
-            URLConnection urlc = url.openConnection();
-            OutputStream os = urlc.getOutputStream();
-
-            // write the data
-            os.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
-            os.flush();
-            os.close();
-
+            ftp = new FTPClient();
+            ftp.connect(_configuration.mds_ftp_srvr);
+            ftp.login(_configuration.mds_ftp_login, _configuration.mds_ftp_pwd);
+            StringBuilder fp = new StringBuilder();
+            fp.append(_configuration.mds_ftp_path);
+            fp.append("/ftp_test_file.xml");
+            OutputStream fs = ftp.storeFileStream(fp.toString());
+            fs.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
+            fs.flush();
+            fs.close();
+            ftp.deleteFile(fp.toString());
             response = "MDS FTP Connection Successful.";
         }
         catch (Exception ex)
         {
             response = ex.getMessage();
+        }
+        finally
+        {
+            if (null != ftp && ftp.isConnected())
+            {
+                try
+                {
+                    ftp.disconnect();
+                }
+                catch (Exception ex){}
+            }
         }
         return response;    }
 }

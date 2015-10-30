@@ -154,5 +154,6 @@
     <orderEntry type="library" exported="" name="org.apache.axis:axis-jaxrpc:1.4" level="project" />
     <orderEntry type="library" exported="" name="joda-time:joda-time:2.8.2" level="project" />
     <orderEntry type="library" exported="" name="com.fasterxml.jackson.core:jackson-annotations:2.0.5" level="project" />
+    <orderEntry type="library" exported="" name="commons-net-3.3" level="project" />
   </component>
 </module>
