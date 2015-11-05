@@ -35,6 +35,7 @@
             "duration_field",
             "info_field",
             "modified_field",
+            "music_field",
             "rundown_field",
             "runup_field",
             "start_time_field",
@@ -86,6 +87,7 @@
                 this.duration_field = ko.observable("");
                 this.info_field = ko.observable("");
                 this.modified_field = ko.observable("");
+                this.music_field = ko.observable("");
                 this.rundown_field = ko.observable("");
                 this.runup_field = ko.observable("");
                 this.start_time_field = ko.observable("");
@@ -124,6 +126,7 @@
                 this.viz_id(data.viz_id);
                 this.update_field = data.update_field;
                 this.modified_field = data.modified_field;
+                this.music_field = data.music_field;
                 this.start_time_field(data.start_time_field);
                 this.duration_field(data.duration_field);
                 this.type_field(data.type_field);

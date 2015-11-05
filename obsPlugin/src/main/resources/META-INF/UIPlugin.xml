@@ -1,23 +1,14 @@
 <UIPlugin bundlePath="static">
-  <View type="obsPane">
+  <View type="cueSheet">
     <Property name="productId" value="obsPlugin"/>
     <Property name="view-env" value="production"/>
     <Property name="view-vendor" value="broadcastmediasolutions"/>
     <Property name="view-mode" value="factory"/>
-    <Property name="@menuName" value="obsPane.name"/>
+    <Property name="@menuName" value="Cue Sheet Export"/>
     <Property name="showMenu" value="true"/>
-    <Import type="js" path="js/events/obsDND.View.js"/>
-    <Import type="js" path="js/events/obsDND.DragZone.js"/>
-    <Import type="css" path="css/obsDND.css"/>
-  </View>
-  <View type="cutSheet">
-    <Property name="productId" value="obsPlugin"/>
-    <Property name="view-env" value="production"/>
-    <Property name="view-vendor" value="broadcastmediasolutions"/>
-    <Property name="view-mode" value="factory"/>
-    <Property name="@menuName" value="CutSheet"/>
-    <Property name="showMenu" value="true"/>
-    <Import type="js" path="js/cutsheet/cutSheet.js"/>
+    <Import type="js" path="js/cuesheet/cueSheet.js"/>
+    <Import type="js" path="js/cuesheet/datamodel/cuesheetRequest.js"/>
+    <Import type="js" path="js/cuesheet/datamodel/cuesheetResponse.js"/>
    </View>
   <View type="system-settings-obs-view">
     <Property name="settings-type" value="system-settings"/>
@@ -28,25 +19,6 @@
     <Import type="js" path="js/configuration/SystemSettingsObsView.js"/>
     <Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>    <!--<Import type="css" path="css/styles.css"/>-->
   </View>
-  <!--<View type="obs-push-notifications-example">-->
-    <!--<Property name="productId" value="core"/>-->
-
-    <!--<Property name="example" value="true"/>-->
-
-    <!--<Property name="name" value="Cutsheet Notify"/>-->
-    <!--<Property name="extensionType" value="common"/>-->
-    <!--<Property name="showMenu" value="true"/>-->
-    <!--<Property name="singleton" value="true"/>-->
-
-    <!--<Property name="view-vendor" value="avid"/>-->
-    <!--<Property name="view-env" value="production"/>-->
-
-
-    <!--<Property name="menuName" value="Cutsheet Notifications"/>-->
-
-    <!--<Import type="css" path="css/obs-push-notifications-example.css"/>-->
-    <!--<Import type="js" path="js/cutsheet/PushNotificationExample.js"/>-->
-  <!--</View>-->
   <ViewExtension type="av-asset-list">
     <Import type="js" path="js/export/asset-menu.js"/>
     <Import type="js" path="js/export/datamodel/inewsRequest.js"/>

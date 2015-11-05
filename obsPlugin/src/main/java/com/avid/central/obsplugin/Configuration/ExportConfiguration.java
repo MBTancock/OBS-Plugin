@@ -67,6 +67,7 @@ public class ExportConfiguration {
     public String duration_field;
     public String info_field;
     public String modified_field;
+    public String music_field;
     public String rundown_field;
     public String runup_field;
     public String start_time_field;
@@ -147,6 +148,7 @@ public class ExportConfiguration {
                 this.duration_field = configuration.duration_field;
                 this.info_field = configuration.info_field;
                 this.modified_field = configuration.modified_field;
+                this.music_field = configuration.music_field;
                 this.rundown_field = configuration.rundown_field;
                 this.runup_field = configuration.runup_field;
                 this.start_time_field = configuration.start_time_field;

@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nsml="http://avid.com/nsml" targetNamespace="http://avid.com/nsml">
+	<xs:element name="nsml">
+		<xs:annotation>
+			<xs:documentation>iNEWS NSML root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="head" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="meta" minOccurs="0">
+								<xs:complexType>
+									<xs:attribute name="wire">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:pattern value="[bforu]"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="mail">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:pattern value="read|unread"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="locked" use="optional">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:pattern value="pass|user"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="words" type="xs:unsignedShort"/>
+									<xs:attribute name="rate" type="xs:unsignedShort"/>
+									<xs:attribute name="break" type="xs:boolean" default="0"/>
+									<xs:attribute name="mcserror" type="xs:boolean" default="0"/>
+									<xs:attribute name="hold" type="xs:boolean" default="0"/>
+									<xs:attribute name="float" type="xs:boolean" default="0"/>
+									<xs:attribute name="wordlength" type="xs:unsignedShort"/>
+									<xs:attribute name="version" type="xs:unsignedShort"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="rgroup" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="number" type="xs:unsignedShort" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="wgroup" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="number" type="xs:unsignedShort" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="egroup" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="number" type="xs:unsignedShort" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="wcode" type="xs:string" minOccurs="0"/>
+							<xs:element name="dist" type="xs:string" minOccurs="0"/>
+							<xs:element name="source" type="xs:string" minOccurs="0"/>
+							<xs:element name="formname" type="xs:string" minOccurs="0"/>
+							<xs:element name="storyid" type="xs:string" minOccurs="0"/>
+							<xs:element name="storygroupid" type="xs:string" minOccurs="0"/>
+							<xs:element name="password" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="form" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="row" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:group ref="nsml:cell" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="fields" minOccurs="0">
+					<xs:complexType>
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="string">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attributeGroup ref="nsml:fieldAttributes"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="boolean" default="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:boolean">
+											<xs:attributeGroup ref="nsml:fieldAttributes"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="date" default="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:unsignedLong">
+											<xs:attributeGroup ref="nsml:fieldAttributes"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="duration" default="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:unsignedLong">
+											<xs:attributeGroup ref="nsml:fieldAttributes"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="body" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="p" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType mixed="1">
+									<xs:choice minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="b" type="nsml:text-content"/>
+										<xs:element name="i" type="nsml:text-content"/>
+										<xs:element name="u" type="nsml:text-content"/>
+										<xs:element name="rtl" type="nsml:text-content"/>
+										<xs:element name="bg" type="nsml:bgType"/>
+										<xs:element name="pb" fixed=""/>
+										<xs:element name="tab" fixed=""/>
+										<xs:element name="wp" fixed=""/>
+										<xs:element name="a" type="nsml:aType"/>
+										<xs:element name="link" type="nsml:linkType"/>
+										<xs:element name="cc" type="nsml:text-content"/>
+										<xs:element name="pi" type="nsml:text-content"/>
+									</xs:choice>
+									<xs:attributeGroup ref="nsml:fontAttribute"/>
+								</xs:complexType>
+								<xs:unique name="a-idref">
+									<xs:selector xpath=".//nsml:a"/>
+									<xs:field xpath="@idref"/>
+								</xs:unique>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="tabs" use="optional" default="24">
+							<xs:simpleType>
+								<xs:restriction base="xs:normalizedString">
+									<xs:whiteSpace value="replace"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="script" type="xs:unsignedShort" use="optional"/>
+						<xs:attribute name="width" type="xs:unsignedShort" use="optional"/>
+						<xs:attribute name="pindent" type="xs:unsignedShort" use="optional" default="0"/>
+						<xs:attribute name="rindent" type="xs:unsignedShort" use="optional" default="0"/>
+						<xs:attribute name="findent" type="xs:unsignedShort" use="optional" default="0"/>
+						<xs:attributeGroup ref="nsml:fontAttribute"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="aeset" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ae" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="hidden" type="xs:string" minOccurs="0"/>
+										<xs:choice minOccurs="0" maxOccurs="unbounded">
+											<xs:element name="mc">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="ap" type="nsml:ap-content" minOccurs="0" maxOccurs="unbounded"/>
+													</xs:sequence>
+													<xs:attribute name="error" type="xs:boolean" use="optional" default="0"/>
+													<xs:attribute name="idref" use="optional"/>
+													<xs:attribute name="flags">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:pattern value="[YN][YN][YN][A-Z]([A-Z]([YN]?))?"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:attribute>
+													<xs:attribute name="runs" type="xs:unsignedInt" use="optional" default="0"/>
+													<xs:attribute name="status" type="xs:unsignedByte" use="optional" default="0"/>
+													<xs:attributeGroup ref="nsml:fontAttribute"/>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="ap" type="nsml:ap-content"/>
+										</xs:choice>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:unsignedByte" use="required"/>
+									<xs:attribute name="version">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:pattern value="[SC][0-9].[0-9]"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="type" use="optional" default="G">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:pattern value="[A-Z]"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="runs" type="xs:unsignedLong" use="optional" default="0"/>
+									<xs:attributeGroup ref="nsml:fontAttribute"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attributeGroup ref="nsml:fontAttribute"/>
+					</xs:complexType>
+					<xs:unique name="ae-id">
+						<xs:selector xpath="ae"/>
+						<xs:field xpath="@id"/>
+					</xs:unique>
+				</xs:element>
+				<xs:element name="field-atts" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="attachment" type="nsml:attachmentType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:unique name="attachment-id">
+						<xs:selector xpath="attachment"/>
+						<xs:field xpath="@id"/>
+					</xs:unique>
+				</xs:element>
+				<xs:element name="aeset-atts" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="attachment" type="nsml:attachmentType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:unique name="attachement-id">
+						<xs:selector xpath="attachment"/>
+						<xs:field xpath="@id"/>
+					</xs:unique>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:string" use="required" fixed="3"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:group name="cell">
+		<xs:choice>
+			<xs:element name="stringcell">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attributeGroup ref="nsml:cellAttributes"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="checkboxcell">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attributeGroup ref="nsml:cellAttributes"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="comboboxcell">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="label" type="xs:string" minOccurs="0"/>
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="entry" type="nsml:entryType"/>
+							<xs:element name="group">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="entry" type="nsml:entryType"/>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:string" use="required"/>
+									<xs:attribute name="bg" type="xs:unsignedByte" default="0"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="list">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="entry" type="nsml:entryType"/>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:string" use="required"/>
+									<xs:attribute name="bg" type="xs:unsignedByte" default="0"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:sequence>
+					<xs:attribute name="locked" type="xs:boolean" use="optional" default="1"/>
+					<xs:attributeGroup ref="nsml:cellAttributes"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="datecell">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attributeGroup ref="nsml:cellAttributes"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="durationcell">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attributeGroup ref="nsml:cellAttributes"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+	<xs:attributeGroup name="cellAttributes">
+		<xs:attribute name="idref" type="xs:NMTOKEN" use="optional"/>
+		<xs:attribute name="length" type="xs:unsignedShort" use="optional" default="0"/>
+		<xs:attribute name="style" use="optional" default="">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([biu]( [bui]){0,2}){0,1}"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="align" use="optional" default="left">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="left|right|center"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ro" type="xs:boolean" use="optional" default="0"/>
+		<xs:attribute name="aready" type="xs:boolean" use="optional" default="0"/>
+		<xs:attribute name="llength" type="xs:unsignedShort" use="optional" default="0"/>
+		<xs:attribute name="lstyle" use="optional" default="">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([biu]( [bui]){0,2}){0,1}"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="lalign" use="optional" default="left">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="left|right|center"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="lposition" use="optional" default="top">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="left|right|top|bottom"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="limit" type="xs:boolean" use="optional" default="0"/>
+		<xs:attribute name="wg" type="xs:unsignedShort" use="optional" default="0"/>
+		<xs:attribute name="mandatory" type="xs:boolean" use="optional" default="0"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="fieldAttributes">
+		<xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
+		<xs:attribute name="urgency" use="optional" default="1">
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedByte">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="9"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aready" type="xs:boolean" use="optional" default="0"/>
+		<xs:attribute name="uec" type="xs:boolean" use="optional" default="0"/>
+		<xs:attribute name="ro" type="xs:boolean" use="optional" default="0"/>
+		<xs:attribute name="bg" type="xs:unsignedByte" use="optional" default="0"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="fontAttribute">
+		<xs:attribute name="font" type="xs:string" use="optional" default=""/>
+		<xs:attribute name="family" use="optional" default="0">
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedByte">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="pitch" use="optional" default="0">
+			<xs:simpleType>
+				<xs:restriction base="xs:unsignedByte">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<xs:complexType name="attachmentType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ap-content" mixed="1">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="b" type="nsml:ap-content"/>
+			<xs:element name="i" type="nsml:ap-content"/>
+			<xs:element name="u" type="nsml:ap-content"/>
+			<xs:element name="tab" fixed=""/>
+			<xs:element name="wp" fixed=""/>
+			<xs:element name="link" type="nsml:linkType"/>
+		</xs:choice>
+		<xs:attributeGroup ref="nsml:fontAttribute"/>
+	</xs:complexType>
+	<xs:complexType name="linkType">
+		<xs:sequence>
+			<xs:element name="show" type="xs:string" minOccurs="0"/>
+			<xs:element name="url" type="xs:anyURI"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="text-content" mixed="1">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="b" type="nsml:text-content"/>
+			<xs:element name="i" type="nsml:text-content"/>
+			<xs:element name="u" type="nsml:text-content"/>
+			<xs:element name="rtl" type="nsml:text-content"/>
+			<xs:element name="bg" type="nsml:bgType"/>
+			<xs:element name="pb" fixed=""/>
+			<xs:element name="tab" fixed=""/>
+			<xs:element name="wp" fixed=""/>
+			<xs:element name="a" type="nsml:aType"/>
+			<xs:element name="link" type="nsml:linkType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="aType">
+		<xs:complexContent>
+			<xs:restriction base="xs:anyType">
+				<xs:attribute name="idref" type="xs:unsignedByte" use="required"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="bgType">
+		<xs:complexContent>
+			<xs:extension base="nsml:text-content">
+				<xs:attribute name="rgb" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:hexBinary">
+							<xs:length value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="entryType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="bg" type="xs:unsignedByte" default="0"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

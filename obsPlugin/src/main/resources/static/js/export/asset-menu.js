@@ -60,8 +60,8 @@
 
                     //var wb = AV.messages.WaitBox.getDialog();
                     AV.messages.WaitBox.show({
-                        title: "Processing Rundown",
-                        content: "Please wait while " + queueToExport + " is processed",
+                        title: "Preparing Rundown",
+                        content: "Please wait while " + queueToExport + " is prepared",
                         isDelayed: true
                     });
 
@@ -91,8 +91,8 @@
 
                                                 //var wb = AV.messages.WaitBox.getDialog();
                                                 AV.messages.WaitBox.show({
-                                                    title: "Processing Rundown",
-                                                    content: "Please wait while " + queueToExport + " is processed",
+                                                    title: "Exporting Rundown",
+                                                    content: "Please wait while " + queueToExport + " is exported",
                                                     isDelayed: true
                                                 });
 
@@ -108,6 +108,11 @@
                                                         if (0 == response.result) {
                                                             // oh dear, we can't export it
                                                             AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
+                                                        }
+                                                        else if (3 == response.result)
+                                                        {
+                                                            // configuration data has disappeared
+                                                            AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
                                                         }
                                                         else {
                                                             var html = new String("Filename: <b>");
@@ -175,6 +180,10 @@
 
                                 case 2: // not authorized
                                     AV.Utilities.showErrorMessage("Sorry but you are not permitted to export rundowns", "Export Not Allowed");
+                                    break;
+
+                                case 3: // missing configuration
+                                    AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
                                     break;
 
                                 default: // generic error

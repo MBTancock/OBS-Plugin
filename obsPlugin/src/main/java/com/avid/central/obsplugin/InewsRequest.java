@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.UUID;
 
 /**
- * Created by Administrator on 03/10/2015.
+ * Created by Broadcast Media Solutions on 03/10/2015.
  */
 @XmlRootElement(name = "inewsrequest")
 @XmlAccessorType(XmlAccessType.NONE)

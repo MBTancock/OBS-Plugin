@@ -15,7 +15,7 @@
         this.startTime = "";
         this.endTime = "";
         this.message = "";
-        this.result = 0; // 0 = error, 1 = setup success, 2 = not authorized
+        this.result = 0; // 0 = error, 1 = setup success, 2 = not authorized, 3 = missing configuration
 
         if (data) {
             if (data.id) {

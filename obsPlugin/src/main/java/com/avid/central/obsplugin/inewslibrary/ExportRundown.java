@@ -73,11 +73,17 @@ public class ExportRundown {
             Story obsStory = new Story();
             obsStory.setStartTime(story.GetStartTime());
             obsStory.setDuration(story.GetDuration());
-
+            obsStory.setSubject(story.Subject);
             if (null == story.Type) {
                 obsStory.setType("Filler");
             } else {
                 obsStory.setType(story.Type);
+            }
+
+            obsStory.setModified(story.Modified);
+            if (story.Update)
+            {
+                obsStory.setUpdated(true);
             }
 
             obsStory.setVideoID(story.VideoID);
@@ -86,7 +92,7 @@ public class ExportRundown {
             if (isMds) {
                 // data only exported for MDS
                 obsStory.setComUpmix(story.Upmix);
-                obsStory.setCuesheet(story.CueSheet);
+                obsStory.setMusic(story.Music);
 
                 // add the graphic objects
                 if (null != story.Graphics) {
@@ -101,14 +107,8 @@ public class ExportRundown {
                         obsStory.getGraphic().add(storyGraphic);
                     }
                 }
-            }
-            else
-            {
-                if (story.Update)
-                {
-                    obsStory.setUpdated(true);
-                    obsStory.setModified(story.Modified);
-                }
+
+                obsStory.setCuesheet(story.CueSheet);
             }
 
             // add the story

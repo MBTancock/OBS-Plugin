@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.StringReader;
 
 /**
- * Created by Administrator on 28/10/2015.
+ * Created by Broadcast Media Solutions on 28/10/2015.
  */
 @XmlRootElement(name = "AttachmentContent")
 public class AttachmentContent {

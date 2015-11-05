@@ -65,6 +65,8 @@ public class ExportStories {
         // Flags the fact that we have now validated the header
         boolean headerValid = false;
 
+        String cutsheetInfo = "[CUESHEET INFO]";
+
         // do everything inside a try {} block
         // if we encounter any of the conditions listed above which preclude exporting the rundown
         // then we throw an exception which includes the reason why
@@ -189,8 +191,7 @@ public class ExportStories {
                         String updatedTimestamp = null;
                         int update = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.update_field);
                         DateTime modificationTime = GetFieldDateValue(story.getFields().getStringOrBooleanOrDate(), config.modified_field);
-                        if (null != modificationTime)
-                        {
+                        if (null != modificationTime) {
                             DateTimeFormatter fmt = ISODateTimeFormat.dateHourMinuteSecond();
                             updatedTimestamp = modificationTime.toString(fmt);
                         }
@@ -249,6 +250,14 @@ public class ExportStories {
                             }
                             if (upMix.length() == 0) {
                                 throw new Exception("The rundown is invalid: at least one story is missing its upmix details");
+                            }
+                        }
+
+                        // get the Music
+                        String music = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.music_field);
+                        if (exportData.getMdsMode()) {
+                            if (null == music || music.length() == 0) {
+                                exportData.getResponse().setMessage("At least one story is missing its music element");
                             }
                         }
 
@@ -321,6 +330,7 @@ public class ExportStories {
 
                         // Story looks OK so add it to the export
                         OBSStory obsStory = new OBSStory();
+                        obsStory.Subject = subject;
                         obsStory.Type = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.type_field);
                         obsStory.StoryStartTime = currentStartTime;
                         obsStory.StoryDuration = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.duration_field);
@@ -331,12 +341,10 @@ public class ExportStories {
                             obsStory.Upmix = upMix == "1";
                             obsStory.Runout = rundown;
                             obsStory.Runup = runup;
+                            obsStory.Music = music;
                             obsStory.Graphics = vizGrapics;
-                        }
-                        else
-                        {
-                            if (null != updatedTimestamp)
-                            {
+                        } else {
+                            if (null != updatedTimestamp) {
                                 obsStory.Modified = updatedTimestamp;
                                 obsStory.Update = true;
                             }
@@ -345,42 +353,31 @@ public class ExportStories {
                         // need to get the story body free of all formatting
                         String storyBody = GetStoryBody(story);
 
-                        //TODO
-//                        int cueSheetLocation = story.getBody()..IndexOf("[CUESHEET INFO]", StringComparison.Ordinal);
-                        int cueSheetLocation = 0;
+                        int cueSheetLocation = storyBody.indexOf(cutsheetInfo);
                         String scriptInfo = null;
                         String cueSheet = null;
 
                         // look for a Cue Sheet section
-                        if (cueSheetLocation > 0) {
-                            // there is a cue sheet so leave it out of the script info
-                            //TODO
-                            /*
-                         scriptInfo = st.body.Substring(0, cueSheetLocation);
+                        if (cueSheetLocation >= 0) {
+                            scriptInfo = storyBody.substring(0, cueSheetLocation);
 
-                         // but include it with the cue sheet
-                         if (st.body.length() > cueSheetLocation + Properties.Resources.CueSheetIdentifier.length())
-                         {
-                         cueSheet = st.body.Substring(cueSheetLocation + Properties.Resources.CueSheetIdentifier.length());
-                         }
-                         */
+                            if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + cutsheetInfo.length())) {
+                                cueSheet = storyBody.substring(cueSheetLocation + cutsheetInfo.length());
+                            }
                         } else {
-                            // no cue sheet so use story body "as is"
-                            //TODO
                             scriptInfo = storyBody;
                         }
 
-                        obsStory.ScriptInfo = scriptInfo;
-                        if (exportData.getMdsMode()) {
-                            obsStory.CueSheet = cueSheet;
+                            obsStory.ScriptInfo = scriptInfo;
+                            if (exportData.getMdsMode() && null != cueSheet) {
+                                obsStory.CueSheet = cueSheet;
+                            }
+
+                            _export.Stories.add(obsStory);
+
+                            lastStoryWasBreak = false;
                         }
-
-                        _export.Stories.add(obsStory);
-
-                        lastStoryWasBreak = false;
-                    }
                 }
-
             }
 
             // check that we have an end time

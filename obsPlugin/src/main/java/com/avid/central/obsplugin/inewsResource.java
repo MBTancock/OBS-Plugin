@@ -17,8 +17,9 @@ import java.util.UUID;
 
 
 /**
- * Created by Administrator on 02/10/2015.
+ * Created by Broadcast Media Solutions on 02/10/2015.
  */
+
 @Path("/inews")
 @Consumes("application/json")
 @Produces("application/json")
@@ -28,55 +29,13 @@ public class inewsResource {
 
     private Map<UUID, ExportStoryData> _exports = null;
     public inewsResource() {
+        _configuration = null;
         try
         {
             _configuration = ExportConfiguration.Open();
         }
         catch (Exception ex) {
-            // failed to open it so create a default version
-            _configuration = new ExportConfiguration();
-            _configuration.duration_field = "total-time";
-            _configuration.info_field = "v-info";
-
-            _configuration.rundown_field = "v-rundown";
-            _configuration.runup_field = "v-runup";
-            _configuration.start_time_field = "cume-time";
-            _configuration.story_id_field = "v-storyid";
-            _configuration.subject_field = "title";
-            _configuration.type_field = "v-type";
-            _configuration.upmix_field = "v-upmix";
-            _configuration.video_id_field = "mos-title";
-
-            _configuration.date_id = "Date";
-            _configuration.day_id = "Day";
-            _configuration.title_id = "Name";
-            _configuration.obs_channel_id = "OBSChannelID";
-
-            _configuration.obs_export_role = "Exporters";
-
-            _configuration.onc_ftp_srvr = "wysdomserver";
-            _configuration.onc_ftp_port = 21;
-            _configuration.onc_ftp_login = "administrator";
-            _configuration.onc_ftp_pwd = "is-admin";
-            _configuration.onc_ftp_path = "nas";
-
-            _configuration.mds_ftp_srvr = "wysdomserver";
-            _configuration.mds_ftp_port = 21;
-            _configuration.mds_ftp_login = "administrator";
-            _configuration.mds_ftp_pwd = "is-admin";
-            _configuration.mds_ftp_path = "nas";
-
-            _configuration.inws_ws_srvr = "ftsserver";
-            _configuration.inws_ws_port = 8080;
-            _configuration.inws_server = "inews2";
-            _configuration.inws_login = "avstar";
-            _configuration.inws_pwd = "avstar";
-
-            _configuration.iplay_ws_srvr = "ftsserver";
-            _configuration.iplay_ws_port = 8080;
-            _configuration.iplay_workgroup = "WYSDOM";
-            _configuration.iplay_login = "avstar";
-            _configuration.iplay_pwd = "avstar";
+            // failed to open it
         }
 
         _exports =  new HashMap<UUID, ExportStoryData>();
@@ -87,9 +46,24 @@ public class inewsResource {
     @Path("/{id}")
     public InewsResponse get(@PathParam("id") UUID id) {
 
-        _configuration.ReloadIfChanged();
         InewsResponse response = new InewsResponse();
         response.setMessage("Export Failed");
+
+        if (null == _configuration)
+        {
+            // see if we can load the settings
+            try
+            {
+                _configuration = ExportConfiguration.Open();
+            }
+            catch (Exception ex) {
+                response.setResult(3);
+                response.setMessage("No configuration");
+                return response;
+            }
+        }
+
+        _configuration.ReloadIfChanged();
 
         try {
             // retrieve the export data from the map
@@ -117,10 +91,13 @@ public class inewsResource {
 
                 // write the data
                 os.write(exportData.getRundownAsXml().getBytes());
-                os.flush();
                 os.close();
+                if(!ftp.completePendingCommand())
+                {
+                    throw new Exception("Problem writing the XML output file");
+                }
 
-                // create the result message
+                    // create the result message
                 filePath.setLength(0);
                 if (exportData.getMdsMode()) {
                     filePath.append("ftp://");
@@ -169,7 +146,6 @@ public class inewsResource {
         return response;
     }
 
-
     // this is called if the user decides not to export the data
     // deletes the export data from the map
     @DELETE
@@ -193,10 +169,19 @@ public class inewsResource {
     // also returns key parameters associated with the export data for display to the user
     @POST
     public InewsResponse post(UserInfo session, InewsRequest request) {
-        _configuration.ReloadIfChanged();
-        Boolean connected = false;
         InewsResponse response = new InewsResponse();
         response.setMessage("Listing Failed");
+
+        if (null == _configuration)
+        {
+            response.setResult(3);
+            response.setMessage("No configuration");
+            return response;
+        }
+
+        _configuration.ReloadIfChanged();
+
+        Boolean connected = false;
 
         // check that this user can export rundowns
         boolean authorised = false;

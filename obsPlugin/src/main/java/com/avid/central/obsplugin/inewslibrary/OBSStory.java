@@ -18,6 +18,8 @@ public class OBSStory
         public int StoryStartTime = 0;
         public int StoryDuration = 0;
         public String Modified;
+        public String Subject;
+        public String Music;
         public String Type = "";
         public String VideoID;
         public String StoryID;

@@ -370,6 +370,12 @@
                         },
                         {
                             xtype: 'textfield',
+                            fieldLabel: 'Music',
+                            name: 'music_field',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
                             fieldLabel: 'Rundown',
                             name: 'rundown_field',
                             allowBlank: false
@@ -470,6 +476,7 @@
             $('input[name="duration_field"]').attr('data-bind', 'value: duration_field');
             $('input[name="info_field"]').attr('data-bind', 'value: info_field');
             $('input[name="modified_field"]').attr('data-bind', 'value: modified_field');
+            $('input[name="music_field"]').attr('data-bind', 'value: music_field');
             $('input[name="rundown_field"]').attr('data-bind', 'value: rundown_field');
             $('input[name="runup_field"]').attr('data-bind', 'value: runup_field');
             $('input[name="start_time_field"]').attr('data-bind', 'value: start_time_field');
@@ -500,7 +507,11 @@
             })
                 .done (function(res)
             {
-
+                if (res.responseText.indexOf("Error") >= 0)
+                {
+                    // save settings failed
+                    AV.Utilities.showErrorMessage(res.responseText);
+                }
         })
                 .fail(function(res){
                     AV.Utilities.showErrorMessage(res.responseText);
@@ -514,50 +525,57 @@
                 dataType: "json"
             })
                 .done(function (res) {
-                    model.inws_ws_srvr(res.inws_ws_srvr);
-                    model.inws_ws_port(res.inws_ws_port);
-                    model.inws_server(res.inws_server);
-                    model.inws_login(res.inws_login);
-                    model.inws_pwd(res.inws_pwd);
+                    if (res == undefined)
+                    {
+                        AV.Utilities.showErrorMessage("Problem reading settings");
+                    }
+                    else {
+                        model.inws_ws_srvr(res.inws_ws_srvr);
+                        model.inws_ws_port(res.inws_ws_port);
+                        model.inws_server(res.inws_server);
+                        model.inws_login(res.inws_login);
+                        model.inws_pwd(res.inws_pwd);
 
-                    model.iplay_ws_srvr(res.iplay_ws_srvr);
-                    model.iplay_ws_port(res.iplay_ws_port);
-                    model.iplay_workgroup(res.iplay_workgroup);
-                    model.iplay_login(res.iplay_login);
-                    model.iplay_pwd(res.iplay_pwd);
+                        model.iplay_ws_srvr(res.iplay_ws_srvr);
+                        model.iplay_ws_port(res.iplay_ws_port);
+                        model.iplay_workgroup(res.iplay_workgroup);
+                        model.iplay_login(res.iplay_login);
+                        model.iplay_pwd(res.iplay_pwd);
 
-                    model.onc_ftp_srvr(res.onc_ftp_srvr);
-                    model.onc_ftp_port(res.onc_ftp_port);
-                    model.onc_ftp_login(res.onc_ftp_login);
-                    model.onc_ftp_pwd(res.onc_ftp_pwd);
-                    model.onc_ftp_path(res.onc_ftp_path);
+                        model.onc_ftp_srvr(res.onc_ftp_srvr);
+                        model.onc_ftp_port(res.onc_ftp_port);
+                        model.onc_ftp_login(res.onc_ftp_login);
+                        model.onc_ftp_pwd(res.onc_ftp_pwd);
+                        model.onc_ftp_path(res.onc_ftp_path);
 
-                    model.mds_ftp_srvr(res.mds_ftp_srvr);
-                    model.mds_ftp_port(res.mds_ftp_port);
-                    model.mds_ftp_login(res.mds_ftp_login);
-                    model.mds_ftp_pwd(res.mds_ftp_pwd);
-                    model.mds_ftp_path(res.mds_ftp_path);
+                        model.mds_ftp_srvr(res.mds_ftp_srvr);
+                        model.mds_ftp_port(res.mds_ftp_port);
+                        model.mds_ftp_login(res.mds_ftp_login);
+                        model.mds_ftp_pwd(res.mds_ftp_pwd);
+                        model.mds_ftp_path(res.mds_ftp_path);
 
-                    model.obs_export_role(res.obs_export_role);
+                        model.obs_export_role(res.obs_export_role);
 
-                    model.obs_channel_id(res.obs_channel_id);
-                    model.title_id(res.title_id);
-                    model.date_id(res.date_id);
-                    model.day_id(res.day_id);
-                    model.viz_id(res.viz_id);
+                        model.obs_channel_id(res.obs_channel_id);
+                        model.title_id(res.title_id);
+                        model.date_id(res.date_id);
+                        model.day_id(res.day_id);
+                        model.viz_id(res.viz_id);
 
-                    model.duration_field(res.duration_field);
-                    model.info_field(res.info_field);
-                    model.modified_field(res.modified_field);
-                    model.rundown_field(res.rundown_field);
-                    model.runup_field(res.runup_field);
-                    model.start_time_field(res.start_time_field);
-                    model.story_id_field(res.story_id_field);
-                    model.subject_field(res.subject_field);
-                    model.type_field(res.type_field);
-                    model.update_field(res.update_field);
-                    model.upmix_field(res.upmix_field);
-                    model.video_id_field(res.video_id_field);
+                        model.duration_field(res.duration_field);
+                        model.info_field(res.info_field);
+                        model.modified_field(res.modified_field);
+                        model.music_field(res.music_field);
+                        model.rundown_field(res.rundown_field);
+                        model.runup_field(res.runup_field);
+                        model.start_time_field(res.start_time_field);
+                        model.story_id_field(res.story_id_field);
+                        model.subject_field(res.subject_field);
+                        model.type_field(res.type_field);
+                        model.update_field(res.update_field);
+                        model.upmix_field(res.upmix_field);
+                        model.video_id_field(res.video_id_field);
+                    }
                     return true;
                 }
             )
@@ -638,7 +656,7 @@
 
         function test_mds_ftp()
         {
-            AV.messages.WaitBox.show({title: "Checking ONC MDS Connection",
+            AV.messages.WaitBox.show({title: "Checking MDS FTP Connection",
                 content: "Please wait while the MDS FTP Connection is checked",
                 isDelayed: true
             });

@@ -10,25 +10,25 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Created by Broadcast Media Solutions on 16/10/2015.
+ * Created by Broadcast Media Solutions on 02/10/2015.
  */
-@Component(name = "configurationResourceProvider", immediate = true)
+@Component(name = "cuesheetResourceProvider", immediate = true)
 @Service(SingletonsProvider.class)
-public class configurationResourceProvider  implements SingletonsProvider {
-    private configurationResource _configurationResource;
+public class cuesheetResourceProvider implements SingletonsProvider {
+    private cuesheetResource _cuesheetResource;
 
     @Activate
     public void activate () {
-        _configurationResource = new configurationResource();
+        _cuesheetResource = new cuesheetResource();
     }
 
     @Deactivate
     public void deactivate () {
-        _configurationResource = null;
+        _cuesheetResource = null;
     }
 
     @Override
     public Set<?> getSingletons() {
-        return Collections.singleton(_configurationResource);
+        return Collections.singleton(_cuesheetResource);
     }
 }

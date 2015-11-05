@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Created by Administrator on 28/10/2015.
+ * Created by Broadcast Media Solutions on 28/10/2015.
  */
 public class mos {
     @XmlElement(required = true)

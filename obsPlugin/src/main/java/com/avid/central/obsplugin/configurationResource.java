@@ -3,6 +3,7 @@ package com.avid.central.obsplugin;
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
+import com.avid.central.obsplugin.interplaylibrary.interplay_assets;
 import org.apache.commons.net.ftp.FTPClient;
 
 import javax.ws.rs.*;
@@ -12,74 +13,28 @@ import java.net.URLConnection;
 import java.util.List;
 
 /**
- * Created by Administrator on 16/10/2015.
+ * Created by Broadcast Media Solutions on 16/10/2015.
  */
 @Path("/obsdetails")
 @Consumes("application/json")
 @Produces("application/json")
 
 public class configurationResource {
-    ExportConfiguration _configuration;
-
     public configurationResource()
     {
-        // try and read the configuration from disk...
-        try
-        {
-            _configuration = ExportConfiguration.Open();
-        }
-        catch (Exception ex)
-        {
-            // failed to open it so create a default version
-            _configuration = new ExportConfiguration();
-            _configuration.duration_field = "total-time";
-            _configuration.info_field = "v-info";
-
-            _configuration.rundown_field = "v-rundown";
-            _configuration.runup_field = "v-runup";
-            _configuration.start_time_field = "cume-time";
-            _configuration.story_id_field = "v-storyid";
-            _configuration.subject_field = "title";
-            _configuration.type_field = "v-type";
-            _configuration.upmix_field = "v-upmix";
-            _configuration.video_id_field = "mos-title";
-
-            _configuration.obs_export_role = "Exporters";
-
-            _configuration.date_id = "Date";
-            _configuration.day_id = "Day";
-            _configuration.title_id = "Name";
-            _configuration.obs_channel_id = "OBSChannelID";
-
-            _configuration.onc_ftp_srvr = "wysdomserver";
-            _configuration.onc_ftp_port = 21;
-            _configuration.onc_ftp_login = "administrator";
-            _configuration.onc_ftp_pwd = "is-admin";
-            _configuration.onc_ftp_path = "nas";
-
-            _configuration.mds_ftp_srvr = "wysdomserver";
-            _configuration.mds_ftp_port = 21;
-            _configuration.mds_ftp_login = "administrator";
-            _configuration.mds_ftp_pwd = "is-admin";
-            _configuration.mds_ftp_path = "nas";
-
-            _configuration.inws_ws_srvr = "ftsserver";
-            _configuration.inws_ws_port = 8080;
-            _configuration.inws_server = "inews";
-            _configuration.inws_login = "avstar";
-            _configuration.inws_pwd = "avstar";
-
-            _configuration.iplay_ws_srvr = "ftsserver";
-            _configuration.iplay_ws_port = 8080;
-            _configuration.iplay_workgroup = "WYSDOM";
-            _configuration.iplay_login = "avstar";
-            _configuration.iplay_pwd = "avstar";
-        }
     }
+
     @GET
     @Path("/")
     public ExportConfiguration get_configuration() {
-        return _configuration;
+        ExportConfiguration config = null;
+
+        try
+        {
+            config = ExportConfiguration.Open();
+        }
+        catch (Exception ex){}
+        return config;
     }
 
     @GET
@@ -108,33 +63,44 @@ public class configurationResource {
 
     @POST
      public String post(ExportConfiguration config) {
-        _configuration = config;
         try {
-            _configuration.Save();
+            config.Save();
         }
         catch (Exception ex)
         {
-
+            return "Error saving configuration: " + ex.getMessage();
         }
-        return "OK";
+        return "Saved Configuration";
     }
 
     String test_inews_connection()
     {
+        // first get the configuration
+        ExportConfiguration config = null;
+        try
+        {
+            config = ExportConfiguration.Open();
+        }
+        catch (Exception ex)
+        {
+            return "Error reading configuration settings: " + ex.getMessage();
+        }
+
         String response = "Connection Failed";
         boolean connected = false;
-        iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
+        iNEWS_System inews = null;
 
         try {
-            // first connect to iNEWS
-            inews.Connect(_configuration.inws_server, _configuration.inws_login, _configuration.inws_pwd);
+            // then connect to iNEWS
+            inews = new iNEWS_System(config.inws_ws_srvr, config.inws_ws_port);
+            inews.Connect(config.inws_server, config.inws_login, config.inws_pwd);
             connected = true;
 
             // try and list the root folder
             List<String> listing = inews.ListFolder("");
 
             // folder listed ok, can we use the later GetQueueRecords command?
-            iNEWS_Queue queue = new iNEWS_Queue(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
+            iNEWS_Queue queue = new iNEWS_Queue(inews.getSessionID(), config.inws_ws_srvr, config.inws_ws_port);
             queue.CheckForGetRecords();
             response = "iNEWS Connection Successful";
          }
@@ -162,20 +128,51 @@ public class configurationResource {
 
     String test_interplay_connection()
     {
-        return "OK";
+        // first get the configuration
+        ExportConfiguration config = null;
+        try
+        {
+            config = ExportConfiguration.Open();
+        }
+        catch (Exception ex)
+        {
+            return "Error reading configuration settings: " + ex.getMessage();
+        }
+
+        interplay_assets assets = new interplay_assets(config.iplay_ws_srvr, config.iplay_ws_port, config.iplay_workgroup, config.iplay_login, config.iplay_pwd);
+        try
+        {
+            assets.testConnection();
+        }
+        catch (Exception ex)
+        {
+            return "Interplay connection failed: " + ex.getMessage();
+        }
+
+        return "Interplay connection successful";
     }
 
     String test_onc_connection()
     {
         String response = "Connection Failed";
 
+        // first get the configuration
+        ExportConfiguration config = null;
+        try
+        {
+            config = ExportConfiguration.Open();
+        }
+        catch (Exception ex)
+        {
+            return "Error reading configuration settings: " + ex.getMessage();
+        }
+
         // check for valid configuration
-        if (null == _configuration ||
-                _configuration.onc_ftp_path.length() == 0 ||
-                _configuration.onc_ftp_pwd.length() == 0 ||
-                _configuration.onc_ftp_port == 0 ||
-                _configuration.onc_ftp_login.length() == 0 ||
-                _configuration.onc_ftp_srvr.length() == 0)
+        if (config.onc_ftp_path.length() == 0 ||
+                config.onc_ftp_pwd.length() == 0 ||
+                config.onc_ftp_port == 0 ||
+                config.onc_ftp_login.length() == 0 ||
+                config.onc_ftp_srvr.length() == 0)
         {
             return "The ONC FTP settings are not valid\r\n\r\nPlease update the configuration.";
         }
@@ -185,10 +182,10 @@ public class configurationResource {
         try
         {
             ftp = new FTPClient();
-            ftp.connect(_configuration.onc_ftp_srvr);
-            ftp.login(_configuration.onc_ftp_login, _configuration.onc_ftp_pwd);
+            ftp.connect(config.onc_ftp_srvr);
+            ftp.login(config.onc_ftp_login, config.onc_ftp_pwd);
             StringBuilder fp = new StringBuilder();
-            fp.append(_configuration.onc_ftp_path);
+            fp.append(config.onc_ftp_path);
             fp.append("/ftp_test_file.xml");
             OutputStream fs = ftp.storeFileStream(fp.toString());
             fs.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());
@@ -219,13 +216,23 @@ public class configurationResource {
     {
         String response = "Connection Failed";
 
+        // first get the configuration
+        ExportConfiguration config = null;
+        try
+        {
+            config = ExportConfiguration.Open();
+        }
+        catch (Exception ex)
+        {
+            return "Error reading configuration settings: " + ex.getMessage();
+        }
+
         // check for valid configuration
-        if (null == _configuration ||
-                _configuration.mds_ftp_path.length() == 0 ||
-                _configuration.mds_ftp_pwd.length() == 0 ||
-                _configuration.mds_ftp_port == 0 ||
-                _configuration.mds_ftp_login.length() == 0 ||
-                _configuration.mds_ftp_srvr.length() == 0)
+        if (config.mds_ftp_path.length() == 0 ||
+                config.mds_ftp_pwd.length() == 0 ||
+                config.mds_ftp_port == 0 ||
+                config.mds_ftp_login.length() == 0 ||
+                config.mds_ftp_srvr.length() == 0)
         {
             return "The ONC FTP settings are not valid\r\n\r\nPlease update the configuration.";
         }
@@ -235,10 +242,10 @@ public class configurationResource {
         try
         {
             ftp = new FTPClient();
-            ftp.connect(_configuration.mds_ftp_srvr);
-            ftp.login(_configuration.mds_ftp_login, _configuration.mds_ftp_pwd);
+            ftp.connect(config.mds_ftp_srvr);
+            ftp.login(config.mds_ftp_login, config.mds_ftp_pwd);
             StringBuilder fp = new StringBuilder();
-            fp.append(_configuration.mds_ftp_path);
+            fp.append(config.mds_ftp_path);
             fp.append("/ftp_test_file.xml");
             OutputStream fs = ftp.storeFileStream(fp.toString());
             fs.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Rundown>This is my test data</Rundown>".getBytes());

@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.UUID;
 
 /**
- * Created by Administrator on 03/10/2015.
+ * Created by Broadcast Media Solutions on 03/10/2015.
  */
 @XmlRootElement(name = "inewsresponse")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -35,7 +35,7 @@ public class InewsResponse {
     @XmlElement(required = true)
     private String message;
     @XmlElement(required = true)
-    private int result; // 0 = generic error, 1 = setup success, 2 = not authorized
+    private int result; // 0 = generic error, 1 = setup success, 2 = not authorized, 3 = configuration missing
 
     public UUID getID() {
         return this.id;

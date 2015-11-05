@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!-- definition of simple types -->
+    <xs:simpleType name="Nvarchar6">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="6" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Nvarchar16">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="16" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Nvarchar32">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="32" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Nvarchar255">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TimeTypeold">
+        <xs:union memberTypes="xs:time">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value=""/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="TimeType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="11" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- definition of Rundown -->
+    <xs:element name="Rundown">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="OBSChannelId" type="Nvarchar16"/>
+                <xs:element name="Title" type="Nvarchar16"/>
+                <xs:element name="Day" type="Nvarchar6"/>
+                <xs:element name="Date" type="xs:date"/>
+                <xs:element name="RundownStartTime" type="TimeType" minOccurs="0"/>
+                <xs:element name="RundownEndTime" type="TimeType" minOccurs="0" />
+                <xs:element name="StorySession">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Story" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="StartTime" type="TimeType"/>
+                                        <xs:element name="Duration" type="TimeType"/>
+                                        <xs:element name="Subject" type="Nvarchar255"/>
+                                        <xs:element name="Type" type="Nvarchar32"/>
+                                        <xs:element name="VideoID" type="Nvarchar32"/>
+                                        <xs:element name="Updated" type="xs:boolean"/>
+                                        <xs:element name="Modified" type="TimeType"/>
+                                        <xs:element name="Graphic" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="GraphPage" type="Nvarchar32" minOccurs="0" />
+                                                    <xs:element name="GraphOffset_IN" type="TimeType" minOccurs="0" />
+                                                    <xs:element name="GraphOffset_OUT" type="TimeType" minOccurs="0" />
+                                                    <xs:element name="GraphDuration" type="TimeType" minOccurs="0" />
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="music" type="Nvarchar6"/>
+                                        <xs:element name="com-upmix" type="xs:boolean"/>
+                                        <xs:element name="cuesheet" type="Nvarchar255" minOccurs="0" />
+                                        <xs:element name="ScriptInfo" type="Nvarchar255"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
