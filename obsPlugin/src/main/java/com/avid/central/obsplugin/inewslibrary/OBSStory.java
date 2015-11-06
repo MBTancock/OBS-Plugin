@@ -24,8 +24,6 @@ public class OBSStory
         public String VideoID;
         public String StoryID;
         public boolean Upmix;
-        public String Runup;
-        public String Runout;
 
         public String ScriptInfo = "";
         public String CueSheet = "";

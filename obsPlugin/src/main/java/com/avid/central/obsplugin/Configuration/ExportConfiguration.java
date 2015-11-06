@@ -55,6 +55,7 @@ public class ExportConfiguration {
 
     //    Authorisation Definitions
     public String obs_export_role;
+    public String obs_cuesheet_role;
 
     //    XML Definitions
     public String obs_channel_id;
@@ -62,14 +63,13 @@ public class ExportConfiguration {
     public String date_id;
     public String day_id;
     public String viz_id;
+    public String cuesheet_id;
 
     //    Field Definitions
     public String duration_field;
     public String info_field;
     public String modified_field;
     public String music_field;
-    public String rundown_field;
-    public String runup_field;
     public String start_time_field;
     public String story_id_field;
     public String subject_field;
@@ -77,6 +77,9 @@ public class ExportConfiguration {
     public String update_field;
     public String upmix_field;
     public String video_id_field;
+
+    // Script Export
+    public boolean script_format;
 
     @XmlTransient
     private long _lastModifiedTime = 0;
@@ -123,7 +126,7 @@ public class ExportConfiguration {
                 //    ONC FTP Configuration
                 this.onc_ftp_srvr = configuration.onc_ftp_srvr;
                 this.onc_ftp_port = configuration.onc_ftp_port;
-                this. onc_ftp_login= configuration.onc_ftp_login;
+                this.onc_ftp_login= configuration.onc_ftp_login;
                 this.onc_ftp_pwd = configuration.onc_ftp_pwd;
                 this.onc_ftp_path = configuration.onc_ftp_path;
 
@@ -136,6 +139,7 @@ public class ExportConfiguration {
 
                 //    Authorisation Definitions
                 this.obs_export_role = configuration.obs_export_role;
+                this.obs_cuesheet_role = configuration.obs_cuesheet_role;
 
                 //    XML Definitions
                 this.obs_channel_id = configuration.obs_channel_id;
@@ -143,14 +147,13 @@ public class ExportConfiguration {
                 this.date_id = configuration.date_id;
                 this.day_id = configuration.day_id;
                 this.viz_id = configuration.viz_id;
+                this.cuesheet_id = configuration.cuesheet_id;
 
                 //    Field Definitions
                 this.duration_field = configuration.duration_field;
                 this.info_field = configuration.info_field;
                 this.modified_field = configuration.modified_field;
                 this.music_field = configuration.music_field;
-                this.rundown_field = configuration.rundown_field;
-                this.runup_field = configuration.runup_field;
                 this.start_time_field = configuration.start_time_field;
                 this.story_id_field = configuration.story_id_field;
                 this.subject_field = configuration.subject_field;
@@ -158,6 +161,9 @@ public class ExportConfiguration {
                 this.update_field = configuration.update_field;
                 this.upmix_field = configuration.upmix_field;
                 this.video_id_field = configuration.video_id_field;
+
+                // Script formatting
+                this.script_format = configuration.script_format;
 
                 _lastModifiedTime = lastModifiedTime;
             }

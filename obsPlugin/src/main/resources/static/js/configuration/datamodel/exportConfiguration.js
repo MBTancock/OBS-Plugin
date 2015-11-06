@@ -27,24 +27,25 @@
             "mds_ftp_pwd",
             "mds_ftp_path",
             "obs_export_role",
+            "obs_cuesheet_role",
             "obs_channel_id",
             "title_id",
             "date_id",
             "day_id",
             "viz_id",
+            "cuesheet_id",
             "duration_field",
             "info_field",
             "modified_field",
             "music_field",
-            "rundown_field",
-            "runup_field",
             "start_time_field",
             "story_id_field",
             "subject_field",
             "type_field",
             "update_field",
             "upmix_field",
-            "video_id_field"
+            "video_id_field",
+            "script_format"
         ];
         
         AV.ns("AV.obsPlugin.datamodel");
@@ -52,9 +53,6 @@
     /**
      * @name AV.obsPlugin.datamodel.ExportData
      * @class
-     * @param {Object} data Hash of properties
-     * @param {String} data.interplayWebServicesServerName
-     * @param {String} data.interplayWebServicesPort
      * @constructor
      */
         ExportConfiguration = function (data) {
@@ -79,17 +77,17 @@
                 this.mds_ftp_pwd = ko.observable("");
                 this.mds_ftp_path = ko.observable("");
                 this.obs_export_role = ko.observable("");
+                this.obs_cuesheet_role = ko.observable("");
                 this.obs_channel_id = ko.observable("");
                 this.title_id = ko.observable("");
                 this.date_id = ko.observable("");
                 this.day_id = ko.observable("");
                 this.viz_id = ko.observable("");
+                this.cuesheet_id = ko.observable("");
                 this.duration_field = ko.observable("");
                 this.info_field = ko.observable("");
                 this.modified_field = ko.observable("");
                 this.music_field = ko.observable("");
-                this.rundown_field = ko.observable("");
-                this.runup_field = ko.observable("");
                 this.start_time_field = ko.observable("");
                 this.story_id_field = ko.observable("");
                 this.subject_field = ko.observable("");
@@ -97,6 +95,7 @@
                 this.update_field = ko.observable("");
                 this.upmix_field = ko.observable("");
                 this.video_id_field = ko.observable("");
+                this.script_format = ko.observable(false);
             if (data) {
                 this.inws_ws_srvr(data.inws_ws_srvr);
                 this.inws_ws_port(data.inws_ws_port);
@@ -119,11 +118,13 @@
                 this.mds_ftp_pwd(data.mds_ftp_pwd);
                 this.mds_ftp_path(data.mds_ftp_path);
                 this.obs_export_role(data.obs_export_role);
+                this.obs_cuesheet_role(data.obs_cuesheet_role);
                 this.obs_channel_id(data.obs_channel_id);
                 this.title_id(data.title_id);
                 this.date_id(data.date_id);
                 this.day_id(data.day_id);
                 this.viz_id(data.viz_id);
+                this.cuesheet_id(data.cuesheet_id);
                 this.update_field = data.update_field;
                 this.modified_field = data.modified_field;
                 this.music_field = data.music_field;
@@ -135,16 +136,11 @@
                 this.video_id_field(data.video_id_field);
                 this.story_id_field(data.story_id_field);
                 this.upmix_field(data.upmix_field);
-                this.runup_field(data.runup_field);
-                this.rundown_field(data.rundown_field);
+                this.script_format(data.script_format);
             }
         };
 
 
-    /**
-     * Returns hash that contains only persistent properties
-     * @return {Object}
-     */
         ExportConfiguration.prototype.toJS = function () {
             var json = ko.toJS(this);
 

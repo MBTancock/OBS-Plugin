@@ -1,4 +1,22 @@
 <UIPlugin bundlePath="static">
+  <View type="obs-general-settings">
+    <!-- Mark view as system settings view. -->
+    <Property name="settings-type" value="system-settings"/>
+    <Property name="settings-cardinality" value="1..1" />
+    <Property name="showMenu" value="false"/>
+    <Property name="view-env" value="administration"/>
+    <Property name="@name" value="system-settings-general-view.name"/>
+
+    <Property name="productId" value="core"/>
+
+    <Import type="js" path="js/settings/Localization.js"/>
+    <Import type="js" path="js/settings/model/ObsSettings.js"/>
+    <Import type="js" path="js/settings/view/Details.js"/>
+    <Import type="js" path="js/settings/view/ObsSettingsView.js"/>
+    <Import type="js" path="js/settings/controller/ObsSettings.js"/>
+    <Import type="js" path="js/settings/ObsSettings.js"/>
+    <Import type="css" path="css/styles.css" />
+  </View>
   <View type="cueSheet">
     <Property name="productId" value="obsPlugin"/>
     <Property name="view-env" value="production"/>
@@ -17,7 +35,7 @@
     <Property name="view-env" value="administration"/>
     <Property name="@name" value="OBS"/>
     <Import type="js" path="js/configuration/SystemSettingsObsView.js"/>
-    <Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>    <!--<Import type="css" path="css/styles.css"/>-->
+    <Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>
   </View>
   <ViewExtension type="av-asset-list">
     <Import type="js" path="js/export/asset-menu.js"/>

@@ -49,7 +49,6 @@
             // place your data saving logic her
             save: function (callback) {
                 if (panel.isValid()) {
-                    var server = model.iplay_ws_srvr();
                     savesettings();
                     this.setDirty(false);
                     callback(true);
@@ -68,6 +67,15 @@
         });
 
         function setupfields() {
+            var formatStore = ({
+                type : 'array',
+                fields : ['name'],
+                data : [
+                    ['Omit Tags'],
+                    ['Include Tags']
+                ]
+            });
+
             return [
                 {
                     xtype: 'fieldset',
@@ -294,8 +302,14 @@
                     items: [
                         {
                             xtype: 'textfield',
-                            fieldLabel: 'Exporters Role',
+                            fieldLabel: 'Rundown Exporters Role',
                             name: 'obs_export_role',
+                            allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Cue SheetExporters Role',
+                            name: 'obs_cuesheet_role',
                             allowBlank: false
                         }
                     ]
@@ -338,6 +352,12 @@
                             fieldLabel: 'Viz Graphic',
                             name: 'viz_id',
                             allowBlank: false
+                        },
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Cue Sheet',
+                            name: 'cuesheet_id',
+                            allowBlank: false
                         }
                     ]
                 },
@@ -372,18 +392,6 @@
                             xtype: 'textfield',
                             fieldLabel: 'Music',
                             name: 'music_field',
-                            allowBlank: false
-                        },
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Rundown',
-                            name: 'rundown_field',
-                            allowBlank: false
-                        },
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Runup',
-                            name: 'runup_field',
                             allowBlank: false
                         },
                         {
@@ -429,6 +437,23 @@
                             allowBlank: false
                         }
                     ]
+                },
+                {
+                    xtype: 'fieldset',
+                    title: 'Script Formatting',
+                    layout: 'column',
+                    defaults: {
+                        labelWidth: 160,
+                        labelAlign: 'right'
+                    },
+                    items: [
+                        {
+                            xtype: 'checkbox',
+                            fieldLabel: 'Retain Formatting Tags',
+                            id: 'script_format_id',
+                            checkboxName: 'script_format'
+                        }
+                    ]
                 }
             ]
         }
@@ -462,8 +487,9 @@
             $('input[name="mds_ftp_pwd"]').attr('data-bind', 'value: mds_ftp_pwd');
             $('input[name="mds_ftp_path"]').attr('data-bind', 'value: mds_ftp_path');
 
-            // autorisation binding
+            // authorisation binding
             $('input[name="obs_export_role"]').attr('data-bind', 'value: obs_export_role');
+            $('input[name="obs_cuesheet_role"]').attr('data-bind', 'value: obs_cuesheet_role');
 
             // definitions binding
             $('input[name="obs_channel_id"]').attr('data-bind', 'value: obs_channel_id');
@@ -471,14 +497,13 @@
             $('input[name="date_id"]').attr('data-bind', 'value: date_id');
             $('input[name="day_id"]').attr('data-bind', 'value: day_id');
             $('input[name="viz_id"]').attr('data-bind', 'value: viz_id');
+            $('input[name="cuesheet_id"]').attr('data-bind', 'value: cuesheet_id');
 
             // field identifier bindings
             $('input[name="duration_field"]').attr('data-bind', 'value: duration_field');
             $('input[name="info_field"]').attr('data-bind', 'value: info_field');
             $('input[name="modified_field"]').attr('data-bind', 'value: modified_field');
             $('input[name="music_field"]').attr('data-bind', 'value: music_field');
-            $('input[name="rundown_field"]').attr('data-bind', 'value: rundown_field');
-            $('input[name="runup_field"]').attr('data-bind', 'value: runup_field');
             $('input[name="start_time_field"]').attr('data-bind', 'value: start_time_field');
             $('input[name="story_id_field"]').attr('data-bind', 'value: story_id_field');
             $('input[name="subject_field"]').attr('data-bind', 'value: subject_field');
@@ -486,6 +511,16 @@
             $('input[name="update_field"]').attr('data-bind', 'value: update_field');
             $('input[name="upmix_field"]').attr('data-bind', 'value: upmix_field');
             $('input[name="video_id_field"]').attr('data-bind', 'value: video_id_field');
+
+            //$('input[name="script_format_id-inputEl"]').attr('data-bind', 'checked: script_format');
+
+            var i = $('#script_format_id-inputEl');
+            i.attr('type', 'checkbox');
+            i.attr('data-bind', 'checked: script_format');
+
+            //var btn = Ext4.getCmp('script_format_id-inputEl');
+            //var el = btn.getEl();
+            //el.set({"data-bind": 'checked: script_format'});
 
                  try {
                     var elem = panel.getEl();
@@ -507,14 +542,16 @@
             })
                 .done (function(res)
             {
-                if (res.responseText.indexOf("Error") >= 0)
+                if (null != res.responseText && res.responseText.indexOf("Error") >= 0)
                 {
                     // save settings failed
                     AV.Utilities.showErrorMessage(res.responseText);
                 }
         })
                 .fail(function(res){
-                    AV.Utilities.showErrorMessage(res.responseText);
+                    if (null != res.responseText) {
+                        AV.Utilities.showErrorMessage(res.responseText);
+                    }
                     return false;
                 })
         }
@@ -555,19 +592,19 @@
                         model.mds_ftp_path(res.mds_ftp_path);
 
                         model.obs_export_role(res.obs_export_role);
+                        model.obs_cuesheet_role(res.obs_cuesheet_role);
 
                         model.obs_channel_id(res.obs_channel_id);
                         model.title_id(res.title_id);
                         model.date_id(res.date_id);
                         model.day_id(res.day_id);
                         model.viz_id(res.viz_id);
+                        model.cuesheet_id(res.cuesheet_id);
 
                         model.duration_field(res.duration_field);
                         model.info_field(res.info_field);
                         model.modified_field(res.modified_field);
                         model.music_field(res.music_field);
-                        model.rundown_field(res.rundown_field);
-                        model.runup_field(res.runup_field);
                         model.start_time_field(res.start_time_field);
                         model.story_id_field(res.story_id_field);
                         model.subject_field(res.subject_field);
@@ -575,6 +612,8 @@
                         model.update_field(res.update_field);
                         model.upmix_field(res.upmix_field);
                         model.video_id_field(res.video_id_field);
+
+                        model.script_format(res.script_format);
                     }
                     return true;
                 }

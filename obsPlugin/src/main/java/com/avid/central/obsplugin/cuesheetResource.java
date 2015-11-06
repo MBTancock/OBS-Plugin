@@ -76,7 +76,7 @@ public class cuesheetResource {
     @POST
     public CuesheetResponse post(UserInfo session, CuesheetRequest request) {
         CuesheetResponse response = new CuesheetResponse();
-        response.setMessage("Listing Failed");
+        response.setMessage("Cuesheet Export Failed");
 
         if (null == _configuration) {
             response.setResult(3);
@@ -88,7 +88,7 @@ public class cuesheetResource {
 
         Boolean connected = false;
 
-        // check that this user can export rundowns
+        // check that this user can export cue sheets
         boolean authorised = false;
         for (String role : session.getUserSession().getRoles()) {
             if (role.equalsIgnoreCase(_configuration.obs_export_role)) {

@@ -261,18 +261,6 @@ public class ExportStories {
                             }
                         }
 
-                        // get Runup
-                        String runup = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.runup_field);
-                        if (null == runup || runup.isEmpty()) {
-                            runup = "0";
-                        }
-
-                        // get Rundown
-                        String rundown = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.rundown_field);
-                        if (null == rundown || rundown.isEmpty()) {
-                            rundown = "0";
-                        }
-
                         // get VIZ production cue
                         // are there any anchored elements?
                         if (exportData.getMdsMode()) {
@@ -339,8 +327,6 @@ public class ExportStories {
                         if (exportData.getMdsMode()) {
                             obsStory.StoryID = storyID;
                             obsStory.Upmix = upMix == "1";
-                            obsStory.Runout = rundown;
-                            obsStory.Runup = runup;
                             obsStory.Music = music;
                             obsStory.Graphics = vizGrapics;
                         } else {

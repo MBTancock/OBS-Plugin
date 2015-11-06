@@ -1,33 +1,33 @@
 /*
- * Copyright Broadcast Media Solutions
+ * Copyright 2014-2015 by Avid Technology, Inc.
  */
 
-.obs-settings .x4-panel-body-default .x4-panel-body-default {
+.obs-general-settings .x4-panel-body-default .x4-panel-body-default {
     border: none;
     padding-top: 0;
 }
 
-.obs-settings .settings-fieldset .x4-form-item-label{
+.obs-general-settings .settings-fieldset .x4-form-item-label{
     width: 200px;
     margin: 6px 3px 0 0 !important;
     padding: 0;
     font: bold 11px Arial;
 }
 
-.obs-settings .x4-fieldset{
+.obs-general-settings .x4-fieldset{
     padding: 5px 10px 8px 10px;
     margin-left: 1px;
 }
 
-.obs-settings .x4-form-item.x4-form-type-text {
+.obs-general-settings .x4-form-item.x4-form-type-text {
     margin-bottom: 2px;
 }
 
-.obs-settings .x-panel-body > .x4-panel > .x4-panel-body {
+.obs-general-settings .x-panel-body > .x4-panel > .x4-panel-body {
     border-radius: 0;
     border: 0;
 }
 
-.obs-settings legend.x4-fieldset-header {
+.obs-general-settings legend.x4-fieldset-header {
     margin-left: 10px;
 }

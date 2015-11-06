@@ -62,15 +62,15 @@ public class configurationResource {
     }
 
     @POST
-     public String post(ExportConfiguration config) {
+     public ExportConfiguration post(ExportConfiguration config) {
         try {
             config.Save();
         }
         catch (Exception ex)
         {
-            return "Error saving configuration: " + ex.getMessage();
+            return null;
         }
-        return "Saved Configuration";
+        return config;
     }
 
     String test_inews_connection()
