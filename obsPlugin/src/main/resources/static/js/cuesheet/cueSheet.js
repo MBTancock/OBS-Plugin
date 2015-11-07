@@ -65,6 +65,8 @@
         function exportCueSheet() {
             var txt = Ext4.getCmp('export_link_id').value;
             // strip off initial identifier
+            var urlText = txt;
+
             txt = txt.substring(txt.indexOf("%3A") + 3);
             var rundown = txt.substring(0, txt.indexOf("%3A"));
             txt = txt.substring(txt.indexOf("%3A") + 3);
@@ -74,6 +76,26 @@
             cuesheet.queue = rundown;
             cuesheet.story = story;
 
+            //// see if we can get the story using the MediaCentral iNEWS api
+            //// https://media-central/layout/inews-only-layout/#inews:INEWS%3AMDS.MX1.00%3A84955593.287885.11%7CStory
+            //urlText = urlText.substring(urlText.indexOf("#inews:") + "#inews:".length);
+            //var urlQueue = urlText.substring(0, urlText.lastIndexOf("%3A"));
+            //var urlStory = urlText.substring(urlText.lastIndexOf("%3A") + "%3A".length);
+            //urlStory = urlStory.substring(0, urlStory.indexOf("%7C"));
+            //
+            //var url = "/api/inews/queue/story/story/" + urlQueue + "%7CQueue/" + urlStory;
+            //$.ajax(url, {
+            //        method: "GET",
+            //        dataType: "json",
+            //    })
+            //    .done(function (res) {
+            //        var story = new Storyline.StoryModel();
+            //        story.setStory(res);
+            //        if (story != null) {
+            //            AV.Utilities.showErrorMessage(story.getTitleValue() + "Sequence: " + story.getSequenceID());
+            //        }
+            //    })
+
             // post the request to create the export data
             $.ajax("/api/cuesheet/", {
                     method: "POST",
@@ -82,6 +104,8 @@
                     dataType: "json",
                 })
                 .done(function (res) {
+                    var response = new AV.obsPlugin.datamodel.CuesheetResponse(res);
+                    AV.Utilities.showInfoMessage(response.message);
                                 })
         }
     })

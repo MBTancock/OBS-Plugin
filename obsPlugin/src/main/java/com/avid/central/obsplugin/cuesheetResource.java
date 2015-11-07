@@ -2,6 +2,9 @@ package com.avid.central.obsplugin;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
 import com.avid.central.obsplugin.inewslibrary.ExportCuesheetData;
+import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
+import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
+import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
 import com.avid.central.services.authentication.um.UserInfo;
 
 import javax.ws.rs.*;
@@ -101,6 +104,40 @@ public class cuesheetResource {
             // sorry, not allowed!
             response.setResult(2);
             return response;
+        }
+
+        iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
+
+        try {
+
+            // request to create the export xml data
+            // first connect to iNEWS, throws exception if it fails
+            inews.Connect(_configuration.inws_server, _configuration.inws_login, _configuration.inws_pwd);
+            connected = true;
+
+            // create a queue soap client
+            iNEWS_Queue queue = new iNEWS_Queue(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
+
+            String storyAsNsml = queue.GetStory(request.getQueue(), request.getStory());
+            String mobID = queue.GetMobID(storyAsNsml);
+            response.setMessage(mobID);
+
+        } catch (Exception ex) {
+            response.setMessage(ex.getMessage());
+            response.setResult(0);
+            return response;
+        }
+
+        finally
+        {
+            if (connected)
+            {
+                try
+                {
+                    inews.Disconnect();
+                }
+                catch (Exception ex){}
+            }
         }
 
         return response;

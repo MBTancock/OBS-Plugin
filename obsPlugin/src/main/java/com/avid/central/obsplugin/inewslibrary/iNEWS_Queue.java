@@ -5,6 +5,7 @@
  */
 package com.avid.central.obsplugin.inewslibrary;
 
+import com.avid.central.obsplugin.inewslibrary.VizGraphic.AttachmentContent;
 import com.avid.central.obsplugin.inewslibrary.nsml.*;
 import com.avid.central.obsplugin.inewslibrary.inewsqueue.*;
 import com.avid.central.obsplugin.inewslibrary.inewsqueue.types.*;
@@ -144,6 +145,8 @@ public class iNEWS_Queue {
 
         try
         {
+            SetSessionID();
+
             GetStoryType gst = new GetStoryType();
             gst.setQueueFullName(queue);
             gst.setQueueLocator(locator);
@@ -180,6 +183,26 @@ public class iNEWS_Queue {
         {
             StringReader reader = new StringReader(storyAsNsml);
             Nsml story = (Nsml) unmarshaller.unmarshal(reader);
+
+            if (null != story.getAeset() && story.getAeset().getAe().size() > 0) {
+                // is there one for VIZ?
+                for (Nsml.Aeset.Ae ae : story.getAeset().getAe()) {
+
+                    for (Object ap : ae.getMcOrAp()) {
+                        if (ap.getClass() != ApContent.class) {
+                            continue;
+                        }
+
+                        if (null == ae.getHidden() || -1 == ae.getHidden().indexOf("sequenceID") )
+                        {
+                            continue;
+                        }
+
+                        mobID = ae.getHidden().substring(ae.getHidden().indexOf(":") + 1);
+                        return mobID;
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {
