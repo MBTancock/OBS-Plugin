@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 by Avid Technology, Inc.
+ * Copyright Broadcast Media Solutions
  */
 
 (function(AV) {

@@ -28,15 +28,16 @@
     <Import type="js" path="js/cuesheet/datamodel/cuesheetRequest.js"/>
     <Import type="js" path="js/cuesheet/datamodel/cuesheetResponse.js"/>
    </View>
-  <View type="system-settings-obs-view">
-    <Property name="settings-type" value="system-settings"/>
-    <Property name="showMenu" value="false"/>
-    <Property name="productId" value="obsPlugin"/>
-    <Property name="view-env" value="administration"/>
-    <Property name="@name" value="OBS"/>
-    <Import type="js" path="js/configuration/SystemSettingsObsView.js"/>
-    <Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>
-  </View>
+  <!--Removed in favour of GENSET based settings-->
+  <!--<View type="system-settings-obs-view">-->
+    <!--<Property name="settings-type" value="system-settings"/>-->
+    <!--<Property name="showMenu" value="false"/>-->
+    <!--<Property name="productId" value="obsPlugin"/>-->
+    <!--<Property name="view-env" value="administration"/>-->
+    <!--<Property name="@name" value="OBS"/>-->
+    <!--<Import type="js" path="js/configuration/SystemSettingsObsView.js"/>-->
+    <!--<Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>-->
+  <!--</View>-->
   <ViewExtension type="av-asset-list">
     <Import type="js" path="js/export/asset-menu.js"/>
     <Import type="js" path="js/export/datamodel/inewsRequest.js"/>

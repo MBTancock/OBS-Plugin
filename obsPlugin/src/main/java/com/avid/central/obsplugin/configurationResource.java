@@ -83,7 +83,12 @@ public class configurationResource {
         }
         catch (Exception ex)
         {
-            return "Error reading configuration settings: " + ex.getMessage();
+            String errorMsg = ex.getMessage();
+            if (null == errorMsg)
+            {
+                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
+            }
+            return "Error reading configuration settings: " + errorMsg;
         }
 
         String response = "Connection Failed";
@@ -136,7 +141,12 @@ public class configurationResource {
         }
         catch (Exception ex)
         {
-            return "Error reading configuration settings: " + ex.getMessage();
+            String errorMsg = ex.getMessage();
+            if (null == errorMsg)
+            {
+                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
+            }
+            return "Error reading configuration settings: " + errorMsg;
         }
 
         interplay_assets assets = new interplay_assets(config.iplay_ws_srvr, config.iplay_ws_port, config.iplay_workgroup, config.iplay_login, config.iplay_pwd);
@@ -164,7 +174,12 @@ public class configurationResource {
         }
         catch (Exception ex)
         {
-            return "Error reading configuration settings: " + ex.getMessage();
+            String errorMsg = ex.getMessage();
+            if (null == errorMsg)
+            {
+                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
+            }
+            return "Error reading configuration settings: " + errorMsg;
         }
 
         // check for valid configuration
@@ -224,7 +239,12 @@ public class configurationResource {
         }
         catch (Exception ex)
         {
-            return "Error reading configuration settings: " + ex.getMessage();
+            String errorMsg = ex.getMessage();
+            if (null == errorMsg)
+            {
+                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
+            }
+            return "Error reading configuration settings: " + errorMsg;
         }
 
         // check for valid configuration
