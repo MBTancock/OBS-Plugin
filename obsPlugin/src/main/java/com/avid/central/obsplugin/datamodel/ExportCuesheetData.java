@@ -1,6 +1,4 @@
-package com.avid.central.obsplugin.inewslibrary;
-
-import com.avid.central.obsplugin.CuesheetResponse;
+package com.avid.central.obsplugin.datamodel;
 
 import java.util.UUID;
 

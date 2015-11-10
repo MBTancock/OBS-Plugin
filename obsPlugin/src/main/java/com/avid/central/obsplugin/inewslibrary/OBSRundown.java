@@ -38,7 +38,7 @@ public class OBSRundown {
             DateTime dt = DateTime.parse(Date);
             return dt.toString("");
             // TODO
-//                    return dt.ToString(Properties.Settings.Default.XML_Date_Format);
+//                    return dt.toString(Properties.Settings.Default.XML_Date_Format);
         } catch (Exception ex) {
         }
 
@@ -59,13 +59,13 @@ public class OBSRundown {
         Duration dur = new Duration(RundownEndTime);
         return dur.toString("%1$02d%2$02d");
         //TODO
-//                return ts.ToString(Properties.Settings.Default.FileTimeStampFormat);
+//                return ts.toString(Properties.Settings.Default.FileTimeStampFormat);
     }
 
     public String GetFileStartTime() {
         Duration dur = new Duration(RundownStartTime);
         return dur.toString("%1$02d%2$02d");
         // TODO
-//                return ts.ToString(Properties.Settings.Default.FileTimeStampFormat);
+//                return ts.toString(Properties.Settings.Default.FileTimeStampFormat);
     }    
 }

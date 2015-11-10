@@ -5,35 +5,27 @@
 (function (AV) {
     var CuesheetResponse;
 
+
     AV.ns("AV.obsPlugin.datamodel");
 
     CuesheetResponse = function (data) {
         this.id = null;
+        this.markers = [];
         this.message = "";
-        this.queue = "";
-        this.story = "";
-        this.result = 0; // 0 = error, 1 = setup success, 2 = not authorized, 3 = missing configuration
+        this.result = 0; // 0 = error, 1 = success, 2 = not authorized, 3 = missing configuration, 4 = no MobID
 
         if (data) {
             if (data.id) {
                 this.id = data.id;
             }
-            this.queue = data.queue;
-            this.story = data.story;
+            if (data.markers)
+            {
+                this.markers = data.markers;
+            }
             this.message = data.message;
             this.result = data.result;
         }
 
-        this.toHtml = function() {
-            var html = new String("Exporting Cuesheet <b>");
-            html = html.concat(this.rundown);
-            html = html.concat("</b>><BR><BR>Story: <b>")
-            html = html.concat(this.story);
-            html = html.concat("</b><BR><BR>Warnings: <b>")
-            html = html.concat(this.message == undefined ? "None" : this.message);
-            html = html.concat("</b>");
-            return html;
-        }
     };
 
 

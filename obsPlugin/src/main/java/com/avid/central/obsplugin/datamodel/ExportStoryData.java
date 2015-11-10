@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.avid.central.obsplugin.inewslibrary;
-
-import com.avid.central.obsplugin.InewsResponse;
+package com.avid.central.obsplugin.datamodel;
 
 import java.util.UUID;
 

@@ -3,6 +3,9 @@ package com.avid.central.obsplugin;
 import javax.ws.rs.*;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
+import com.avid.central.obsplugin.datamodel.ExportStoryData;
+import com.avid.central.obsplugin.datamodel.InewsRequest;
+import com.avid.central.obsplugin.datamodel.InewsResponse;
 import com.avid.central.obsplugin.inewslibrary.*;
 import com.avid.central.services.authentication.um.UserInfo;
 import org.apache.commons.net.ftp.FTPClient;
@@ -10,8 +13,6 @@ import org.apache.commons.net.ftp.FTPClient;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Map;
 import java.util.UUID;
 

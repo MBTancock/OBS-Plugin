@@ -10,9 +10,7 @@ import com.avid.central.obsplugin.inewslibrary.nsml.*;
 import com.avid.central.obsplugin.inewslibrary.inewsqueue.*;
 import com.avid.central.obsplugin.inewslibrary.inewsqueue.types.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.ws.BindingProvider;
@@ -24,6 +22,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.ws.WebServiceException;
+
+import org.json.simple.*;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -67,18 +69,22 @@ public class iNEWS_Queue {
         return true;
     }
 
+    private Unmarshaller CreateUnmarshaller() throws JAXBException
+    {
+        JAXBContext jc = JAXBContext.newInstance(Nsml.class);
+        return jc.createUnmarshaller();
+    }
+
     public List<Nsml> GetRundown(String path, boolean getBody) {
         List<Nsml> listing = null;
 
         // create the deserialization object
-        JAXBContext jc;
         Unmarshaller unmarshaller;
         try {
-            jc = JAXBContext.newInstance(Nsml.class);
-            unmarshaller = jc.createUnmarshaller();
+            unmarshaller = CreateUnmarshaller();
         } catch (JAXBException ex) {
             Logger.getLogger(iNEWS_Queue.class.getName()).log(Level.SEVERE, null, ex);
-            return listing;
+            return null;
         }
 
         // set the session ID
@@ -163,20 +169,30 @@ public class iNEWS_Queue {
         return storyAsNsml;
     }
 
+    ContainerFactory containerFactory = new ContainerFactory(){
+        public List creatArrayContainer() {
+            return new LinkedList();
+        }
+
+        public Map createObjectContainer() {
+            return new LinkedHashMap();
+        }
+
+    };
+
     // Decodes a story to NSML then looks for a reference to a MobID
     public String GetMobID(String storyAsNsml)
     {
-        String mobID = null;
+        // create a json parser
+        JSONParser parser = new JSONParser();
 
         // create the deserialization object
-        JAXBContext jc;
         Unmarshaller unmarshaller;
         try {
-            jc = JAXBContext.newInstance(Nsml.class);
-            unmarshaller = jc.createUnmarshaller();
+            unmarshaller = CreateUnmarshaller();
         } catch (JAXBException ex) {
             Logger.getLogger(iNEWS_Queue.class.getName()).log(Level.SEVERE, null, ex);
-           return mobID;
+           return null;
         }
 
         try
@@ -185,7 +201,7 @@ public class iNEWS_Queue {
             Nsml story = (Nsml) unmarshaller.unmarshal(reader);
 
             if (null != story.getAeset() && story.getAeset().getAe().size() > 0) {
-                // is there one for VIZ?
+                // look for an entry which includes a sequenceID
                 for (Nsml.Aeset.Ae ae : story.getAeset().getAe()) {
 
                     for (Object ap : ae.getMcOrAp()) {
@@ -198,18 +214,35 @@ public class iNEWS_Queue {
                             continue;
                         }
 
-                        mobID = ae.getHidden().substring(ae.getHidden().indexOf(":") + 1);
-                        return mobID;
+
+                        // see if we can parse the ae hidden value for the sequence data
+                        // we shouldn't have got this far if it doesn't include "sequenceID"
+                        try {
+                            Map json = (Map) parser.parse(ae.getHidden(), containerFactory);
+
+                            if (json.containsKey("sequenceID"))
+                            {
+                                String mobID = (String)json.get("sequenceID");
+                                if (null != mobID)
+                                {
+                                    // ok we found what we were looking for
+                                    return mobID;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // we won't error here, just keep on looking...
+                        }
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            mobID = null;
         }
 
-        return mobID;
+        return null;
     }
 
     private void SetSessionID() {

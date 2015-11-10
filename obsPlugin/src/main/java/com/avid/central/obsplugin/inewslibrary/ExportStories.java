@@ -6,6 +6,7 @@
 package com.avid.central.obsplugin.inewslibrary;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
+import com.avid.central.obsplugin.datamodel.ExportStoryData;
 import com.avid.central.obsplugin.inewslibrary.VizGraphic.AttachmentContent;
 import com.avid.central.obsplugin.inewslibrary.VizGraphic.mos;
 import com.avid.central.obsplugin.inewslibrary.nsml.ApContent;

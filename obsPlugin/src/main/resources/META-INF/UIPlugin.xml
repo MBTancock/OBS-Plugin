@@ -27,7 +27,17 @@
     <Import type="js" path="js/cuesheet/cueSheet.js"/>
     <Import type="js" path="js/cuesheet/datamodel/cuesheetRequest.js"/>
     <Import type="js" path="js/cuesheet/datamodel/cuesheetResponse.js"/>
+    <Import type="js" path="js/cuesheet/datamodel/markerData.js"/>
    </View>
+  <View type="cueSheetTest">
+    <Property name="productId" value="obsPlugin"/>
+    <Property name="view-env" value="production"/>
+    <Property name="view-vendor" value="broadcastmediasolutions"/>
+    <Property name="view-mode" value="factory"/>
+    <Property name="@menuName" value="Cue Sheet Export Test"/>
+    <Property name="showMenu" value="true"/>
+    <Import type="js" path="js/cuesheet/cueSheetTest.js"/>
+  </View>
   <!--Removed in favour of GENSET based settings-->
   <!--<View type="system-settings-obs-view">-->
     <!--<Property name="settings-type" value="system-settings"/>-->

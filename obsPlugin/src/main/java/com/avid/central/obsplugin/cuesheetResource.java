@@ -1,16 +1,20 @@
 package com.avid.central.obsplugin;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
-import com.avid.central.obsplugin.inewslibrary.ExportCuesheetData;
+import com.avid.central.obsplugin.datamodel.CuesheetRequest;
+import com.avid.central.obsplugin.datamodel.CuesheetResponse;
+import com.avid.central.obsplugin.datamodel.ExportCuesheetData;
+import com.avid.central.obsplugin.datamodel.MarkerData;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
-import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
+import com.avid.central.obsplugin.interplaylibrary.assets.*;
+import com.avid.central.obsplugin.interplaylibrary.interplay_assets;
+import com.avid.central.obsplugin.timecode.Timecode;
+import com.avid.central.obsplugin.timecode.VideoSampleRate;
 import com.avid.central.services.authentication.um.UserInfo;
 
 import javax.ws.rs.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Broadcast Media Solutions on 05/11/2015.
@@ -120,10 +124,124 @@ public class cuesheetResource {
 
             String storyAsNsml = queue.GetStory(request.getQueue(), request.getStory());
             String mobID = queue.GetMobID(storyAsNsml);
-            response.setMessage(mobID);
+
+            if (null == mobID)
+            {
+                // flag the fact we failed to locate the MobID
+                response.setResult(4);
+                return response;
+            }
+
+            // ok, now we have the MobID we can ask for the markers
+            interplay_assets assets = new interplay_assets(_configuration.iplay_ws_srvr, _configuration.iplay_ws_port, _configuration.iplay_workgroup, _configuration.iplay_login, _configuration.iplay_pwd);
+
+            // first we need some details of the sequence, start frame, end frame and the frame rate
+            Map<String, String> returnAttributes = assets.GetSequenceDetails(mobID);
+
+            // check we have the attributes we need
+            double frameRate = 0;
+            String start;
+            String end;
+            if (returnAttributes.containsKey("FPS"))
+            {
+                try
+                {
+                    frameRate = Double.parseDouble(returnAttributes.get("FPS"));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Failed to obtain the sequence frame rate");
+                }
+            }
+            else
+            {
+                throw new Exception("Failed to obtain the sequence frame rate");
+            }
+
+            if (returnAttributes.containsKey("Start"))
+            {
+                start = returnAttributes.get("Start");
+            }
+            else
+            {
+                throw new Exception("Failed to obtain the sequence start timecode");
+            }
+
+            if (returnAttributes.containsKey("End"))
+            {
+                end = returnAttributes.get("End");
+            }
+            else
+            {
+                throw new Exception("Failed to obtain the sequence end timecode");
+            }
+
+
+            // now get the markers
+            response.setMarkers(new ArrayList<MarkerData>());
+
+            List<UMIDLocatorType> markers = assets.GetMarkers(mobID);
+
+            // process the markers into the desired reporting format
+            if (markers != null)
+            {
+                // need to sort the list
+                Collections.sort(markers, new Comparator<UMIDLocatorType>(){
+                    @Override
+                    public int compare(final UMIDLocatorType lhs,UMIDLocatorType rhs) {
+                        return Long.compare(lhs.getFrameNumber(), rhs.getFrameNumber());
+                    }
+                });
+
+                // need a timecode calculator
+                int numerator = 50;
+                int denominator = 1;
+                if (frameRate == 29.97)
+                {
+                    numerator = 60000;
+                    denominator = 1001;
+                }
+
+                VideoSampleRate sampleRate = new VideoSampleRate(true, numerator, denominator);
+
+                Timecode tc = new Timecode(start, sampleRate);
+                long startFrameNumber = tc.getTotalFrames();
+                tc = tc.setNewTimecode(end);
+                long endFrameNumber = tc.getTotalFrames();
+
+                for (int i = 0; i < markers.size(); i++)
+                {
+                    MarkerData markerData = new MarkerData();
+
+                    // first get the corrected timecode (Interplay WS Error if > 1 hour durn)
+                    UMIDLocatorType marker = markers.get(i);
+                    long markerStart = marker.getFrameNumber() + startFrameNumber;
+                    tc.setTotalFrames((int)markerStart);
+                    markerData.Start = tc.toString();
+
+                    long nextStart;
+                    if (i < (markers.size() - 1))
+                    {
+                        nextStart = markers.get(i + 1).getFrameNumber();
+                    }
+                    else
+                    {
+                        nextStart = endFrameNumber;
+                    }
+
+                    tc.setTotalFrames((int)(nextStart - markerStart));
+                    markerData.Duration = tc.toString();
+
+                    markerData.Comment = marker.getComment();
+                    response.getMarkers().add(markerData);
+                }
+            }
+
+            response.setResult(1);
 
         } catch (Exception ex) {
             response.setMessage(ex.getMessage());
+            response.setMarkers(null);
             response.setResult(0);
             return response;
         }

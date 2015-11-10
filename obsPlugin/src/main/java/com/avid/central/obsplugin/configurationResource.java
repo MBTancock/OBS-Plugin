@@ -73,9 +73,8 @@ public class configurationResource {
         return config;
     }
 
-    String test_inews_connection()
+    private ExportConfiguration GetConfiguration() throws Exception
     {
-        // first get the configuration
         ExportConfiguration config = null;
         try
         {
@@ -88,7 +87,22 @@ public class configurationResource {
             {
                 errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
             }
-            return "Error reading configuration settings: " + errorMsg;
+            throw new Exception("Error reading configuration settings: " + errorMsg);
+        }
+        return config;
+    }
+
+    String test_inews_connection()
+    {
+        // first get the configuration
+        ExportConfiguration config = null;
+        try
+        {
+            config = GetConfiguration();
+        }
+        catch (Exception ex)
+        {
+            return ex.getMessage();
         }
 
         String response = "Connection Failed";
@@ -137,16 +151,11 @@ public class configurationResource {
         ExportConfiguration config = null;
         try
         {
-            config = ExportConfiguration.Open();
+            config = GetConfiguration();
         }
         catch (Exception ex)
         {
-            String errorMsg = ex.getMessage();
-            if (null == errorMsg)
-            {
-                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
-            }
-            return "Error reading configuration settings: " + errorMsg;
+            return ex.getMessage();
         }
 
         interplay_assets assets = new interplay_assets(config.iplay_ws_srvr, config.iplay_ws_port, config.iplay_workgroup, config.iplay_login, config.iplay_pwd);
@@ -170,16 +179,11 @@ public class configurationResource {
         ExportConfiguration config = null;
         try
         {
-            config = ExportConfiguration.Open();
+            config = GetConfiguration();
         }
         catch (Exception ex)
         {
-            String errorMsg = ex.getMessage();
-            if (null == errorMsg)
-            {
-                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
-            }
-            return "Error reading configuration settings: " + errorMsg;
+            return ex.getMessage();
         }
 
         // check for valid configuration
@@ -235,16 +239,11 @@ public class configurationResource {
         ExportConfiguration config = null;
         try
         {
-            config = ExportConfiguration.Open();
+            config = GetConfiguration();
         }
         catch (Exception ex)
         {
-            String errorMsg = ex.getMessage();
-            if (null == errorMsg)
-            {
-                errorMsg = null != ex.getCause() ? ex.getCause().getMessage() : "";
-            }
-            return "Error reading configuration settings: " + errorMsg;
+            return ex.getMessage();
         }
 
         // check for valid configuration

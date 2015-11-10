@@ -1,4 +1,4 @@
-package com.avid.central.obsplugin;
+package com.avid.central.obsplugin.datamodel;
 
 import javax.xml.bind.annotation.XmlElement;
 

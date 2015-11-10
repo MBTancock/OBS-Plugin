@@ -1,12 +1,20 @@
 package com.avid.central.obsplugin.interplaylibrary;
 
 import com.avid.central.obsplugin.interplaylibrary.assets.*;
+import com.avid.central.obsplugin.interplaylibrary.assets.AssetDescriptionType;
+import com.avid.central.obsplugin.interplaylibrary.assets.AttributeListType;
+import com.avid.central.obsplugin.interplaylibrary.assets.AttributeType;
+import com.avid.central.obsplugin.interplaylibrary.assets.InterplayURIListType;
+import com.avid.central.obsplugin.interplaylibrary.assets.ObjectFactory;
 import com.avid.central.obsplugin.interplaylibrary.assets.UserCredentialsType;
 import com.avid.central.obsplugin.interplaylibrary.infrastructure.*;
 
 import javax.xml.ws.WebServiceException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Broadcast Media Solutions on 03/11/2015.
@@ -16,9 +24,9 @@ public class interplay_assets {
     private final URL _infrastructureUrl;
 
     private final String _workgroup;
-    private final String _user;
-    private final String _pasword;
+    private final UserCredentialsType _userCredentials;
 
+    private Assets _assets;
     private AssetsPortType _port;
 
     public interplay_assets(String server, int port, String workgroup, String user, String password) {
@@ -40,8 +48,10 @@ public class interplay_assets {
         _infrastructureUrl = url;
 
         _workgroup = workgroup;
-        _user = user;
-        _pasword = password;
+        _userCredentials = new UserCredentialsType();
+        _userCredentials.setUsername(user);
+        _userCredentials.setPassword(password);
+
     }
 
     // tests the Interplay connection by attempting to list the top level folders
@@ -81,16 +91,103 @@ public class interplay_assets {
         Assets assets = new Assets(_assetsUrl);
         _port = assets.getAssetsPort();
 
-        UserCredentialsType uct = new UserCredentialsType();
-        uct.setUsername(_user);
-        uct.setPassword(_pasword);
         GetChildrenType gft = new GetChildrenType();
         gft.setInterplayURI("interplay://" + _workgroup + "/");
         gft.setIncludeFolders(true);
-        GetChildrenResponseType gftr = _port.getChildren(gft, uct);
+        GetChildrenResponseType gftr = _port.getChildren(gft, _userCredentials);
         if (null != gftr.getErrors())
         {
             throw new Exception(gftr.getErrors().getError().get(0).getMessage());
         }
+    }
+
+    public Map<String, String> GetSequenceDetails(String MobID) throws Exception
+    {
+        if (null == _assetsUrl) {
+            throw new Exception("Problem accessing the web services server");
+        }
+
+        if (null == _assets)
+        {
+            _assets = new Assets(_assetsUrl);
+        }
+
+        if (null == _port) {
+            _port = _assets.getAssetsPort();
+        }
+
+        GetAttributesType gat = new GetAttributesType();
+        InterplayURIListType uri = new InterplayURIListType();
+        uri.getInterplayURI().add("interplay://" + _workgroup + "?mobid=" + MobID);
+        gat.setInterplayURIs(uri);
+
+        AttributeListType attributes = new AttributeListType();
+        AttributeType at = new AttributeType();
+        at.setGroup("SYSTEM");
+        at.setName("FPS");
+        attributes.getAttribute().add(at);
+        at = new AttributeType();
+        at.setGroup("SYSTEM");
+        at.setName("Start");
+        attributes.getAttribute().add(at);
+        at = new AttributeType();
+        at.setGroup("SYSTEM");
+        at.setName("End");
+        attributes.getAttribute().add(at);
+
+        gat.setAttributes(attributes);
+
+        GetAttributesResponseType gatr = _port.getAttributes(gat, _userCredentials);
+        if (null != gatr.getErrors())
+        {
+            throw new Exception(gatr.getErrors().getError().get(0).getMessage());
+        }
+
+        Map<String, String> returnAttributes = new HashMap<String, String>();
+        for (AssetDescriptionType adt :gatr.getResults().getAssetDescription()) {
+
+            for (AttributeType attr : adt.getAttributes().getAttribute()) {
+                switch (attr.getName())
+                {
+                    case "FPS":
+                    case "Start":
+                    case "End":
+                        returnAttributes.put(attr.getName(), attr.getValue());
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return returnAttributes;
+    }
+
+    public List<UMIDLocatorType> GetMarkers(String MobID) throws Exception
+    {
+        if (null == _assetsUrl) {
+            throw new Exception("Problem accessing the web services server");
+        }
+
+        if (null == _assets)
+        {
+            _assets = new Assets(_assetsUrl);
+        }
+
+        if (null == _port) {
+            _port = _assets.getAssetsPort();
+        }
+
+        GetLocatorsType glt = new GetLocatorsType();
+        glt.setInterplayURI("interplay://" + _workgroup + "?mobid=" + MobID);
+        GetUMIDLocatorsResponseType gltr = _port.getUMIDLocators(glt, _userCredentials);
+        if (null != gltr.getErrors())
+        {
+            throw new Exception(gltr.getErrors().getError().get(0).getMessage());
+        }
+
+        List<UMIDLocatorType> markers = gltr.getResults().getLocator();
+        return markers;
     }
 }
