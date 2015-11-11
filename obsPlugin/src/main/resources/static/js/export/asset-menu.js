@@ -40,21 +40,6 @@
                 // for each selected queue perform the export
                 // there should only be one as the enable logic traps multiple selections
                 selection.getItems().forEach(function (item) {
-
-                    //var res = $(".cueSheet");
-                    //
-                    //if (res.length > 0)
-                    //{
-                    //    return;
-                    //}
-                    //var view = AV.ViewManager.createView({
-                    //    type: "cueSheet",
-                    //    name: "Cue Sheet Test",
-                    //    closable: true
-                    //});
-                    //
-                    //AV.ComplexLayout.openView(view);
-                    //return;
                     var queueToExport = item.type == "folder" ? "ONC.RUNDOWNS.00.0000" : "MDS.MX1.00";
                     if (item.type == "Queue") {
                         // strip off leading "SERVER:"

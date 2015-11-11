@@ -26,8 +26,6 @@
     <Property name="showMenu" value="true"/>
     <Import type="js" path="js/cuesheet/cueSheet.js"/>
     <Import type="js" path="js/cuesheet/datamodel/cuesheetRequest.js"/>
-    <Import type="js" path="js/cuesheet/datamodel/cuesheetResponse.js"/>
-    <Import type="js" path="js/cuesheet/datamodel/markerData.js"/>
    </View>
   <View type="cueSheetTest">
     <Property name="productId" value="obsPlugin"/>

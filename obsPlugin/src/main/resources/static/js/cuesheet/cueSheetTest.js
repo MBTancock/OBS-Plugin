@@ -30,14 +30,15 @@
                                 {
                                     xtype: 'textareafield',
                                     fieldLabel: 'Paste Story Link Here',
-                                    id: 'export_link_id',
+                                    id: 'export_link_text',
                                     grow: 'true',
+                                    value: 'https://media-central/layout/inews-only-layout/#inews:INEWS%3AMDS.MX1.00%3A84955593.287885.11%7CStory',
                                     listeners:
                                     {
                                         blur: function () {
                                         },
                                         change: function (newValue, oldValue, eOpts) {
-                                            var btn = Ext4.getCmp('export_sheet_id');
+                                            var btn = Ext4.getCmp('export_sheet_button');
                                             btn.setDisabled(oldValue.toString().length == 0);
                                         }
                                     }
@@ -46,10 +47,9 @@
                                     xtype: 'button',
                                     text: 'Export',
                                     name: 'export_sheet',
-                                    id: 'export_sheet_id',
+                                    id: 'export_sheet_button',
                                     width: '100',
                                     margin: '0 0 0 165',
-                                    disabled: 'true',
                                     handler: function () {
                                         exportcueSheetTest();
                                     }
@@ -58,55 +58,29 @@
                         }
                     ]
                 })
-                $('input[name="export_sheet"]').attr('disabled', 'true');
             }
 
         });
         function exportcueSheetTest() {
-            var txt = Ext4.getCmp('export_link_id').value;
-            // strip off initial identifier
-            var urlText = txt;
+            var txt = Ext4.getCmp('export_link_text').value;
+            var res = $(".cueSheet");
 
-            txt = txt.substring(txt.indexOf("%3A") + 3);
-            var rundown = txt.substring(0, txt.indexOf("%3A"));
-            txt = txt.substring(txt.indexOf("%3A") + 3);
-            var story = txt.substring(0, txt.indexOf("%7C"));
+            if (res.length > 0)
+            {
+                var view = AV.View.getView(".cueSheet");
+                view.triggerGlobal("findSequence", {asset: txt});
+                return;
+            }
+            var view = AV.ViewManager.createView({
+                type: "cueSheet",
+                name: "Cue Sheet Test",
+                closable: true
+            });
 
-            var cueSheetTest = new AV.obsPlugin.datamodel.cueSheetRequest();
-            cueSheetTest.queue = rundown;
-            cueSheetTest.story = story;
-
-            //// see if we can get the story using the MediaCentral iNEWS api
-            //// https://media-central/layout/inews-only-layout/#inews:INEWS%3AMDS.MX1.00%3A84955593.287885.11%7CStory
-            //urlText = urlText.substring(urlText.indexOf("#inews:") + "#inews:".length);
-            //var urlQueue = urlText.substring(0, urlText.lastIndexOf("%3A"));
-            //var urlStory = urlText.substring(urlText.lastIndexOf("%3A") + "%3A".length);
-            //urlStory = urlStory.substring(0, urlStory.indexOf("%7C"));
-            //
-            //var url = "/api/inews/queue/story/story/" + urlQueue + "%7CQueue/" + urlStory;
-            //$.ajax(url, {
-            //        method: "GET",
-            //        dataType: "json",
-            //    })
-            //    .done(function (res) {
-            //        var story = new Storyline.StoryModel();
-            //        story.setStory(res);
-            //        if (story != null) {
-            //            AV.Utilities.showErrorMessage(story.getTitleValue() + "Sequence: " + story.getSequenceID());
-            //        }
-            //    })
-
-            // post the request to create the export data
-            $.ajax("/api/cueSheet/", {
-                    method: "POST",
-                    contentType: "application/json",
-                    data: cueSheetTest.toJs(),
-                    dataType: "json",
-                })
-                .done(function (res) {
-                    var response = new AV.obsPlugin.datamodel.cueSheetResponse(res);
-                    AV.Utilities.showInfoMessage(response.mobID);
-                })
-        }
+            AV.ComplexLayout.openView(view);
+            //var objectData = {type: 'findSequece', systemID: '12345', systemType: 'story', base: 'findSequece | 12345 | story'};
+            //var data = AV.commonObject.create(objectData);
+            view.triggerGlobal("findSequence", {asset: txt});
+         }
     })
 })(AV);

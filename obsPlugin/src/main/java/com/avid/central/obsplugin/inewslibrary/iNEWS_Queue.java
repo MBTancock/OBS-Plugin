@@ -51,6 +51,9 @@ public class iNEWS_Queue {
         
         INEWSQueue service = new INEWSQueue(url);
         _port = service.getINEWSQueuePort();
+
+         // set the session ID
+         SetSessionID();
     }
 
     public boolean CheckForGetRecords()
@@ -86,9 +89,6 @@ public class iNEWS_Queue {
             Logger.getLogger(iNEWS_Queue.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
-        // set the session ID
-        SetSessionID();
 
         // set the current queue
         SetCurrentQueueType currentQueue = new SetCurrentQueueType();
@@ -151,8 +151,6 @@ public class iNEWS_Queue {
 
         try
         {
-            SetSessionID();
-
             GetStoryType gst = new GetStoryType();
             gst.setQueueFullName(queue);
             gst.setQueueLocator(locator);

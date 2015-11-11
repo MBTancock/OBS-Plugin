@@ -6,20 +6,16 @@
 
     AV.ns("AV.obsPlugin.datamodel");
 
-    CuesheetRequest = function (data) {
+    CuesheetRequest = function (queue, story) {
         this.queue = "";
         this.story = "";
 
-        if (data) {
-            this.queue = data.queue;
-            this.story = data.story;
-        }
+        this.queue = queue;
+        this.story = story;
 
-        this.toJs = function()
-        {
+        this.toJs = function () {
             return JSON.stringify(this);
         }
-
     };
 
     AV.obsPlugin.datamodel.CuesheetRequest = CuesheetRequest;

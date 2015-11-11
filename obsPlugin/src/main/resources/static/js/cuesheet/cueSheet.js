@@ -9,11 +9,14 @@
             onInit: function () {
                 this.name("Cue Sheet Export");
                 this.dom().append('<div id="cuesheetpanel" class="cuesheet"></div>');
+                this.bindGlobal("findSequence", function (event, data) {
+                    retrieveMarkers(data);
+                });
             },
 
             onRender: function () {
                 Ext4.define('markerData', {
-                    extend: 'Ext.data.Model',
+                    extend: 'Ext4.data.Model',
                     fields: [
                         'start',
                         'duration',
@@ -21,180 +24,176 @@
                     ]
                 });
 
-                var store = Ext4.create('Ext.data.ArrayStore', {
+                var markersStore = Ext4.create('Ext4.data.ArrayStore', {
                     id: 'marker-store',
                     model: markerData
                 });
 
-                Ext4.create('Ext.form.Panel', {
+                Ext4.create('Ext4.form.Panel', {
                     autoHeight: false,
                     autoScroll: true,
-                    renderTo: Ext.get('cuesheetpanel'),
-                    width: 500,
+                    renderTo: Ext4.get('cuesheetpanel'),
+                    width: 410,
+                    layout: 'column',
+                    defaults: {
+                        margin: '0 0 10 10'
+                    },
                     items: [
                         {
-                            xtype: 'fieldset',
-                            title: 'OBS Cue Sheet Export Test',
-                            //layout: 'column',
-                            defaults: {
-                                anchor: '100%',
-                                labelWidth: 160,
-                                labelAlign: 'right'
-                            },
-                            items: [
+                            xtype: 'grid',
+                            store: markersStore,
+                            id: 'export_markers_id',
+                            stateful: true,
+                            stateId: 'stateGrid',
+                            columns: [
                                 {
-                                    xtype: 'textareafield',
-                                    fieldLabel: 'Paste Story Link Here',
-                                    id: 'export_link_id',
-                                    grow: 'true',
-                                    listeners: {
-                                        blur: function () {
-                                        },
-                                        change: function (newValue, oldValue, eOpts) {
-                                            var btn = Ext4.getCmp('export_sheet_id');
-                                            btn.setDisabled(oldValue.toString().length == 0);
-                                        }
-                                    }
+                                    text: 'Start',
+                                    width: 80,
+                                    sortable: false,
+                                    dataIndex: 'start',
+                                    height: 24,
+                                    align: 'center'
                                 },
                                 {
-                                    xtype: 'button',
-                                    text: 'Export',
-                                    name: 'export_sheet',
-                                    id: 'export_sheet_id',
-                                    width: '100',
-                                    margin: '0 0 0 165',
-                                    disabled: 'true',
-                                    handler: function () {
-                                        retrieveMarkers();
-                                    }
+                                    text: 'Durn.',
+                                    width: 80,
+                                    sortable: false,
+                                    dataIndex: 'duration',
+                                    height: 24,
+                                    align: 'center'
                                 },
                                 {
-                                    xtype: 'grid',
-                                    store: store,
-                                    id: 'export_markers_id',
-                                    stateful: true,
-                                    stateId: 'stateGrid',
-                                    columns: [
-                                        {
-                                            text: 'Start',
-                                            width: 80,
-                                            sortable: false,
-                                            dataIndex: 'start'
-                                        },
-                                        {
-                                            text: 'Duration',
-                                            width: 80,
-                                            sortable: false,
-                                            dataIndex: 'duration'
-                                        },
-                                        {
-                                            text: 'Comment',
-                                            flex: 1,
-                                            sortable: false,
-                                            dataIndex: 'comment'
-                                        }
-                                    ],
-                                    height: 200,
-                                    width: 400,
-                                    title: 'Markers'
-                                },
-                                {
-                                    xtype: 'button',
-                                    text: 'Export Cue Sheet',
-                                    name: 'export_cue_sheet',
-                                    id: 'export_cue_sheet_id',
-                                    width: '100',
-                                    margin: '0 0 0 165',
-                                    disabled: 'true',
-                                    handler: function () {
-                                        exportCuesheet();
-                                    }
+                                    text: 'Comment',
+                                    flex: 1,
+                                    sortable: false,
+                                    dataIndex: 'comment',
+                                    height: 24
                                 }
-
-                            ]
+                            ],
+                            height: 200,
+                            width: 380
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'Export Cue Sheet',
+                            name: 'export_cue_sheet',
+                            id: 'export_cue_sheet_id',
+                            width: 380,
+                            margin: '0 0 10 10',
+                            disabled: 'true',
+                            handler: function () {
+                                exportCuesheet();
+                            }
+                        },
+                        {
+                            xtype: 'label',
+                            id: 'export_identifier',
+                            text: 'dummy',
+                            value: 'My Data',
+                            hidden: 'true'
                         }
+
                     ]
                 })
-                //$('input[name="export_sheet"]').attr('disabled', 'true');
-
 
             }
 
         });
-        function retrieveMarkers() {
-            var txt = Ext4.getCmp('export_link_id').value;
-            // strip off initial identifier
-            var urlText = txt;
 
-            txt = txt.substring(txt.indexOf("%3A") + 3);
-            var rundown = txt.substring(0, txt.indexOf("%3A"));
-            txt = txt.substring(txt.indexOf("%3A") + 3);
-            var story = txt.substring(0, txt.indexOf("%7C"));
+        function retrieveMarkers(url) {
+            try {
+                if (null == url || url.asset == undefined) {
+                    AV.Utilities.showErrorMessage("Failed to obtain the story reference");
+                    return;
+                }
 
-            var cuesheet = new AV.obsPlugin.datamodel.CuesheetRequest();
-            cuesheet.queue = rundown;
-            cuesheet.story = story;
+                var txt = url.asset;
+                // strip off initial identifier
 
-            //// see if we can get the story using the MediaCentral iNEWS api
-            //// https://media-central/layout/inews-only-layout/#inews:INEWS%3AMDS.MX1.00%3A84955593.287885.11%7CStory
-            //urlText = urlText.substring(urlText.indexOf("#inews:") + "#inews:".length);
-            //var urlQueue = urlText.substring(0, urlText.lastIndexOf("%3A"));
-            //var urlStory = urlText.substring(urlText.lastIndexOf("%3A") + "%3A".length);
-            //urlStory = urlStory.substring(0, urlStory.indexOf("%7C"));
-            //
-            //var url = "/api/inews/queue/story/story/" + urlQueue + "%7CQueue/" + urlStory;
-            //$.ajax(url, {
-            //        method: "GET",
-            //        dataType: "json",
-            //    })
-            //    .done(function (res) {
-            //        var story = new Storyline.StoryModel();
-            //        story.setStory(res);
-            //        if (story != null) {
-            //            AV.Utilities.showErrorMessage(story.getTitleValue() + "Sequence: " + story.getSequenceID());
-            //        }
-            //    })
+                txt = txt.substring(txt.indexOf("%3A") + 3);
+                var rundown = txt.substring(0, txt.indexOf("%3A"));
+                txt = txt.substring(txt.indexOf("%3A") + 3);
+                var story = txt.substring(0, txt.indexOf("%7C"));
 
-            AV.messages.WaitBox.show({
-                title: "Retrieving Markers",
-                content: "Please wait while the markers are retrieved",
-                isDelayed: true
-            });
+                var cuesheet = new AV.obsPlugin.datamodel.CuesheetRequest(rundown, story);
 
-            // post the request to create the export data
-            $.ajax("/api/cuesheet/", {
-                    method: "POST",
-                    contentType: "application/json",
-                    data: cuesheet.toJs(),
-                    dataType: "json"
-                })
-                .done(function (res) {
-                    AV.messages.WaitBox.hide();
+                AV.messages.WaitBox.show({
+                    title: "Retrieving Markers",
+                    content: "Please wait while the markers are retrieved",
+                    isDelayed: true
+                });
 
-                    var response = new AV.obsPlugin.datamodel.CuesheetResponse(res);
+                // post the request to create the export data
+                $.ajax("/api/cuesheet/", {
+                        method: "POST",
+                        contentType: "application/json",
+                        data: cuesheet.toJs(),
+                        dataType: "json"
+                    })
+                    .done(function (res) {
+                        AV.messages.WaitBox.hide();
 
-                    var store = Ext4.getStore('marker-store');
+                        if (res == undefined)
+                        {
+                            AV.Utilities.showErrorMessage("There was a problem communicating with the server.");
+                            return;
+                        }
+                        var store = Ext4.getStore('marker-store');
 
-                    store.loadData([],false);
-                    for (var i = 0; i < response.markers.length; i++)
-                    {
-                        var marker = response.markers[i];
-                        var a = marker['Start'];
-                        var b = marker['Duration'];
-                        var c = marker['Comment'];
-                        store.add({start: a, duration: b, comment: c});
-                    }
+                        store.loadData([], false);
+                        for (var i = 0; i < res.markers.length; i++) {
+                            var marker = res.markers[i];
+                            var a = marker['Start'];
+                            var b = marker['Duration'];
+                            var c = marker['Comment'];
+                            store.add({start: a, duration: b, comment: c});
+                        }
 
-                    var btn = Ext4.getCmp('export_cue_sheet_id');
-                    btn.setDisabled(response.markers.length == 0);
-                })
+                        var btn = Ext4.getCmp('export_cue_sheet_id');
+                        btn.setDisabled(res.markers.length == 0);
 
+                        var label = Ext4.getCmp('export_identifier');
+                        label.value = res.id;
+
+                    })
+            }
+            catch (ex) {
+                AV.messages.WaitBox.hide();
+                AV.Utilities.showErrorMessage("An error occurred: " + ex.message);
+            }
         }
 
-        function exportCuesheet(){
-            var btn = Ext4.getCmp('export_cue_sheet_id');
-            btn.setDisabled(true);
+        function exportCuesheet() {
+            try {
+                // get the id of the export to process
+                var label = Ext4.getCmp('export_identifier');
+                var id = label.value;
 
+                AV.messages.WaitBox.show({
+                    title: "Publishing Cue Sheet",
+                    content: "Please wait while cue sheet is published to the story",
+                    isDelayed: true
+                });
+
+                var path = "/api/cuesheet/" + id;
+                $.ajax(path, {
+                        method: "GET",
+                        dataType: "json",
+                    })
+                    .done(function (res) {
+                        AV.messages.WaitBox.hide();
+
+                        if (res == undefined)
+                        {
+                            AV.Utilities.showErrorMessage("There was a problem communicating with the server.");
+                            return;
+                        }
+                    });
+            }
+            catch (ex) {
+                AV.messages.WaitBox.hide();
+                AV.Utilities.showErrorMessage("An error occurred: " + ex.message);
+            }
         }
     })
 })(AV);
