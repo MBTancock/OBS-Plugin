@@ -13,11 +13,13 @@ public class CuesheetResponse {
     @XmlElement
     private UUID id = null;
     @XmlElement(required = true)
+    private String title = null;
+    @XmlElement(required = true)
     private List<MarkerData> markers;
     @XmlElement(required = true)
     private String message;
     @XmlElement(required = true)
-    private int result; // 0 = generic error, 1 = success, 2 = not authorized, 3 = configuration missing, 4 = no MobID
+    private int result; // 0 = generic error, 1 = success, 2 = not authorized, 3 = configuration missing, 4 = story locked
 
     public UUID getID() {
         return this.id;
@@ -25,6 +27,14 @@ public class CuesheetResponse {
 
     public void setID(UUID id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public List<MarkerData> getMarkers() {

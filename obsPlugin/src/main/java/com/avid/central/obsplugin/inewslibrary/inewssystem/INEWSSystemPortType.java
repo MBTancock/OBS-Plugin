@@ -9,7 +9,6 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
-import com.avid.central.obsplugin.inewslibrary.inewssystem.types.*;
 
 
 /**
@@ -37,7 +36,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectResponseType
+     *     returns inewssystem.ConnectResponseType
      * @throws ConnectionFault
      */
     @WebMethod(operationName = "Connect")
@@ -59,7 +58,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.DisconnectResponseType
+     *     returns inewssystem.DisconnectResponseType
      */
     @WebMethod(operationName = "Disconnect")
     @WebResult(name = "DisconnectResponse", targetNamespace = "http://avid.com/inewssystem/types", partName = "body")
@@ -75,7 +74,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.IsConnectedResponseType
+     *     returns inewssystem.IsConnectedResponseType
      */
     @WebMethod(operationName = "IsConnected")
     @WebResult(name = "IsConnectedResponse", targetNamespace = "http://avid.com/inewssystem/types", partName = "body")
@@ -95,9 +94,9 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetFolderChildrenResponseType
-     * @throws GetFolderChildrenFault
+     *     returns inewssystem.GetFolderChildrenResponseType
      * @throws ConnectionFault
+     * @throws GetFolderChildrenFault
      */
     @WebMethod(operationName = "GetFolderChildren")
     @WebResult(name = "GetFolderChildrenResponse", targetNamespace = "http://avid.com/inewssystem/types", partName = "body")
@@ -117,7 +116,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetMessageResponseType
+     *     returns inewssystem.GetMessageResponseType
      * @throws ConnectionFault
      */
     @WebMethod(operationName = "GetMessage")
@@ -138,7 +137,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.HasNewMessageResponseType
+     *     returns inewssystem.HasNewMessageResponseType
      * @throws ConnectionFault
      */
     @WebMethod(operationName = "HasNewMessage")
@@ -159,9 +158,9 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.SendMessageResponseType
-     * @throws ConnectionFault
+     *     returns inewssystem.SendMessageResponseType
      * @throws SendMessageFault
+     * @throws ConnectionFault
      */
     @WebMethod(operationName = "SendMessage")
     @WebResult(name = "SendMessageResponse", targetNamespace = "http://avid.com/inewssystem/types", partName = "body")
@@ -181,7 +180,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetQueuesFormResponseType
+     *     returns inewssystem.GetQueuesFormResponseType
      * @throws ConnectionFault
      * @throws GetQueuesFormFault
      */
@@ -205,7 +204,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.WatchQueueForChangesResponseType
+     *     returns inewssystem.WatchQueueForChangesResponseType
      * @throws ConnectionFault
      * @throws WatchQueueForChangesFault
      */
@@ -226,7 +225,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetChangedQueuesResponseType
+     *     returns inewssystem.GetChangedQueuesResponseType
      */
     @WebMethod(operationName = "GetChangedQueues")
     @WebResult(name = "GetChangedQueuesResponse", targetNamespace = "http://avid.com/inewssystem/types", partName = "body")
@@ -244,7 +243,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.RemoveWatchForQueueChangesResponseType
+     *     returns inewssystem.RemoveWatchForQueueChangesResponseType
      * @throws ConnectionFault
      */
     @WebMethod(operationName = "RemoveWatchForQueueChanges")
@@ -267,7 +266,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.PerformSimpleSearchResponseType
+     *     returns inewssystem.PerformSimpleSearchResponseType
      * @throws ConnectionFault
      * @throws PerformSimpleSearchFault
      */
@@ -290,7 +289,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.RetrieveSearchResultsResponseType
+     *     returns inewssystem.RetrieveSearchResultsResponseType
      * @throws ConnectionFault
      * @throws RetrieveSearchResultsFault
      */
@@ -313,8 +312,8 @@ public interface INEWSSystemPortType {
      * @throws RegisterNotificationServiceFault
      */
     @WebMethod(operationName = "RegisterNotificationService")
-    @RequestWrapper(localName = "RegisterNotificationService", targetNamespace = "http://avid.com/inewssystem/types", className = "com.avid.central.obsplugin.inewslibrary.inewssystem.types.RegisterNotificationServiceType")
-    @ResponseWrapper(localName = "RegisterNotificationServiceResponse", targetNamespace = "http://avid.com/inewssystem/types", className = "com.avid.central.obsplugin.inewslibrary.inewssystem.types.RegisterNotificationServiceResponseType")
+    @RequestWrapper(localName = "RegisterNotificationService", targetNamespace = "http://avid.com/inewssystem/types", className = "inewssystem.RegisterNotificationServiceType")
+    @ResponseWrapper(localName = "RegisterNotificationServiceResponse", targetNamespace = "http://avid.com/inewssystem/types", className = "inewssystem.RegisterNotificationServiceResponseType")
     public void registerNotificationService(
         @WebParam(name = "ServiceURL", targetNamespace = "http://avid.com/inewssystem/types")
         String serviceURL)
@@ -331,7 +330,7 @@ public interface INEWSSystemPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewssystem.types.CancelSearchResponseType
+     *     returns inewssystem.CancelSearchResponseType
      * @throws ConnectionFault
      */
     @WebMethod(operationName = "CancelSearch")

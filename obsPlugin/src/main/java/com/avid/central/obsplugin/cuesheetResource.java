@@ -5,7 +5,9 @@ import com.avid.central.obsplugin.datamodel.CuesheetRequest;
 import com.avid.central.obsplugin.datamodel.CuesheetResponse;
 import com.avid.central.obsplugin.datamodel.ExportCuesheetData;
 import com.avid.central.obsplugin.datamodel.MarkerData;
+import com.avid.central.obsplugin.inewslibrary.StoryData;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
+import com.avid.central.obsplugin.inewslibrary.iNEWS_Story;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
 import com.avid.central.obsplugin.interplaylibrary.assets.*;
 import com.avid.central.obsplugin.interplaylibrary.interplay_assets;
@@ -66,7 +68,7 @@ public class cuesheetResource {
             // retrieve the export data from the map
             ExportCuesheetData exportData = _exports.get(id);
             if (null == exportData) {
-                throw new Exception();
+                throw new Exception("Failed to locate the marker data");
             }
             iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
 
@@ -84,6 +86,10 @@ public class cuesheetResource {
                     throw new Exception ("There was a problem publishing the cue sheet");
                 }
 
+                // create a story soap client
+                iNEWS_Story story = new iNEWS_Story(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
+
+                response.setResult(story.SaveStory(exportData.getQueue(), exportData.getLocator(), replacementNSML) ? 1 : 4);
             } catch (Exception ex) {
                 response.setMessage(ex.getMessage());
                 response.setMarkers(null);
@@ -98,7 +104,9 @@ public class cuesheetResource {
                 }
             }
         } catch (Exception ex) {
-
+            response.setMessage(ex.getMessage());
+            response.setMarkers(null);
+            response.setResult(0);
         }
         return response;
     }
@@ -161,8 +169,9 @@ public class cuesheetResource {
             // create a queue soap client
             iNEWS_Queue queue = new iNEWS_Queue(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
 
-            String storyAsNsml = queue.GetStory(request.getQueue(), request.getStory());
-            String mobID = queue.GetMobID(storyAsNsml);
+            StoryData storyData = queue.GetStory(request.getQueue(), request.getStory(), _configuration.subject_field);
+            response.setTitle(storyData.Title);
+            String mobID = queue.GetMobID(storyData.StoryAsNSML);
 
             if (null == mobID) {
                 // flag the fact we failed to locate the MobID
@@ -258,7 +267,7 @@ public class cuesheetResource {
             }
 
             // get the export data
-            ExportCuesheetData exportData = new ExportCuesheetData(request.getQueue(), request.getStory(), storyAsNsml, response);
+            ExportCuesheetData exportData = new ExportCuesheetData(request.getQueue(), request.getStory(), storyData.StoryAsNSML, response);
 
             // create an ID for it and add it to the map
             do {
@@ -297,6 +306,7 @@ public class cuesheetResource {
 
         String BodyCloseTag = "</body>";
         String EmptyParagraph = "<p family=\"0\" font=\"\" pitch=\"0\"/>";
+        String LocateParagraph = "<p family=\"0\" font=\"\" pitch=\"0\"";
         String OpenParagraph = "<p family=\"0\" font=\"\" pitch=\"0\">";
         String CloseParagraph = "</p>";
         String TabbedParagraph = "</p><p family=\"0\" font=\"\" pitch=\"0\"><tab /><tab /><tab />";
@@ -329,9 +339,9 @@ public class cuesheetResource {
         }
 
         // remove empty paragraphs from end of story body
-        while (replacementNSML.lastIndexOf(EmptyParagraph) == replacementNSML.length() - EmptyParagraph.length())
+        while (replacementNSML.lastIndexOf(LocateParagraph) >= replacementNSML.length() - EmptyParagraph.length())
         {
-            replacementNSML = replacementNSML.delete(replacementNSML.lastIndexOf(EmptyParagraph), replacementNSML.lastIndexOf(EmptyParagraph) + EmptyParagraph.length());
+            replacementNSML = replacementNSML.delete(replacementNSML.lastIndexOf(EmptyParagraph), replacementNSML.length());
         }
 
         // add one paragraph as a spacer

@@ -2,7 +2,6 @@
 package com.avid.central.obsplugin.inewslibrary.inewsstory;
 
 import javax.xml.ws.WebFault;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.*;
 
 
 /**
@@ -46,7 +45,7 @@ public class LockStoryFault
     /**
      * 
      * @return
-     *     returns fault bean: com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryFaultType
+     *     returns fault bean: inewsstory.LockStoryFaultType
      */
     public LockStoryFaultType getFaultInfo() {
         return faultInfo;

@@ -5,6 +5,8 @@
  */
 package com.avid.central.obsplugin.inewslibrary;
 
+import com.avid.central.obsplugin.inewslibrary.inewssystem.*;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,8 +48,8 @@ public class iNEWS_System {
         return _sessionID;
     }
 
-    public com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectResponseType Connect(String host, String user, String password) throws Exception {
-        com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectType connection = new com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectType();
+    public ConnectResponseType Connect(String host, String user, String password) throws Exception {
+        ConnectType connection = new ConnectType();
 
         connection.setServername(host);
         connection.setUsername(user);
@@ -57,7 +59,7 @@ public class iNEWS_System {
 
         _port = service.getINEWSSystemPort();
 
-        com.avid.central.obsplugin.inewslibrary.inewssystem.types.ConnectResponseType response = _port.connect(connection);
+        ConnectResponseType response = _port.connect(connection);
 
         Map<String, List<String>> map;
         map = (Map<String, List<String>>) ((BindingProvider) _port).getResponseContext().get(MessageContext.HTTP_RESPONSE_HEADERS);
@@ -72,8 +74,8 @@ public class iNEWS_System {
     public void Disconnect() throws Exception {
         SetSessionID();
 
-        com.avid.central.obsplugin.inewslibrary.inewssystem.types.DisconnectType disconnect = new com.avid.central.obsplugin.inewslibrary.inewssystem.types.DisconnectType();
-        com.avid.central.obsplugin.inewslibrary.inewssystem.types.DisconnectResponseType response = _port.disconnect(disconnect);
+        DisconnectType disconnect = new DisconnectType();
+        DisconnectResponseType response = _port.disconnect(disconnect);
     }
 
     public String GetSessionID() {
@@ -84,14 +86,14 @@ public class iNEWS_System {
         List<String> listing = null;
         SetSessionID();
 
-        com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetFolderChildrenType getFolders = new com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetFolderChildrenType();
+        GetFolderChildrenType getFolders = new GetFolderChildrenType();
         getFolders.setFolderFullName(folderName);
 
         try {
-            com.avid.central.obsplugin.inewslibrary.inewssystem.types.GetFolderChildrenResponseType folders = _port.getFolderChildren(getFolders);
+            GetFolderChildrenResponseType folders = _port.getFolderChildren(getFolders);
 
             listing = new ArrayList<String>();
-            for (com.avid.central.obsplugin.inewslibrary.inewssystem.types.DirectoryType dir : folders.getChildren()) {
+            for (DirectoryType dir : folders.getChildren()) {
                 listing.add(dir.getFullName());
             }
         } catch (com.avid.central.obsplugin.inewslibrary.inewssystem.GetFolderChildrenFault | com.avid.central.obsplugin.inewslibrary.inewssystem.ConnectionFault ex) {

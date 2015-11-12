@@ -25,7 +25,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "INEWSQueue", targetNamespace = "http://avid.com/inewsqueue", wsdlLocation = "file:/D:/NetBeans%20Projects/iNEWS/WSDLs/inewsqueue.wsdl")
+@WebServiceClient(name = "INEWSQueue", targetNamespace = "http://avid.com/inewsqueue", wsdlLocation = "http://ftsserver:8080/inewswebservice/services/inewsqueue?wsdl")
 public class INEWSQueue
     extends Service
 {
@@ -38,7 +38,7 @@ public class INEWSQueue
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/D:/NetBeans%20Projects/iNEWS/WSDLs/inewsqueue.wsdl");
+            url = new URL("http://ftsserver:8080/inewswebservice/services/inewsqueue?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

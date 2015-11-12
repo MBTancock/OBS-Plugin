@@ -1,10 +1,6 @@
 package com.avid.central.obsplugin.inewslibrary;
 
 import com.avid.central.obsplugin.inewslibrary.inewsstory.*;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryResponseType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryType;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.SectionLockEnum;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.UnlockStoryType;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
@@ -40,8 +36,11 @@ public class iNEWS_Story {
         SetSessionID();
     }
 
-    public void SaveStory(String queue, String locator, String storyAsNSML) throws Exception
+    // attempts to save the story, returns true if it succeeds, false if the story lock fails
+    // all other issues throw an error
+    public boolean SaveStory(String queue, String locator, String storyAsNSML) throws Exception
     {
+        boolean result = false;
         boolean locked = false;
 
         try
@@ -53,11 +52,25 @@ public class iNEWS_Story {
 
             LockStoryResponseType lstr = _port.lockStory(lst);
 
-            // if save story then set locked false
+            // if we get here the story is locked
+            locked = true;
+
+            SaveStoryType sst = new SaveStoryType();
+            sst.setStoryNSML(storyAsNSML);
+            SaveStoryResponseType sstr = _port.saveStory(sst);
+
+            // if we get here save succeeded so set locked false, save story will have unlocked it
+            locked = false;
+            result = true;
         }
         catch (Exception ex)
         {
-
+            // if the error is because the story is locked don't throw the exception
+            // return false to indicate that story is locked
+            if (!ex.getMessage().contains("locked"))
+            {
+                throw ex;
+            }
         }
         finally
         {
@@ -72,6 +85,7 @@ public class iNEWS_Story {
                 }
             }
         }
+        return result;
     }
 
     private void SetSessionID() {

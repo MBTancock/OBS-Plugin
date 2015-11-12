@@ -5,10 +5,8 @@
  */
 package com.avid.central.obsplugin.inewslibrary;
 
-import com.avid.central.obsplugin.inewslibrary.VizGraphic.AttachmentContent;
 import com.avid.central.obsplugin.inewslibrary.nsml.*;
 import com.avid.central.obsplugin.inewslibrary.inewsqueue.*;
-import com.avid.central.obsplugin.inewslibrary.inewsqueue.types.*;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -23,7 +21,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.ws.WebServiceException;
 
-import org.json.simple.*;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 
@@ -145,9 +142,17 @@ public class iNEWS_Queue {
     }
 
     // retrieves a story as an NSML string
-    public String GetStory(String queue, String locator)
+    public StoryData GetStory(String queue, String locator, String subjectField)
     {
-        String storyAsNsml = null;
+        // create the deserialization object
+        Unmarshaller unmarshaller;
+        try {
+            unmarshaller = CreateUnmarshaller();
+        } catch (JAXBException ex) {
+            unmarshaller = null;
+        }
+
+        StoryData storyData = null;
 
         try
         {
@@ -157,14 +162,28 @@ public class iNEWS_Queue {
 
             GetStoryResponseType gstr = _port.getStory(gst);
 
-            storyAsNsml = gstr.getStory().getStoryAsNSML();
+            storyData = new StoryData();
+            storyData.StoryAsNSML = gstr.getStory().getStoryAsNSML();
+
+            // decode the NSML to get the title
+            if (null != unmarshaller) {
+                StringReader reader = new StringReader(storyData.StoryAsNSML);
+
+                try
+                {
+                    Nsml nsml = (Nsml) unmarshaller.unmarshal(reader);
+                    storyData.Title = GetFieldStringValue(nsml.getFields().getStringOrBooleanOrDate(), subjectField);
+                }
+                catch (Exception ex){}
+
+            }
         }
         catch (Exception ex)
         {
-            storyAsNsml = null;
+            storyData = null;
         }
 
-        return storyAsNsml;
+        return storyData;
     }
 
     ContainerFactory containerFactory = new ContainerFactory(){
@@ -238,6 +257,38 @@ public class iNEWS_Queue {
         }
         catch (Exception ex)
         {
+        }
+
+        return null;
+    }
+
+    public String GetFieldStringValue(List<Object> fields, String id) {
+        for (Object field : fields) {
+            if (field instanceof Nsml.Fields.String) {
+                Nsml.Fields.String stringField = (Nsml.Fields.String) field;
+
+                if (id.equals(stringField.getId())) {
+                    return stringField.getValue();
+                }
+            } else if (field instanceof Nsml.Fields.Boolean) {
+                Nsml.Fields.Boolean booleanField = (Nsml.Fields.Boolean) field;
+
+                if (id.equals(booleanField.getId())) {
+                    return String.valueOf(booleanField.isValue());
+                }
+            } else if (field instanceof Nsml.Fields.Date) {
+                Nsml.Fields.Date dateField = (Nsml.Fields.Date) field;
+
+                if (id.equals(dateField.getId())) {
+                    return dateField.toString();
+                }
+            } else if (field instanceof Nsml.Fields.Duration) {
+                Nsml.Fields.Duration durationField = (Nsml.Fields.Duration) field;
+
+                if (id.equals(durationField.getId())) {
+                    return durationField.toString();
+                }
+            }
         }
 
         return null;

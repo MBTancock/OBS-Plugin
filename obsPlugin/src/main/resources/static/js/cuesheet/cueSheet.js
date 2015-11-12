@@ -5,6 +5,7 @@
     AV.ViewManager.addViewFactory("cueSheet", function (options) {
         return new AV.View({
 
+            confirmDlog: undefined,
 
             onInit: function () {
                 this.name("Cue Sheet Export");
@@ -39,6 +40,17 @@
                         margin: '0 0 10 10'
                     },
                     items: [
+                        {
+                            xtype: 'label',
+                            id: 'story_title_label',
+                            text: 'Title:'
+                        },
+                        {
+                            xtype: 'label',
+                            id: 'story_title',
+                            text: '',
+                            style: "font-weight:bold",
+                        },
                         {
                             xtype: 'grid',
                             store: markersStore,
@@ -138,6 +150,13 @@
                             AV.Utilities.showErrorMessage("There was a problem communicating with the server.");
                             return;
                         }
+
+                        if (0 == res.result)
+                        {
+                            AV.Utilities.showErrorMessage("There was a problem retrieving the markers: " + res.message);
+                            return;
+                        }
+
                         var store = Ext4.getStore('marker-store');
 
                         store.loadData([], false);
@@ -154,6 +173,9 @@
 
                         var label = Ext4.getCmp('export_identifier');
                         label.value = res.id;
+
+                        var title = Ext4.getCmp('story_title');
+                        title.setText(res.title);
 
                     })
             }
@@ -188,6 +210,41 @@
                             AV.Utilities.showErrorMessage("There was a problem communicating with the server.");
                             return;
                         }
+
+                        switch (res.result)
+                        {
+                            case 1: // success
+                                var moreActions = [
+                                    new Ext.Action({
+                                        handler: function () {
+                                            confirmDlog.close();
+                                            confirmDlog = undefined;
+                                        },
+                                        text: "OK"
+                                    })
+                                ];
+
+                                confirmDlog = AV.DialogBox.createDialogBox({
+                                    height: 60,
+                                    width: 200,
+                                    title: "Publish Complete",
+                                    maximizable: false,
+                                    modal: true,
+                                    footerActions: moreActions,
+                                    html: "Cue Sheet published successfully."
+                                });
+                                confirmDlog.show();
+                                break;
+
+                            case 4: // locked
+                                AV.Utilities.showErrorMessage("Failed to publish the Cue Sheet because the story is locked");
+                                break;
+
+                            default: // assume error
+                            AV.Utilities.showErrorMessage("There was a problem publishing the cue sheet: " + res.message);
+                                break;
+                        }
+
                     });
             }
             catch (ex) {

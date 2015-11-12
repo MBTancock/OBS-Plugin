@@ -7,7 +7,6 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import com.avid.central.obsplugin.inewslibrary.inewsstory.types.*;
 
 
 /**
@@ -35,9 +34,9 @@ public interface INEWSStoryPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewsstory.types.LockStoryResponseType
-     * @throws ConnectionFault
+     *     returns inewsstory.LockStoryResponseType
      * @throws LockStoryFault
+     * @throws ConnectionFault
      */
     @WebMethod(operationName = "LockStory")
     @WebResult(name = "LockStoryResponse", targetNamespace = "http://avid.com/inewsstory/types", partName = "body")
@@ -58,9 +57,9 @@ public interface INEWSStoryPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewsstory.types.SaveStoryResponseType
-     * @throws SaveStoryFault
+     *     returns inewsstory.SaveStoryResponseType
      * @throws ConnectionFault
+     * @throws SaveStoryFault
      */
     @WebMethod(operationName = "SaveStory")
     @WebResult(name = "SaveStoryResponse", targetNamespace = "http://avid.com/inewsstory/types", partName = "body")
@@ -80,7 +79,7 @@ public interface INEWSStoryPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewsstory.types.UnlockStoryResponseType
+     *     returns inewsstory.UnlockStoryResponseType
      * @throws ConnectionFault
      */
     @WebMethod(operationName = "UnlockStory")
@@ -101,9 +100,9 @@ public interface INEWSStoryPortType {
      * 
      * @param body
      * @return
-     *     returns com.avid.central.obsplugin.inewslibrary.inewsstory.types.DeleteStoryResponseType
-     * @throws DeleteStoryFault
+     *     returns inewsstory.DeleteStoryResponseType
      * @throws ConnectionFault
+     * @throws DeleteStoryFault
      */
     @WebMethod(operationName = "DeleteStory")
     @WebResult(name = "DeleteStoryResponse", targetNamespace = "http://avid.com/inewsstory/types", partName = "body")
