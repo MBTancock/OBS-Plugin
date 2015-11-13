@@ -145,7 +145,7 @@ public class cuesheetResource {
         // check that this user can export cue sheets
         boolean authorised = false;
         for (String role : session.getUserSession().getRoles()) {
-            if (role.equalsIgnoreCase(_configuration.obs_export_role)) {
+            if (role.equalsIgnoreCase(_configuration.obs_cuesheet_role)) {
                 authorised = true;
                 break;
             }

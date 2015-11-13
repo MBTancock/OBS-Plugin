@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement(name = "export_configuration")
 public class ExportConfiguration {
+    @XmlTransient
+    public String id;
 
     //    iNEWS Configuration
     public String inws_ws_srvr;
@@ -46,7 +48,7 @@ public class ExportConfiguration {
     public String onc_ftp_pwd;
     public String onc_ftp_path;
 
-    //    MDS FTP COnfiguration
+    //    MDS FTP Configuration
     public String mds_ftp_srvr;
     public int mds_ftp_port;
     public String mds_ftp_login;

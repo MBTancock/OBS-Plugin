@@ -12,6 +12,7 @@ var GENSET;
 Ext4.define("GENSET.model.ObsSettings", {
     extend: "Ext.data.Model",
     fields: [
+        {name: "inws_ws_srvr", persist: false},
         {name: "inws_ws_srvr"},
         {name: "inws_ws_port"},
         {name: "inws_server"},
