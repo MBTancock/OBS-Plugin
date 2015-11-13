@@ -48,7 +48,7 @@ public class cuesheetResource {
     public CuesheetResponse get(@PathParam("id") UUID id) {
 
         CuesheetResponse response = new CuesheetResponse();
-        response.setMessage("Export Failed");
+        response.setMessage("Publish Failed");
 
         if (null == _configuration) {
             // see if we can load the settings
@@ -90,6 +90,7 @@ public class cuesheetResource {
                 iNEWS_Story story = new iNEWS_Story(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
 
                 response.setResult(story.SaveStory(exportData.getQueue(), exportData.getLocator(), replacementNSML) ? 1 : 4);
+                response.setMessage(1 == response.getResult() ? "Publish Succeeded" : "Story Locked");
             } catch (Exception ex) {
                 response.setMessage(ex.getMessage());
                 response.setMarkers(null);
@@ -108,6 +109,16 @@ public class cuesheetResource {
             response.setMarkers(null);
             response.setResult(0);
         }
+
+        // remove any export data
+        try
+        {
+            if (null != _exports.get(id)) {
+                _exports.remove(id);
+            }
+        }
+
+        catch (Exception ex){}
         return response;
     }
 
@@ -153,6 +164,7 @@ public class cuesheetResource {
 
         if (!authorised) {
             // sorry, not allowed!
+            response.setMessage("User not authorised");
             response.setResult(2);
             return response;
         }
@@ -175,6 +187,7 @@ public class cuesheetResource {
 
             if (null == mobID) {
                 // flag the fact we failed to locate the MobID
+                response.setMessage("Failed to determine MobID");
                 response.setResult(4);
                 return response;
             }
@@ -275,6 +288,7 @@ public class cuesheetResource {
             } while (_exports.containsKey(exportData.getID()));
 
             _exports.put(exportData.getID(), exportData);
+            response.setMessage("Marker data retrieved");
             response.setResult(1);
 
         } catch (Exception ex) {

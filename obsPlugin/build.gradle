@@ -2,10 +2,11 @@ useOSGi()
 
 dependencies {
     compile ipcDep('com.avid.central.framework:RestCore')
+    compile ipcDep('com.avid.central.framework:ConfigurationUI')
     compile ipcDep("com.avid.central.framework:AuthenticationAPI")
     compile ipcDep('javax.ws.rs:jsr311-api')
     compile ipcDep('com.fasterxml.jackson.core:jackson-annotations')
     compile ipcDep('joda-time:joda-time')
     compile 'commons-net:commons-net:3.3'
-    compile 'json-simple:json-simple-1.1.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }

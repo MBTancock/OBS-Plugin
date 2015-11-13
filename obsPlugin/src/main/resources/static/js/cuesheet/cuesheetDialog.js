@@ -36,6 +36,11 @@ function exportCuesheet(locator) {
                     return;
                 }
 
+                if (res.message != undefined)
+                {
+                    console.log(res.message);
+                }
+
                 switch (res.result)
                 {
                     case 1: // success
@@ -184,8 +189,22 @@ function showDialog(res)
 // deletes the publish record, called if the user cancelled
 function deleteSheet(id)
 {
-
+    try {
+        var path = "/api/cuesheet/" + id;
+        $.ajax(path, {
+                method: "DELETE",
+                dataType: "text",
+            })
+            .done(function (res) {
+                if (res != undefined)
+                {
+                    console.log(res);
+                }
+            });
+    }
+    catch (ex){}
 }
+
 // publishes the cuesheet to the story
 function publishSheet(id)
 {
@@ -208,6 +227,11 @@ function publishSheet(id)
                 {
                     AV.Utilities.showErrorMessage("There was a problem communicating with the server.");
                     return;
+                }
+
+                if (res.message != undefined)
+                {
+                    console.log(res.message);
                 }
 
                 switch (res.result)
