@@ -9,7 +9,6 @@ Ext.ns("GENSET.view");
  *
  * @class GENSET.view.ObsSettingsView
  * @extends AV.View
- * @author oleksii.koliada Adapted for AV.BasicSettingsView
  */
 GENSET.view.ObsSettingsView = AV.BasicSettingsView.extend({
 

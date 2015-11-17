@@ -2,7 +2,50 @@
   // Retrieve the Avid action registry so you can register your new menu item/action.
   var registry = AV.action.Registry.getGlobal();
 
-    // Register your new action.
+    /*
+
+     var registry = AV.action.Registry.getGlobal();
+     registry.register({
+     id: 'com.avid.central.inews.ExportStory',
+     text: 'ExportStory',
+     handler: function (selection) {
+     // button handler
+     }
+     });
+
+     And bind it to our type of view:
+
+     AV.action.Binder.bind({
+     places: [AV.action.Binder.PLACE_TOOLBAR],
+     filter: AV.action.DefaultFilters.viewType('inews-storyline-and-queue'),
+     model: [{
+     actionId: 'com.avid.central.inews.ExportStory',
+     cls: 'export-story-btn', // Here you can specify css class with an icon for button. Without that it will show up blank, because we don't have any default icon for toolbar buttons currently.
+     }]
+     });
+
+
+     */
+    // register handler for cue sheet export button
+    registry.register({
+        id: 'com.avid.central.inews.ExportStory',
+        text: 'ExportStory',
+        handler: function (selection) {
+
+            // the storyline panel export cue sheet button will call here
+            // selection is the story model of the story, but make certain
+            if (selection instanceof Storyline.StoryModel)
+            {
+                exportCuesheet(selection);
+            }
+            else
+            {
+                AV.Utilities.showErrorMessage("Failed to obtain the story reference");
+            }
+        }
+    });
+
+// Register your new action.
     registry.register({
         id: "com.avid.central.obsplugin.exportrundown",
         text: "Export Rundown",
@@ -231,5 +274,15 @@
             { type: "separator" }
         ]
     });
+
+    binder.bind({
+        places: [AV.action.Binder.PLACE_TOOLBAR],
+        filter: filters.viewType('inews-storyline-and-queue'),
+        model: [{
+            actionId: 'com.avid.central.inews.ExportStory',
+            cls: 'export-story-btn', // Here you can specify css class with an icon for button. Without that it will show up blank, because we don't have any default icon for toolbar buttons currently.
+        }]
+    });
+
 })();
 

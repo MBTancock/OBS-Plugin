@@ -18,7 +18,7 @@
                     autoHeight: false,
                     autoScroll: true,
                     renderTo: Ext.get('cuesheettestpanel'),
-                    width: 500,
+                    width: 600,
                     items: [
                         {
                             xtype: 'fieldset',
@@ -26,23 +26,63 @@
                             //layout: 'column',
                             defaults: {
                                 anchor: '100%',
-                                labelWidth: 160,
+                                labelWidth: 100,
                                 labelAlign: 'right'
                             },
                             items: [
                                 {
-                                    xtype: 'textareafield',
-                                    fieldLabel: 'Paste Story Link Here',
-                                    id: 'export_link_text',
-                                    grow: 'true',
-                                    value: 'https://media-central/layout/inews-only-layout/#inews:INEWS%3AMDS.MX1.00%3A84955593.287885.11%7CStory',
+                                    xtype: 'textfield',
+                                    fieldLabel: 'Title',
+                                    id: 'export_title',
+                                    value: 'My Story',
                                     listeners:
                                     {
                                         blur: function () {
                                         },
                                         change: function (newValue, oldValue, eOpts) {
-                                            var btn = Ext4.getCmp('export_sheet_button');
-                                            btn.setDisabled(oldValue.toString().length == 0);
+                                            checkData();
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: 'Queue Full Path',
+                                    id: 'export_queue',
+                                    value: 'INEWS:MDS.MX1.00',
+                                    listeners:
+                                    {
+                                        blur: function () {
+                                        },
+                                        change: function (newValue, oldValue, eOpts) {
+                                            checkData();
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: 'Locator',
+                                    id: 'export_locator',
+                                    value: '491450435.52797.8',
+                                    listeners:
+                                    {
+                                        blur: function () {
+                                        },
+                                        change: function (newValue, oldValue, eOpts) {
+                                            checkData();
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: 'MobID',
+                                    id: 'export_mob_id',
+                                    value: '060a2b340101010101010f0013-000000-46bd19c5041c431f-b273bf151bb9-b410',
+                                    listeners:
+                                    {
+                                        blur: function () {
+                                        },
+                                        change: function (newValue, oldValue, eOpts) {
+                                            checkData();
                                         }
                                     }
                                 },
@@ -54,7 +94,11 @@
                                     width: '100',
                                     margin: '0 0 0 165',
                                     handler: function () {
-                                        exportCuesheet(Ext4.getCmp('export_link_text').value);
+                                        var title = Ext4.getCmp('export_title').value;
+                                        var queue = Ext4.getCmp('export_queue').value;
+                                        var locator = Ext4.getCmp('export_locator').value;
+                                        var mobID = Ext4.getCmp('export_mob_id').value;
+                                        retrieveMarkers(title, queue, locator, mobID);
                                     }
                                 }
                             ]
@@ -64,4 +108,20 @@
             }
         });
     })
+
+    function checkData()
+    {
+        var title = Ext4.getCmp('export_title').value;
+        var queue = Ext4.getCmp('export_queue').value;
+        var locator = Ext4.getCmp('export_locator').value;
+        var mobID = Ext4.getCmp('export_mob_id').value;
+        var btn = Ext4.getCmp('export_sheet_button');
+        btn.setDisabled(title.length == 0 || queue.length == 0 || locator.length == 0 || mobID.length == 0);
+    }
 })(AV);
+
+/*
+ locator: "491450435.52797.8"
+ mobID: "060a2b340101010101010f0013-000000-46bd19c5041c431f-b273bf151bb9-b410"
+ queue: "INEWS:MDS.MX1.00"
+ */

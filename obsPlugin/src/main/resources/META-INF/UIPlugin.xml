@@ -1,4 +1,8 @@
 <UIPlugin bundlePath="static">
+  <Dependency name="com.avid.central.UICore"/>
+  <Dependency name="com.avid.central.ConfigurationUI"/>
+
+
   <View type="obs-general-settings">
     <!-- Mark view as system settings view. -->
     <Property name="settings-type" value="system-settings"/>
@@ -17,17 +21,6 @@
     <Import type="js" path="js/settings/ObsSettings.js"/>
     <Import type="css" path="css/styles.css" />
   </View>
-  <!--Removed in favour of dialog-->
-  <!--<View type="cueSheet">-->
-    <!--<Property name="productId" value="obsPlugin"/>-->
-    <!--<Property name="view-env" value="production"/>-->
-    <!--<Property name="view-vendor" value="broadcastmediasolutions"/>-->
-    <!--<Property name="view-mode" value="factory"/>-->
-    <!--<Property name="@menuName" value="Cue Sheet Export"/>-->
-    <!--<Property name="showMenu" value="true"/>-->
-    <!--<Import type="js" path="js/cuesheet/cueSheet.js"/>-->
-   <!--</View>-->
-  <!--Temporary pane to enable testing-->
   <View type="cueSheetTest">
     <Property name="productId" value="obsPlugin"/>
     <Property name="view-env" value="production"/>
@@ -35,22 +28,12 @@
     <Property name="view-mode" value="factory"/>
     <Property name="@menuName" value="Cue Sheet Export Test"/>
     <Property name="showMenu" value="true"/>
-    <Import type="js" path="js/cuesheet/datamodel/cuesheetRequest.js"/>
-    <Import type="js" path="js/cuesheet/cueSheetDialog.js"/>
     <Import type="js" path="js/cuesheet/cueSheetTest.js"/>
   </View>
-  <!--Removed in favour of GENSET based settings-->
-  <!--<View type="system-settings-obs-view">-->
-    <!--<Property name="settings-type" value="system-settings"/>-->
-    <!--<Property name="showMenu" value="false"/>-->
-    <!--<Property name="productId" value="obsPlugin"/>-->
-    <!--<Property name="view-env" value="administration"/>-->
-    <!--<Property name="@name" value="OBS"/>-->
-    <!--<Import type="js" path="js/configuration/SystemSettingsObsView.js"/>-->
-    <!--<Import type="js" path="js/configuration/datamodel/exportConfiguration.js"/>-->
-  <!--</View>-->
   <ViewExtension type="av-asset-list">
     <Import type="js" path="js/export/asset-menu.js"/>
+    <Import type="js" path="js/cuesheet/datamodel/publishRequest.js"/>
+    <Import type="js" path="js/cuesheet/cueSheetDialog.js"/>
     <Import type="js" path="js/export/datamodel/inewsRequest.js"/>
     <Import type="js" path="js/export/datamodel/inewsResponse.js"/>
   </ViewExtension>

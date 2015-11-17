@@ -142,17 +142,9 @@ public class iNEWS_Queue {
     }
 
     // retrieves a story as an NSML string
-    public StoryData GetStory(String queue, String locator, String subjectField)
+    public String GetStory(String queue, String locator, String subjectField)
     {
-        // create the deserialization object
-        Unmarshaller unmarshaller;
-        try {
-            unmarshaller = CreateUnmarshaller();
-        } catch (JAXBException ex) {
-            unmarshaller = null;
-        }
-
-        StoryData storyData = null;
+        String storyAsNSML = null;
 
         try
         {
@@ -162,28 +154,14 @@ public class iNEWS_Queue {
 
             GetStoryResponseType gstr = _port.getStory(gst);
 
-            storyData = new StoryData();
-            storyData.StoryAsNSML = gstr.getStory().getStoryAsNSML();
-
-            // decode the NSML to get the title
-            if (null != unmarshaller) {
-                StringReader reader = new StringReader(storyData.StoryAsNSML);
-
-                try
-                {
-                    Nsml nsml = (Nsml) unmarshaller.unmarshal(reader);
-                    storyData.Title = GetFieldStringValue(nsml.getFields().getStringOrBooleanOrDate(), subjectField);
-                }
-                catch (Exception ex){}
-
-            }
+            storyAsNSML = gstr.getStory().getStoryAsNSML();
         }
         catch (Exception ex)
         {
-            storyData = null;
+            storyAsNSML = null;
         }
 
-        return storyData;
+        return storyAsNSML;
     }
 
     ContainerFactory containerFactory = new ContainerFactory(){

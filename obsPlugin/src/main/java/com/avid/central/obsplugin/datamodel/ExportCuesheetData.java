@@ -7,9 +7,6 @@ import java.util.UUID;
  */
 public class ExportCuesheetData {
     private UUID id;
-    private String queue;
-    private String locator;
-    private String storyAsNSML;
     private CuesheetResponse response;
 
     public ExportCuesheetData() {
@@ -17,12 +14,8 @@ public class ExportCuesheetData {
         this.response = new CuesheetResponse();
     }
 
-    public ExportCuesheetData(String queue, String locator, String storyAsNSML, CuesheetResponse response) {
+    public ExportCuesheetData(CuesheetResponse response) {
         this.id = null;
-
-        this.queue = queue;
-        this.locator = locator;
-        this.storyAsNSML = storyAsNSML;
         this.response = response;
     }
 
@@ -35,36 +28,6 @@ public class ExportCuesheetData {
     {
         this.id = id;
         this.response.setID(id);
-    }
-
-    public String getQueue()
-    {
-        return this.queue;
-    }
-
-    public void setQueue(String queue)
-    {
-        this.queue = queue;
-    }
-
-    public String getLocator()
-    {
-        return this.locator;
-    }
-
-    public void setLocator(String locator)
-    {
-        this.locator = locator;
-    }
-
-    public String getStoryAsNSML()
-    {
-        return this.storyAsNSML;
-    }
-
-    public void setStoryAsNSML(String storyAsNSML)
-    {
-        this.storyAsNSML = storyAsNSML;
     }
 
     public CuesheetResponse getResponse()

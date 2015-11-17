@@ -38,7 +38,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                     items: [
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.inews.title"),
+                            title: GENSET.msg("obs.settings.inews.title"),
                             name: 'inews',
                             layout: 'column',
                             defaults: {
@@ -49,12 +49,12 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 {
                                     xtype: 'textfield',
                                     name: 'inws_ws_srvr',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.inews.wshost"),
+                                    fieldLabel: GENSET.msg("obs.settings.inews.wshost"),
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.inews.port"),
+                                    fieldLabel: GENSET.msg("obs.settings.inews.port"),
                                     name: 'inws_ws_port',
                                     inputType: 'numberfield',
                                     width: 200,
@@ -62,19 +62,19 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.inews.inws"),
+                                    fieldLabel: GENSET.msg("obs.settings.inews.inws"),
                                     name: 'inws_server',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.inews.login"),
+                                    fieldLabel: GENSET.msg("obs.settings.inews.login"),
                                     name: 'inws_login',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.inews.password"),
+                                    fieldLabel: GENSET.msg("obs.settings.inews.password"),
                                     name: 'inws_pwd',
                                     inputType: 'password',
                                     allowBlank: false
@@ -109,7 +109,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.interplay.title"),
+                            title: GENSET.msg("obs.settings.interplay.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -119,12 +119,12 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 {
                                     xtype: 'textfield',
                                     name: 'iplay_ws_srvr',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.interplay.wshost"),
+                                    fieldLabel: GENSET.msg("obs.settings.interplay.wshost"),
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.interplay.port"),
+                                    fieldLabel: GENSET.msg("obs.settings.interplay.port"),
                                     name: 'iplay_ws_port',
                                     inputType: 'numberfield',
                                     width: 200,
@@ -132,19 +132,19 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.interplay.workgroup"),
+                                    fieldLabel: GENSET.msg("obs.settings.interplay.workgroup"),
                                     name: 'iplay_workgroup',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.interplay.login"),
+                                    fieldLabel: GENSET.msg("obs.settings.interplay.login"),
                                     name: 'iplay_login',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.interplay.password"),
+                                    fieldLabel: GENSET.msg("obs.settings.interplay.password"),
                                     name: 'iplay_pwd',
                                     inputType: 'password',
                                     allowBlank: false
@@ -179,7 +179,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.onc.title"),
+                            title: GENSET.msg("obs.settings.onc.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -189,12 +189,12 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 {
                                     xtype: 'textfield',
                                     name: 'onc_ftp_srvr',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.onc.ftphost"),
+                                    fieldLabel: GENSET.msg("obs.settings.onc.ftphost"),
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.onc.port"),
+                                    fieldLabel: GENSET.msg("obs.settings.onc.port"),
                                     name: 'onc_ftp_port',
                                     inputType: 'numberfield',
                                     width: 200,
@@ -202,19 +202,19 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.onc.path"),
+                                    fieldLabel: GENSET.msg("obs.settings.onc.path"),
                                     name: 'onc_ftp_path',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.onc.login"),
+                                    fieldLabel: GENSET.msg("obs.settings.onc.login"),
                                     name: 'onc_ftp_login',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.onc.password"),
+                                    fieldLabel: GENSET.msg("obs.settings.onc.password"),
                                     name: 'onc_ftp_pwd',
                                     inputType: 'password',
                                     allowBlank: false
@@ -248,7 +248,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.mds.title"),
+                            title: GENSET.msg("obs.settings.mds.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -258,12 +258,12 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 {
                                     xtype: 'textfield',
                                     name: 'mds_ftp_srvr',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.mds.ftphost"),
+                                    fieldLabel: GENSET.msg("obs.settings.mds.ftphost"),
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.mds.port"),
+                                    fieldLabel: GENSET.msg("obs.settings.mds.port"),
                                     name: 'mds_ftp_port',
                                     inputType: 'numberfield',
                                     width: 200,
@@ -271,19 +271,19 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.mds.path"),
+                                    fieldLabel: GENSET.msg("obs.settings.mds.path"),
                                     name: 'mds_ftp_path',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.mds.login"),
+                                    fieldLabel: GENSET.msg("obs.settings.mds.login"),
                                     name: 'mds_ftp_login',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.mds.password"),
+                                    fieldLabel: GENSET.msg("obs.settings.mds.password"),
                                     name: 'mds_ftp_pwd',
                                     inputType: 'password',
                                     allowBlank: false
@@ -318,7 +318,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.authorisation.title"),
+                            title: GENSET.msg("obs.settings.authorisation.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -327,13 +327,13 @@ Ext4.define("GENSET.view.ObsDetails", {
                             items: [
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.authorisation.rundown"),
+                                    fieldLabel: GENSET.msg("obs.settings.authorisation.rundown"),
                                     name: 'obs_export_role',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.authorisation.cuesheet"),
+                                    fieldLabel: GENSET.msg("obs.settings.authorisation.cuesheet"),
                                     name: 'obs_cuesheet_role',
                                     allowBlank: false
                                 }
@@ -341,7 +341,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.definitions.title"),
+                            title: GENSET.msg("obs.settings.definitions.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -350,37 +350,37 @@ Ext4.define("GENSET.view.ObsDetails", {
                             items: [
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.definitions.id"),
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.id"),
                                     name: 'obs_channel_id',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.definitions.title"),
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.title"),
                                     name: 'title_id',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.definitions.date"),
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.date"),
                                     name: 'date_id',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.definitions.day"),
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.day"),
                                     name: 'day_id',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.definitions.viz"),
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.viz"),
                                     name: 'viz_id',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.definitions.cuesheet"),
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.cuesheet"),
                                     name: 'cuesheet_id',
                                     allowBlank: false
                                 }
@@ -388,7 +388,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.fields.title"),
+                            title: GENSET.msg("obs.settings.fields.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -397,67 +397,67 @@ Ext4.define("GENSET.view.ObsDetails", {
                             items: [
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.duration"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.duration"),
                                     name: 'duration_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.info"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.info"),
                                     name: 'info_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.modified"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.modified"),
                                     name: 'modified_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.music"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.music"),
                                     name: 'music_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.starttime"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.starttime"),
                                     name: 'start_time_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.storyid"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.storyid"),
                                     name: 'story_id_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.subject"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.subject"),
                                     name: 'subject_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.type"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.type"),
                                     name: 'type_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.update"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.update"),
                                     name: 'update_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.upmix"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.upmix"),
                                     name: 'upmix_field',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.fields.videoid"),
+                                    fieldLabel: GENSET.msg("obs.settings.fields.videoid"),
                                     name: 'video_id_field',
                                     allowBlank: false
                                 }
@@ -465,7 +465,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: 'Dummy', // GENSET.msg("obs.settings.formatting.title"),
+                            title: GENSET.msg("obs.settings.formatting.title"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -474,7 +474,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                             items: [
                                 {
                                     xtype: 'checkbox',
-                                    fieldLabel: 'Dummy', // GENSET.msg("obs.settings.formatting.retaintags"),
+                                    fieldLabel: GENSET.msg("obs.settings.formatting.retaintags"),
                                     id: 'script_format_id',
                                     name: 'script_format_loc',
                                     checked: true,
