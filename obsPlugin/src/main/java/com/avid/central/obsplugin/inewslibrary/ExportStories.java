@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
 
+import com.avid.central.obsplugin.inewslibrary.story.Story;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -51,7 +52,7 @@ public class ExportStories {
     // the rundown is the list of stories passed in as stories
     // from this identify significant parameters based on the rules defined above
     // returns the rundown as an XML string and the filename to be used in the fileName parameter
-    public ExportStoryData ProcessRundown(List<Nsml> stories, ExportConfiguration config) {
+    public ExportStoryData ProcessRundown(List<Story> stories, ExportConfiguration config) {
         ExportStoryData exportData = new ExportStoryData();
 
         // create a new OBS_Export
@@ -66,32 +67,34 @@ public class ExportStories {
         // Flags the fact that we have now validated the header
         boolean headerValid = false;
 
-        String cutsheetInfo = "[CUESHEET INFO]";
+        // identifiers used in exporting cue sheets
+        String CueSheetLocation = "<p family=\"0\" font=\"\" pitch=\"0\">" + config.cuesheet_id + "</p>";
+        String BodyStart = "<body";
+        String BodyEnd = "</body>";
 
         // do everything inside a try {} block
         // if we encounter any of the conditions listed above which preclude exporting the rundown
         // then we throw an exception which includes the reason why
         try {
             // go through stories and decide what to do with each
-            for (Nsml story : stories) {
-                // TODO
+            for (Story story : stories) {
                 List<mos> vizGrapics = new ArrayList<mos>();
 
                 // is this a break story?
-                if (story.getHead().getMeta().isBreak()) {
+                if (story.Story.getHead().getMeta().isBreak()) {
                     // yes it is
                     // need to get the content of the info Field
-                    String info = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.info_field);
+                    String info = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.info_field);
                     if (null == info) {
                         throw new Exception("The rundown is invalid: the designated info field was not found");
                     }
 
-                    String subject = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.subject_field);
+                    String subject = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.subject_field);
                     if (null == subject) {
                         throw new Exception("The rundown is invalid: the designated subject field was not found");
                     }
 
-                    String startTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
+                    String startTime = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
                     if (null == startTime) {
                         throw new Exception("The rundown is invalid: the designated start time field was not found");
                     }
@@ -124,7 +127,7 @@ public class ExportStories {
                         if (subject.length() < 1) {
                             // log a warning here (no date specified)
                             // set date to today's date
-                            _export.Rundown.Day = String.format("Day %1$02d", DateTime.now().dayOfMonth());
+                            _export.Rundown.Day = String.format("Day %1$02d", DateTime.now().dayOfMonth().get());
                             exportData.getResponse().setMessage("The day information was missing from the rundown");
                         }
                     } else if (info.equals(config.date_id)) {
@@ -162,7 +165,7 @@ public class ExportStories {
                         lastStoryWasBreak = true;
                     }
                 } else {
-                    if (!story.getHead().getMeta().isFloat()) {
+                    if (!story.Story.getHead().getMeta().isFloat()) {
                         // this is not a floated Story so we must have passed the "header"
                         // if we haven't validated the "header" at this point then now is the time to do so!
                         if (!headerValid) {
@@ -179,7 +182,7 @@ public class ExportStories {
                         _export.Rundown.RundownEndTime = -1;
 
                         // get the subject
-                        String subject = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.subject_field);
+                        String subject = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.subject_field);
                         if (null == subject) {
                             throw new Exception("The rundown is invalid: the designated subject field was not found");
                         }
@@ -190,15 +193,15 @@ public class ExportStories {
 
                         // check for an update and retrieve modification time
                         String updatedTimestamp = null;
-                        int update = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.update_field);
-                        DateTime modificationTime = GetFieldDateValue(story.getFields().getStringOrBooleanOrDate(), config.modified_field);
+//                        int update = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.update_field);
+                        DateTime modificationTime = GetFieldDateValue(story.Story.getFields().getStringOrBooleanOrDate(), config.modified_field);
                         if (null != modificationTime) {
                             DateTimeFormatter fmt = ISODateTimeFormat.dateHourMinuteSecond();
                             updatedTimestamp = modificationTime.toString(fmt);
                         }
 
                         // get the start time
-                        String startTime = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
+                        String startTime = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
 
                         // do we have start time data?
                         if (startTime != null && !startTime.isEmpty()) {
@@ -220,7 +223,7 @@ public class ExportStories {
                         }
 
                         // get the StoryID
-                        String storyID = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.story_id_field);
+                        String storyID = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.story_id_field);
                         if (exportData.getMdsMode()) {
                             if (null == storyID) {
                                 throw new Exception("The rundown is invalid: the designated StoryID field was not found");
@@ -231,7 +234,7 @@ public class ExportStories {
                         }
 
                         // get the VideoID
-                        String videoID = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.video_id_field);
+                        String videoID = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.video_id_field);
                         if (exportData.getMdsMode()) {
                             if (null == videoID) {
                                 throw new Exception("The rundown is invalid: the designated VideoID field was not found");
@@ -244,7 +247,7 @@ public class ExportStories {
                         }
 
                         // get the Upmix
-                        String upMix = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
+                        String upMix = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
                         if (exportData.getMdsMode()) {
                             if (null == upMix) {
                                 throw new Exception("The rundown is invalid: the designated upmix field was not found");
@@ -255,7 +258,7 @@ public class ExportStories {
                         }
 
                         // get the Music
-                        String music = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.music_field);
+                        String music = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.music_field);
                         if (exportData.getMdsMode()) {
                             if (null == music || music.length() == 0) {
                                 exportData.getResponse().setMessage("At least one story is missing its music element");
@@ -265,9 +268,9 @@ public class ExportStories {
                         // get VIZ production cue
                         // are there any anchored elements?
                         if (exportData.getMdsMode()) {
-                            if (null != story.getAeset() && story.getAeset().getAe().size() > 0) {
+                            if (null != story.Story.getAeset() && story.Story.getAeset().getAe().size() > 0) {
                                 // is there one for VIZ?
-                                for (Ae ae : story.getAeset().getAe()) {
+                                for (Ae ae : story.Story.getAeset().getAe()) {
 
                                     for (Object ap : ae.getMcOrAp()) {
                                         if (ap.getClass() != Nsml.Aeset.Ae.Mc.class) {
@@ -288,7 +291,7 @@ public class ExportStories {
                                                         continue;
                                                     }
 
-                                                    for (AttachmentType at : story.getAesetAtts().getAttachment()) {
+                                                    for (AttachmentType at : story.Story.getAesetAtts().getAttachment()) {
                                                         if (mc.getIdref().equals(at.getId())) {
                                                             // found it!
                                                             String graphicData = at.getValue();
@@ -299,7 +302,6 @@ public class ExportStories {
                                                                         vizGrapics.add(ac.mos);
                                                                     }
                                                                 } catch (Exception ex) {
-                                                                    String s = ex.getMessage();
                                                                 }
 
                                                             }
@@ -320,14 +322,14 @@ public class ExportStories {
                         // Story looks OK so add it to the export
                         OBSStory obsStory = new OBSStory();
                         obsStory.Subject = subject;
-                        obsStory.Type = GetFieldStringValue(story.getFields().getStringOrBooleanOrDate(), config.type_field);
+                        obsStory.Type = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.type_field);
                         obsStory.StoryStartTime = currentStartTime;
-                        obsStory.StoryDuration = GetFieldIntegerValue(story.getFields().getStringOrBooleanOrDate(), config.duration_field);
+                        obsStory.StoryDuration = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.duration_field);
                         obsStory.VideoID = videoID;
 
                         if (exportData.getMdsMode()) {
                             obsStory.StoryID = storyID;
-                            obsStory.Upmix = upMix == "1";
+                            obsStory.Upmix = upMix.equals("1");
                             obsStory.Music = music;
                             obsStory.Graphics = vizGrapics;
                         } else {
@@ -337,33 +339,69 @@ public class ExportStories {
                             }
                         }
 
-                        // need to get the story body free of all formatting
-                        String storyBody = GetStoryBody(story);
-
-                        int cueSheetLocation = storyBody.indexOf(cutsheetInfo);
+                        String storyBody;
                         String scriptInfo = null;
                         String cueSheet = null;
 
-                        // look for a Cue Sheet section
-                        if (cueSheetLocation >= 0) {
-                            scriptInfo = storyBody.substring(0, cueSheetLocation);
+                        if (config.script_format) {
+                            // need to get the story body complete with tags
+                            storyBody = "";
 
-                            if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + cutsheetInfo.length())) {
-                                cueSheet = storyBody.substring(cueSheetLocation + cutsheetInfo.length());
+                            // get offsets to body tags
+                            int storyStart = story.StoryAsNSML.indexOf(BodyStart);
+                            int storyEnd = story.StoryAsNSML.indexOf(BodyEnd);
+
+                            // check for empty body
+                            if (-1 != storyEnd) {
+                                storyEnd += BodyEnd.length();
+                                storyBody = story.StoryAsNSML.substring(storyStart, storyEnd);
+
+                                int cueSheetLocation = storyBody.indexOf(CueSheetLocation);
+
+                                // look for a Cue Sheet section
+                                if (cueSheetLocation >= 0) {
+                                    scriptInfo = storyBody.substring(0, cueSheetLocation);
+
+                                    // add back the body end tag
+                                    scriptInfo += BodyEnd;
+
+                                    if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + CueSheetLocation.length())) {
+                                        cueSheet = storyBody.substring(cueSheetLocation + CueSheetLocation.length(), storyBody.length() - BodyEnd.length());
+                                    }
+                                } else {
+                                    scriptInfo = storyBody;
+                                }
+
                             }
+
                         } else {
-                            scriptInfo = storyBody;
-                        }
+                            // need to get the story body free of all formatting
+                            storyBody = GetStoryBody(story.Story);
 
-                            obsStory.ScriptInfo = scriptInfo;
-                            if (exportData.getMdsMode() && null != cueSheet) {
-                                obsStory.CueSheet = cueSheet;
+                            int cueSheetLocation = storyBody.indexOf(config.cuesheet_id);
+
+                            // look for a Cue Sheet section
+                            if (cueSheetLocation >= 0) {
+                                scriptInfo = storyBody.substring(0, cueSheetLocation);
+
+                                if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + config.cuesheet_id.length())) {
+                                    cueSheet = storyBody.substring(cueSheetLocation + config.cuesheet_id.length());
+                                }
+                            } else {
+                                scriptInfo = storyBody;
                             }
 
-                            _export.Stories.add(obsStory);
-
-                            lastStoryWasBreak = false;
                         }
+
+                        obsStory.ScriptInfo = scriptInfo;
+                        if (exportData.getMdsMode() && null != cueSheet) {
+                            obsStory.CueSheet = cueSheet;
+                        }
+
+                        _export.Stories.add(obsStory);
+
+                        lastStoryWasBreak = false;
+                    }
                 }
             }
 
@@ -475,7 +513,7 @@ public class ExportStories {
                 Nsml.Fields.Duration durationField = (Nsml.Fields.Duration) field;
 
                 if (id.equals(durationField.getId())) {
-                    return (int) durationField.getValue().intValue();
+                    return durationField.getValue().intValue();
                 }
             }
         }
@@ -489,7 +527,7 @@ public class ExportStories {
                 Nsml.Fields.Date dateField = (Nsml.Fields.Date) field;
 
                 if (id.equals(dateField.getId())) {
-                     return new DateTime(dateField.getValue().longValue() * 1000L);
+                    return new DateTime(dateField.getValue().longValue() * 1000L);
                 }
             }
         }

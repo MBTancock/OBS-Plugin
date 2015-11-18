@@ -1,0 +1,5 @@
+.export-story-btn .x-btn-text {
+    background: url("icons/cuesheet_publish.png") no-repeat center center !important;
+    width: 20px;
+    margin-left: -2px;
+}

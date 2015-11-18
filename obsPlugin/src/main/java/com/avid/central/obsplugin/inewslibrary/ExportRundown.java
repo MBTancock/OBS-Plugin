@@ -69,34 +69,34 @@ public class ExportRundown {
         // get the story list        
         List<Story> stories = session.getStory();
 
-        for (OBSStory story : Stories) {
-            Story obsStory = new Story();
-            obsStory.setStartTime(story.GetStartTime());
-            obsStory.setDuration(story.GetDuration());
-            obsStory.setSubject(story.Subject);
-            if (null == story.Type) {
-                obsStory.setType("Filler");
+        for (OBSStory obsStory : Stories) {
+            Story exportedStory = new Story();
+            exportedStory.setStartTime(obsStory.GetStartTime());
+            exportedStory.setDuration(obsStory.GetDuration());
+            exportedStory.setSubject(obsStory.Subject);
+            if (null == obsStory.Type) {
+                exportedStory.setType("Filler");
             } else {
-                obsStory.setType(story.Type);
+                exportedStory.setType(obsStory.Type);
             }
 
-            obsStory.setModified(story.Modified);
-            if (story.Update)
+            exportedStory.setModified(obsStory.Modified);
+            if (obsStory.Update)
             {
-                obsStory.setUpdated(true);
+                exportedStory.setUpdated(true);
             }
 
-            obsStory.setVideoID(story.VideoID);
-            obsStory.setScriptInfo(story.ScriptInfo);
+            exportedStory.setVideoID(obsStory.VideoID);
+            exportedStory.setScriptInfo(obsStory.ScriptInfo);
 
             if (isMds) {
                 // data only exported for MDS
-                obsStory.setComUpmix(story.Upmix);
-                obsStory.setMusic(story.Music);
+                exportedStory.setComUpmix(obsStory.Upmix);
+                exportedStory.setMusic(obsStory.Music);
 
                 // add the graphic objects
-                if (null != story.Graphics) {
-                    for (mos graphic : story.Graphics) {
+                if (null != obsStory.Graphics) {
+                    for (mos graphic : obsStory.Graphics) {
                         Story.Graphic storyGraphic = new Story.Graphic();
 
                         storyGraphic.setGraphPage(graphic.objID);
@@ -104,15 +104,15 @@ public class ExportRundown {
                         storyGraphic.setGraphOffsetIN(graphic.vizTCin);
                         storyGraphic.setGraphOffsetOUT(graphic.vizTCout);
 
-                        obsStory.getGraphic().add(storyGraphic);
+                        exportedStory.getGraphic().add(storyGraphic);
                     }
                 }
 
-                obsStory.setCuesheet(story.CueSheet);
+                exportedStory.setCuesheet(obsStory.CueSheet);
             }
 
             // add the story
-             stories.add(obsStory);
+             stories.add(exportedStory);
         }
 
         // serialise the rundown

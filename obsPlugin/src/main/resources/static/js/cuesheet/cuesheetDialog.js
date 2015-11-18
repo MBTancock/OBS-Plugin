@@ -1,31 +1,80 @@
-function exportCuesheet(locator) {
-    AV.messages.WaitBox.show({
-        title: "Retrieving Markers",
-        content: "Please wait while the markers are retrieved",
-        isDelayed: true
-    });
+var storyTitle = undefined;
+var queueFullPath = undefined;
+var storyLocator = undefined;
+var sequenceMobID = undefined;
 
-    try {
-        if (undefined == locator) {
+function exportCuesheet(story) {
+
+    try
+    {
+        if (undefined == story || !(story instanceof Storyline.StoryModel)) {
+            // this shouldn't happen because the handler should have trapped it
             AV.Utilities.showErrorMessage("Failed to obtain the story reference");
             return;
         }
 
-        var txt = locator;
-        // strip off initial identifier
+        if (story.isStoryBodyLocked())
+        {
+            AV.Utilities.showErrorMessage("Unable to publish the Cue Sheet because the story is locked", "Story Locked");
+            return;
+        }
 
-        txt = txt.substring(txt.indexOf("%3A") + 3);
-        var rundown = txt.substring(0, txt.indexOf("%3A"));
-        txt = txt.substring(txt.indexOf("%3A") + 3);
-        var story = txt.substring(0, txt.indexOf("%7C"));
+        // get the title
+        var title = story.getTitleValue();
+        if (undefined == title)
+        {
+            AV.Utilities.showErrorMessage("Failed to retrieve the story title");
+            return;
+        }
 
-        var cuesheet = new AV.obsPlugin.datamodel.CuesheetRequest(rundown, story);
+        // get the queue path
+        var queue = story.getQueueFullPath();
+        if (undefined == queue)
+        {
+            AV.Utilities.showErrorMessage("Failed to retrieve the queue details");
+            return;
+        }
 
-        // post the request to create the export data
-        $.ajax("/api/cuesheet/", {
-                method: "POST",
-                contentType: "application/json",
-                data: cuesheet.toJs(),
+        var locator = story.getQueueLocator();
+        if (undefined == locator)
+        {
+            AV.Utilities.showErrorMessage("Failed to retrieve the story locator");
+            return;
+        }
+
+        // get the sequence MobID
+        var mobID = story.getSequenceID();
+        if (undefined == mobID)
+        {
+            AV.Utilities.showErrorMessage("The story does not appear to have an associated sequence");
+            return;
+        }
+
+        retrieveMarkers(title, queue, locator, mobID);
+    }
+    catch (ex)
+    {
+        AV.Utilities.showErrorMessage("An error occurred: " + ex.message);
+    }
+}
+
+function retrieveMarkers(title, queue, locator, mobID)
+{
+    this.storyTitle = title;
+    this.queueFullPath = queue.substring(queue.indexOf(":") + 1);
+    this.storyLocator = locator;
+    this.sequenceMobID = mobID;
+
+    try {
+        AV.messages.WaitBox.show({
+            title: "Retrieving Markers",
+            content: "Please wait while the markers are retrieved",
+            isDelayed: true
+        });
+
+        // request the marker data
+        $.ajax("/api/cuesheet/" + this.sequenceMobID, {
+                method: "GET",
                 dataType: "json"
             })
             .done(function (res) {
@@ -68,8 +117,7 @@ function exportCuesheet(locator) {
     catch (ex) {
         AV.messages.WaitBox.hide();
         AV.Utilities.showErrorMessage("An error occurred: " + ex.message);
-    }
-}
+    }}
 
 function showDialog(res)
 {
@@ -90,7 +138,7 @@ function showDialog(res)
     win = Ext4.create('Ext4.window.Window', {
         closeAction: 'close',
         id: 'myWin',
-        title: res.title,
+        title: this.storyTitle,
         height: 280,
         width: 410,
         maxWidth: 410,
@@ -209,16 +257,19 @@ function deleteSheet(id)
 function publishSheet(id)
 {
     try {
-        AV.messages.WaitBox.show({
-            title: "Publishing Cue Sheet",
-            content: "Please wait while cue sheet is published to the story",
-            isDelayed: true
-        });
+        //AV.messages.WaitBox.show({
+        //    title: "Publishing Cue Sheet",
+        //    content: "Please wait while cue sheet is published to the story",
+        //    isDelayed: true
+        //});
 
-        var path = "/api/cuesheet/" + id;
+        var publishRequest = new AV.obsPlugin.datamodel.PublishRequest(id, this.queueFullPath, this.storyLocator);
+        var path = "/api/cuesheet/";
         $.ajax(path, {
-                method: "GET",
-                dataType: "json",
+                method: "POST",
+                contentType: "application/json",
+                data: publishRequest.toJs(),
+                dataType: "json"
             })
             .done(function (res) {
                 AV.messages.WaitBox.hide();

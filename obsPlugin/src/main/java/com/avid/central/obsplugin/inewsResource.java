@@ -7,6 +7,7 @@ import com.avid.central.obsplugin.datamodel.ExportStoryData;
 import com.avid.central.obsplugin.datamodel.InewsRequest;
 import com.avid.central.obsplugin.datamodel.InewsResponse;
 import com.avid.central.obsplugin.inewslibrary.*;
+import com.avid.central.obsplugin.inewslibrary.story.Story;
 import com.avid.central.services.authentication.um.UserInfo;
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -216,7 +217,7 @@ public class inewsResource {
 
                 // list the queue, throws exception if there is a soap related error
                 // listing could be empty if there was a problem listing the queue
-                List<com.avid.central.obsplugin.inewslibrary.nsml.Nsml> listing = queue.GetRundown(request.getQueue(), true);
+                List<Story> listing = queue.GetRundown(request.getQueue(), true);
 
                 if (null == listing || listing.isEmpty())
                 {

@@ -21,6 +21,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.ws.WebServiceException;
 
+import com.avid.central.obsplugin.inewslibrary.story.Story;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 
@@ -75,8 +76,8 @@ public class iNEWS_Queue {
         return jc.createUnmarshaller();
     }
 
-    public List<Nsml> GetRundown(String path, boolean getBody) {
-        List<Nsml> listing = null;
+    public List<Story> GetRundown(String path, boolean getBody) {
+        List<Story> listing = null;
 
         // create the deserialization object
         Unmarshaller unmarshaller;
@@ -97,7 +98,7 @@ public class iNEWS_Queue {
         }
 
         // get the stories in the queue
-        listing = new ArrayList<Nsml>();
+        listing = new ArrayList<Story>();
         while (true) {
             // get a batch of stories
             GetStoriesType getStories = new GetStoriesType();
@@ -116,7 +117,7 @@ public class iNEWS_Queue {
 
                     Nsml nsml = (Nsml) unmarshaller.unmarshal(reader);
 
-                    listing.add(nsml);
+                    listing.add(new Story(nsml, storyAsNsml));
                 }
             } catch (ConnectionFault | GetStoriesFault | JAXBException ex) {
                 Logger.getLogger(iNEWS_Queue.class.getName()).log(Level.SEVERE, null, ex);

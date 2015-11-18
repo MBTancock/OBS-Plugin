@@ -68,13 +68,9 @@
                 return false;
             }
 
-            //var items = selection.getItems();
-            //if (1 != items.length)
-            //{
-            //    return false;
-            //}
-            //
-            return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
+            //enable next line for testing
+            //return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
+            return selection.firstItem().type == "Queue";
         },
 
         // handle the menu click

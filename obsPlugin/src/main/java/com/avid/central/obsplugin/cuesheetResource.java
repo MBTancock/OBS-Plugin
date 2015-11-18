@@ -41,9 +41,33 @@ public class cuesheetResource {
     // request to retrieve the markers, parameter will be the MobID of the sequence
     @GET
     @Path("/{id}")
-    public CuesheetResponse get(@PathParam("id") String mobID) {
+    public CuesheetResponse get(UserInfo session, @PathParam("id") String mobID) {
         CuesheetResponse response = new CuesheetResponse();
         response.setMessage("Failed to retrieve markers");
+
+        if (null == _configuration) {
+            response.setResult(3);
+            response.setMessage("No configuration");
+            return response;
+        }
+
+        _configuration.ReloadIfChanged();
+
+        // check that this user can export cue sheets
+        boolean authorised = false;
+        for (String role : session.getUserSession().getRoles()) {
+            if (role.equalsIgnoreCase(_configuration.obs_cuesheet_role)) {
+                authorised = true;
+                break;
+            }
+        }
+
+        if (!authorised) {
+            // sorry, not allowed!
+            response.setMessage("User not authorised");
+            response.setResult(2);
+            return response;
+        }
 
         try
         {
@@ -155,85 +179,6 @@ public class cuesheetResource {
         return response;
     }
 
-    /*
-    private CuesheetResponse oldExport()
-    {
-        UUID id = null;
-        CuesheetResponse response = new CuesheetResponse();
-        response.setMessage("Publish Failed");
-
-        if (null == _configuration) {
-            // see if we can load the settings
-            try {
-                _configuration = ExportConfiguration.Open();
-            } catch (Exception ex) {
-                response.setResult(3);
-                response.setMessage("No configuration");
-                return response;
-            }
-        }
-
-        _configuration.ReloadIfChanged();
-        Boolean connected = false;
-
-        try {
-            // retrieve the export data from the map
-            ExportCuesheetData exportData = _exports.get(id);
-            if (null == exportData) {
-                throw new Exception("Failed to locate the marker data");
-            }
-            iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
-
-            try {
-
-                // request to create the export xml data
-                // first connect to iNEWS, throws exception if it fails
-                inews.Connect(_configuration.inws_server, _configuration.inws_login, _configuration.inws_pwd);
-                connected = true;
-
-                // now create a replacement story containing the cue sheet
-                String replacementNSML = AddMarkers(exportData);
-                if (null == replacementNSML)
-                {
-                    throw new Exception ("There was a problem publishing the cue sheet");
-                }
-
-                // create a story soap client
-                iNEWS_Story story = new iNEWS_Story(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
-
- //               response.setResult(story.SaveStory(exportData.getQueue(), exportData.getLocator(), replacementNSML) ? 1 : 4);
-                response.setMessage(1 == response.getResult() ? "Publish Succeeded" : "Story Locked");
-            } catch (Exception ex) {
-                response.setMessage(ex.getMessage());
-                response.setMarkers(null);
-                response.setResult(0);
-                return response;
-            } finally {
-                if (connected) {
-                    try {
-                        inews.Disconnect();
-                    } catch (Exception ex) {
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            response.setMessage(ex.getMessage());
-            response.setMarkers(null);
-            response.setResult(0);
-        }
-
-        // remove any export data
-        try
-        {
-            if (null != _exports.get(id)) {
-                _exports.remove(id);
-            }
-        }
-
-        catch (Exception ex){}
-        return response;
-    }
-*/
     // this is called if the user decides not to export the data
     // deletes the export data from the map
     @DELETE
@@ -251,7 +196,7 @@ public class cuesheetResource {
     }
 
     @POST
-    public PublishResponse post(UserInfo session, PublishRequest request) {
+    public PublishResponse post(PublishRequest request) {
         PublishResponse response = new PublishResponse();
         response.setMessage("Cuesheet Export Failed");
 
@@ -264,23 +209,6 @@ public class cuesheetResource {
         _configuration.ReloadIfChanged();
 
         Boolean connected = false;
-
-        // check that this user can export cue sheets
-        boolean authorised = false;
-        for (String role : session.getUserSession().getRoles()) {
-            if (role.equalsIgnoreCase(_configuration.obs_cuesheet_role)) {
-                authorised = true;
-                break;
-            }
-        }
-
-        if (!authorised) {
-            // sorry, not allowed!
-            response.setMessage("User not authorised");
-            response.setResult(2);
-            return response;
-        }
-
 
         iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
 
@@ -410,8 +338,10 @@ public class cuesheetResource {
 
             // look for escape characters in the comment and encode them
             marker.Comment = marker.Comment.replace("&", "&amp;");
+            marker.Comment = marker.Comment.replace("\"", "&quot;");
             marker.Comment = marker.Comment.replace("<", "&lt;");
             marker.Comment = marker.Comment.replace(">", "&gt;");
+            marker.Comment = marker.Comment.replace("'", "&apos;");
             // first get any line breaks
             String[] markerLines = marker.Comment.split("['\n']");
 

@@ -33,18 +33,6 @@ public class OBSRundown {
         return new DateTime(0);
     }
 
-    public String GetXmlDate() {
-        try {
-            DateTime dt = DateTime.parse(Date);
-            return dt.toString("");
-            // TODO
-//                    return dt.toString(Properties.Settings.Default.XML_Date_Format);
-        } catch (Exception ex) {
-        }
-
-        return Date;
-    }
-
     public String GetEndTime() {
         Duration dur = new Duration(RundownEndTime);
         return dur.toString();
@@ -58,14 +46,10 @@ public class OBSRundown {
     public String GetFileEndTime() {
         Duration dur = new Duration(RundownEndTime);
         return dur.toString("%1$02d%2$02d");
-        //TODO
-//                return ts.toString(Properties.Settings.Default.FileTimeStampFormat);
     }
 
     public String GetFileStartTime() {
         Duration dur = new Duration(RundownStartTime);
         return dur.toString("%1$02d%2$02d");
-        // TODO
-//                return ts.toString(Properties.Settings.Default.FileTimeStampFormat);
-    }    
+    }
 }
