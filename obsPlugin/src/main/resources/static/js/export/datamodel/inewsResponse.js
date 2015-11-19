@@ -37,7 +37,7 @@
         this.toHtml = function() {
             var html = new String("Exporting iNEWS rundown <b>");
             html = html.concat(this.rundown);
-            html = html.concat("</b>OBSChannelID: <b>")
+            html = html.concat("</b><BR>OBSChannelID: <b>")
             html = html.concat(this.channelID);
             html = html.concat("</b><BR>Title: <b>")
             html = html.concat(this.title);

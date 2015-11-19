@@ -8,6 +8,8 @@ package com.avid.central.obsplugin.inewslibrary;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
 
 /**
  *
@@ -23,7 +25,10 @@ public class OBSRundown {
 
     public DateTime GetFileDate() {
         try {
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd MMMM YYYY");
+            DateTimeParser[] parsers = {
+                    DateTimeFormat.forPattern("dd MMMM YYYY").getParser(),
+                    DateTimeFormat.forPattern("dd-MMMM-YYYY").getParser()};
+            DateTimeFormatter dtf = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
             DateTime dt = DateTime.parse(Date, dtf);
             return dt;
         } catch (Exception ex) {

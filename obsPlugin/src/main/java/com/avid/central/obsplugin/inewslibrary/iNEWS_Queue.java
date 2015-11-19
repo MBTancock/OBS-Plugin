@@ -22,8 +22,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.ws.WebServiceException;
 
 import com.avid.central.obsplugin.inewslibrary.story.Story;
-import org.json.simple.parser.ContainerFactory;
-import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -163,114 +161,6 @@ public class iNEWS_Queue {
         }
 
         return storyAsNSML;
-    }
-
-    ContainerFactory containerFactory = new ContainerFactory(){
-        public List creatArrayContainer() {
-            return new LinkedList();
-        }
-
-        public Map createObjectContainer() {
-            return new LinkedHashMap();
-        }
-
-    };
-
-    // Decodes a story to NSML then looks for a reference to a MobID
-    public String GetMobID(String storyAsNsml)
-    {
-        // create a json parser
-        JSONParser parser = new JSONParser();
-
-        // create the deserialization object
-        Unmarshaller unmarshaller;
-        try {
-            unmarshaller = CreateUnmarshaller();
-        } catch (JAXBException ex) {
-            Logger.getLogger(iNEWS_Queue.class.getName()).log(Level.SEVERE, null, ex);
-           return null;
-        }
-
-        try
-        {
-            StringReader reader = new StringReader(storyAsNsml);
-            Nsml story = (Nsml) unmarshaller.unmarshal(reader);
-
-            if (null != story.getAeset() && story.getAeset().getAe().size() > 0) {
-                // look for an entry which includes a sequenceID
-                for (Nsml.Aeset.Ae ae : story.getAeset().getAe()) {
-
-                    for (Object ap : ae.getMcOrAp()) {
-                        if (ap.getClass() != ApContent.class) {
-                            continue;
-                        }
-
-                        if (null == ae.getHidden() || -1 == ae.getHidden().indexOf("sequenceID") )
-                        {
-                            continue;
-                        }
-
-
-                        // see if we can parse the ae hidden value for the sequence data
-                        // we shouldn't have got this far if it doesn't include "sequenceID"
-                        try {
-                            Map json = (Map) parser.parse(ae.getHidden(), containerFactory);
-
-                            if (json.containsKey("sequenceID"))
-                            {
-                                String mobID = (String)json.get("sequenceID");
-                                if (null != mobID)
-                                {
-                                    // ok we found what we were looking for
-                                    return mobID;
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            // we won't error here, just keep on looking...
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-        }
-
-        return null;
-    }
-
-    public String GetFieldStringValue(List<Object> fields, String id) {
-        for (Object field : fields) {
-            if (field instanceof Nsml.Fields.String) {
-                Nsml.Fields.String stringField = (Nsml.Fields.String) field;
-
-                if (id.equals(stringField.getId())) {
-                    return stringField.getValue();
-                }
-            } else if (field instanceof Nsml.Fields.Boolean) {
-                Nsml.Fields.Boolean booleanField = (Nsml.Fields.Boolean) field;
-
-                if (id.equals(booleanField.getId())) {
-                    return String.valueOf(booleanField.isValue());
-                }
-            } else if (field instanceof Nsml.Fields.Date) {
-                Nsml.Fields.Date dateField = (Nsml.Fields.Date) field;
-
-                if (id.equals(dateField.getId())) {
-                    return dateField.toString();
-                }
-            } else if (field instanceof Nsml.Fields.Duration) {
-                Nsml.Fields.Duration durationField = (Nsml.Fields.Duration) field;
-
-                if (id.equals(durationField.getId())) {
-                    return durationField.toString();
-                }
-            }
-        }
-
-        return null;
     }
 
     private void SetSessionID() {

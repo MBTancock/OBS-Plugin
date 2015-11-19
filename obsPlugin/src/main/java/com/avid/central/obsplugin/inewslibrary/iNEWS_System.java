@@ -61,8 +61,8 @@ public class iNEWS_System {
 
         ConnectResponseType response = _port.connect(connection);
 
-        Map<String, List<String>> map;
-        map = (Map<String, List<String>>) ((BindingProvider) _port).getResponseContext().get(MessageContext.HTTP_RESPONSE_HEADERS);
+        @SuppressWarnings("unchecked")
+        Map<String, List<String>> map = (Map<String, List<String>>) ((BindingProvider) _port).getResponseContext().get(MessageContext.HTTP_RESPONSE_HEADERS);
         List<String> cookies = map.get("Set-Cookie");
         if (cookies != null) {
             _sessionID = cookies.get(0);

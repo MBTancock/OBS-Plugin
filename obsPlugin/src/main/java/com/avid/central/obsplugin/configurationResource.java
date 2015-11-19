@@ -73,6 +73,18 @@ public class configurationResource {
         return config;
     }
 
+    @PUT
+    public ExportConfiguration put(ExportConfiguration config) {
+        try {
+            config.Save();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+        return config;
+    }
+
     private ExportConfiguration GetConfiguration() throws Exception
     {
         ExportConfiguration config = null;

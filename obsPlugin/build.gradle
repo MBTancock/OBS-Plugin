@@ -8,5 +8,4 @@ dependencies {
     compile ipcDep('com.fasterxml.jackson.core:jackson-annotations')
     compile ipcDep('joda-time:joda-time')
     compile 'commons-net:commons-net:3.3'
-    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }

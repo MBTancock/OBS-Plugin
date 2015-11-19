@@ -84,8 +84,9 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     editable: false,
                                     text: 'Test Connection',
                                     margin: '10 0 0 45',
-                                    handler: function ()         {
-                                        AV.messages.WaitBox.show({title: "Checking iNEWS Connection",
+                                    handler: function () {
+                                        AV.messages.WaitBox.show({
+                                            title: "Checking iNEWS Connection",
                                             content: "Please wait while the iNEWS connection is checked",
                                             isDelayed: true
                                         });
@@ -98,7 +99,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showInfoMessage(res, "Test Result");
                                             })
-                                            .fail(function(res){
+                                            .fail(function (res) {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showErrorMessage("Problem performing test");
                                             })
@@ -154,8 +155,9 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     editable: false,
                                     text: 'Test Connection',
                                     margin: '10 0 0 45',
-                                    handler: function ()         {
-                                        AV.messages.WaitBox.show({title: "Checking Interplay Connection",
+                                    handler: function () {
+                                        AV.messages.WaitBox.show({
+                                            title: "Checking Interplay Connection",
                                             content: "Please wait while the Interplay connection is checked",
                                             isDelayed: true
                                         });
@@ -168,7 +170,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showInfoMessage(res, "Test Result");
                                             })
-                                            .fail(function(res){
+                                            .fail(function (res) {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showErrorMessage("Problem performing test");
                                             })
@@ -225,7 +227,8 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     text: 'Test Connection',
                                     margin: '10 0 0 45',
                                     handler: function () {
-                                        AV.messages.WaitBox.show({title: "Checking ONC FTP Connection",
+                                        AV.messages.WaitBox.show({
+                                            title: "Checking ONC FTP Connection",
                                             content: "Please wait while the ONC FTP Connection is checked",
                                             isDelayed: true
                                         });
@@ -238,7 +241,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showInfoMessage(res, "Test Result");
                                             })
-                                            .fail(function(res){
+                                            .fail(function (res) {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showErrorMessage("Problem performing test");
                                             })
@@ -295,7 +298,8 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     text: 'Test Connection',
                                     margin: '10 0 0 45',
                                     handler: function () {
-                                        AV.messages.WaitBox.show({title: "Checking MDS FTP Connection",
+                                        AV.messages.WaitBox.show({
+                                            title: "Checking MDS FTP Connection",
                                             content: "Please wait while the MDS FTP Connection is checked",
                                             isDelayed: true
                                         });
@@ -308,7 +312,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showInfoMessage(res, "Test Result");
                                             })
-                                            .fail(function(res){
+                                            .fail(function (res) {
                                                 AV.messages.WaitBox.hide();
                                                 AV.Utilities.showErrorMessage("Problem performing test");
                                             })
@@ -341,7 +345,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: GENSET.msg("obs.settings.definitions.title"),
+                            title: GENSET.msg("obs.settings.definitions.header"),
                             layout: 'column',
                             defaults: {
                                 labelWidth: 160,
@@ -488,5 +492,5 @@ Ext4.define("GENSET.view.ObsDetails", {
                 }
             ]
         }
-        ]
+    ]
 });

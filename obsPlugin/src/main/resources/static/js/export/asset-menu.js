@@ -127,7 +127,6 @@
                                             handler: function () {
                                                 dlg.close();
 
-                                                //var wb = AV.messages.WaitBox.getDialog();
                                                 AV.messages.WaitBox.show({
                                                     title: "Exporting Rundown",
                                                     content: "Please wait while " + queueToExport + " is exported",

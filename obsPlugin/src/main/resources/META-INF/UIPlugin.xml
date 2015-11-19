@@ -21,16 +21,6 @@
     <Import type="js" path="js/settings/ObsSettings.js"/>
     <Import type="css" path="css/styles.css" />
   </View>
-  <!--Enable the following section for cue sheet test pane-->
-  <!--<View type="cueSheetTest">-->
-    <!--<Property name="productId" value="obsPlugin"/>-->
-    <!--<Property name="view-env" value="production"/>-->
-    <!--<Property name="view-vendor" value="broadcastmediasolutions"/>-->
-    <!--<Property name="view-mode" value="factory"/>-->
-    <!--<Property name="@menuName" value="Cue Sheet Export Test"/>-->
-    <!--<Property name="showMenu" value="true"/>-->
-    <!--<Import type="js" path="js/cuesheet/cueSheetTest.js"/>-->
-  <!--</View>-->
   <ViewExtension type="av-asset-list">
     <Import type="js" path="js/export/asset-menu.js"/>
     <Import type="js" path="js/cuesheet/datamodel/publishRequest.js"/>

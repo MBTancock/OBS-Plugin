@@ -122,24 +122,14 @@ public class ExportStories {
                         _export.Rundown.Title = subject;
                     } else if (info.equals(config.day_id)) {
                         // this is the Story that contains the rundown day
-                        _export.Rundown.Day = subject;
-
-                        if (subject.length() < 1) {
-                            // log a warning here (no date specified)
-                            // set date to today's date
-                            _export.Rundown.Day = String.format("Day %1$02d", DateTime.now().dayOfMonth().get());
-                            exportData.getResponse().setMessage("The day information was missing from the rundown");
+                        if (subject.length() > 0) {
+                            _export.Rundown.Day = subject;
                         }
+
                     } else if (info.equals(config.date_id)) {
                         // this is the Story that contains the rundown date
-                        _export.Rundown.Date = subject;
-
-                        if (subject.length() < 1) {
-                            // log a warning here (no date specified)
-                            // set date to today's date
-                            DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-mm-dd");
-                            _export.Rundown.Date = _export.Rundown.Day = DateTime.now().toString(dtf);
-                            exportData.getResponse().setMessage("The date information was missing from the rundown");
+                        if (subject.length() > 0) {
+                            _export.Rundown.Date = subject;
                         }
                     }
 
@@ -193,7 +183,7 @@ public class ExportStories {
 
                         // check for an update and retrieve modification time
                         String updatedTimestamp = null;
-//                        int update = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.update_field);
+                        int update = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.update_field);
                         DateTime modificationTime = GetFieldDateValue(story.Story.getFields().getStringOrBooleanOrDate(), config.modified_field);
                         if (null != modificationTime) {
                             DateTimeFormatter fmt = ISODateTimeFormat.dateHourMinuteSecond();
@@ -335,7 +325,7 @@ public class ExportStories {
                         } else {
                             if (null != updatedTimestamp) {
                                 obsStory.Modified = updatedTimestamp;
-                                obsStory.Update = true;
+                                obsStory.Update = update == 1;
                             }
                         }
 
@@ -425,21 +415,26 @@ public class ExportStories {
             if (_export.Rundown.Date.length() == 0) {
                 // log a warning here (no date specified)
                 // set date to today's date
-                _export.Rundown.Date = DateTime.now().toString("dd MMM yyyy");
-                exportData.getResponse().setMessage("The date information was missing from the rundown");
-            } else {
-                exportData.getResponse().setDate(_export.Rundown.Date);
+                DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-mm-dd");
+                _export.Rundown.Date = DateTime.now().toString(dtf);
+                if (null == exportData.getResponse().getMessage()) {
+                    exportData.getResponse().setMessage("The date information was missing from the rundown");
+                }
             }
+            exportData.getResponse().setDate(_export.Rundown.Date);
+
 
             // check for Day
             if (_export.Rundown.Day.length() == 0) {
                 // log a warning here (no day specified)
                 // set date to today's date
-                _export.Rundown.Day = String.format("Day%1$02d", DateTime.now().dayOfMonth().get());
-                exportData.getResponse().setMessage("The day information was missing from the rundown");
-            } else {
-                exportData.getResponse().setDay(_export.Rundown.Day);
+                _export.Rundown.Day = String.format("%02d", DateTime.now().dayOfMonth().get());
+                if (null == exportData.getResponse().getMessage()) {
+                    exportData.getResponse().setMessage("The day information was missing from the rundown");
+                }
             }
+            exportData.getResponse().setDay(_export.Rundown.Day);
+
 
             exportData.setRundownAsXml(_export.GenerateXML(exportData.getMdsMode()));
 
