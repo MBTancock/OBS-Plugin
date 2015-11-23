@@ -33,7 +33,9 @@ public class configurationResource {
         {
             config = ExportConfiguration.Open();
         }
-        catch (Exception ex){}
+        catch (Exception ex){
+            String msg = ex.getMessage();
+        }
         return config;
     }
 

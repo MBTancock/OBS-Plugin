@@ -5,6 +5,8 @@
  */
 package com.avid.central.obsplugin.datamodel;
 
+import com.avid.central.obsplugin.Configuration.ExportConfiguration;
+
 import java.util.UUID;
 
 /**
@@ -17,13 +19,27 @@ public class ExportStoryData {
     private boolean mdsMode;
     private String rundownAsXml;
     private InewsResponse response;
+    private boolean oncValidateFields;
+    private boolean oncCheckGraphics;
+    private boolean oncRetainFormatting;
+    private boolean mdsValidateFields;
+    private boolean mdsCheckGraphics;
+    private boolean mdsRetainFormatting;
 
 
-    public ExportStoryData() {
+    public ExportStoryData(ExportConfiguration config) {
         this.id = null;
         this.mdsMode = false;
         this.rundownAsXml = null;
         this.response = new InewsResponse();
+
+        oncValidateFields = config.onc_verify_fields;
+        oncCheckGraphics = config.onc_check_graphics;
+        oncRetainFormatting = config.onc_include_tags;
+        mdsValidateFields = config.mds_verify_fields;
+        mdsCheckGraphics = config.mds_check_graphics;
+        mdsRetainFormatting = config.mds_include_tags;
+
     }
 
     public UUID getID()
@@ -65,5 +81,20 @@ public class ExportStoryData {
     public void setResponse(InewsResponse response)
     {
         this.response = response;
+    }
+
+    public boolean getValidateFields()
+    {
+        return this.mdsMode ? mdsValidateFields : oncValidateFields;
+    }
+
+    public boolean getCheckGrahics()
+    {
+        return this.mdsMode ? mdsCheckGraphics : oncCheckGraphics;
+    }
+
+    public boolean getRetainFormatting()
+    {
+        return this.mdsMode ? mdsRetainFormatting : oncRetainFormatting;
     }
 }

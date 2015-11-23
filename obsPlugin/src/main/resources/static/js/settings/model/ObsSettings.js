@@ -28,11 +28,103 @@ Ext4.define("GENSET.model.ObsSettings", {
         {name: "onc_ftp_login"},
         {name: "onc_ftp_pwd"},
         {name: "onc_ftp_path"},
+        {name: "onc_prefix"},
+        {name: "onc_verify_fields_local", persist: false,
+            /*
+             * data from server does not contain "script_format_loc",
+             * data from form contains it and should define value of "script_format"
+             * */
+            convert: function (value, record) {
+                var isEnabled = record.get("onc_verify_fields_local");
+                if (!Ext.isDefined(isEnabled)) {
+                    return record.get("onc_verify_fields") ? "on" : "";
+                }
+                record.set("onc_verify_fields", Boolean(value));
+                return value;
+            }
+        },
+        {name: "onc_verify_fields"},
+        {name: "onc_check_graphics_local", persist: false,
+            /*
+             * data from server does not contain "script_format_loc",
+             * data from form contains it and should define value of "script_format"
+             * */
+            convert: function (value, record) {
+                var isEnabled = record.get("onc_check_graphics_local");
+                if (!Ext.isDefined(isEnabled)) {
+                    return record.get("onc_check_graphics") ? "on" : "";
+                }
+                record.set("onc_check_graphics", Boolean(value));
+                return value;
+            }
+        },
+        {name: "onc_check_graphics"},
+        {name: "onc_include_tags_local", persist: false,
+            /*
+             * data from server does not contain "script_format_loc",
+             * data from form contains it and should define value of "script_format"
+             * */
+            convert: function (value, record) {
+                var isEnabled = record.get("onc_include_tags_local");
+                if (!Ext.isDefined(isEnabled)) {
+                    return record.get("onc_include_tags") ? "on" : "";
+                }
+                record.set("onc_include_tags", Boolean(value));
+                return value;
+            }
+        },
+        {name: "onc_include_tags"},
         {name: "mds_ftp_srvr"},
         {name: "mds_ftp_port"},
         {name: "mds_ftp_login"},
         {name: "mds_ftp_pwd"},
         {name: "mds_ftp_path"},
+        {name: "mds_prefix"},
+        {name: "mds_verify_fields_local", persist: false,
+            /*
+             * data from server does not contain "script_format_loc",
+             * data from form contains it and should define value of "script_format"
+             * */
+            convert: function (value, record) {
+                var isEnabled = record.get("mds_verify_fields_local");
+                if (!Ext.isDefined(isEnabled)) {
+                    return record.get("mds_verify_fields") ? "on" : "";
+                }
+                record.set("mds_verify_fields", Boolean(value));
+                return value;
+            }
+        },
+        {name: "mds_verify_fields"},
+        {name: "mds_check_graphics_local", persist: false,
+            /*
+             * data from server does not contain "script_format_loc",
+             * data from form contains it and should define value of "script_format"
+             * */
+            convert: function (value, record) {
+                var isEnabled = record.get("mds_check_graphics_local");
+                if (!Ext.isDefined(isEnabled)) {
+                    return record.get("mds_check_graphics") ? "on" : "";
+                }
+                record.set("mds_check_graphics", Boolean(value));
+                return value;
+            }
+        },
+        {name: "mds_check_graphics"},
+        {name: "mds_include_tags_local", persist: false,
+            /*
+             * data from server does not contain "script_format_loc",
+             * data from form contains it and should define value of "script_format"
+             * */
+            convert: function (value, record) {
+                var isEnabled = record.get("mds_include_tags_local");
+                if (!Ext.isDefined(isEnabled)) {
+                    return record.get("mds_include_tags") ? "on" : "";
+                }
+                record.set("mds_include_tags", Boolean(value));
+                return value;
+            }
+        },
+        {name: "mds_include_tags"},
         {name: "obs_export_role"},
         {name: "obs_cuesheet_role"},
         {name: "obs_channel_id"},
@@ -51,23 +143,7 @@ Ext4.define("GENSET.model.ObsSettings", {
         {name: "type_field"},
         {name: "update_field"},
         {name: "upmix_field"},
-        {name: "video_id_field"},
-        {name: "script_format_loc", persist: false,
-            /*
-             * data from server does not contain "script_format_loc",
-             * data from form contains it and should define value of "script_format"
-             * */
-            convert: function (value, record) {
-                var isEnabled = record.get("script_format_loc");
-                if (!Ext.isDefined(isEnabled)) {
-                    return record.get("script_format") ? "on" : "";
-                }
-                record.set("script_format", Boolean(value));
-                return value;
-            }
-        },
-        {name: "script_format"}
-
+        {name: "video_id_field"}
     ],
     validations: [
     ],
