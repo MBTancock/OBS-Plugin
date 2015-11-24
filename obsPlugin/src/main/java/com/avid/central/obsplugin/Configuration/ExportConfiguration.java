@@ -5,9 +5,7 @@
  */
 package com.avid.central.obsplugin.Configuration;
 
-import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.axis.encoding.Base64;
 
 import java.io.File;
 import java.io.IOException;

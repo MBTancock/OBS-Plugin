@@ -216,7 +216,10 @@ public class configurationResource {
         {
             ftp = new FTPClient();
             ftp.connect(config.onc_ftp_srvr);
-            ftp.login(config.onc_ftp_login, config.onc_ftp_pwd);
+            if (!ftp.login(config.onc_ftp_login, config.onc_ftp_pwd))
+            {
+                throw new Exception("Failed to login user: " + config.onc_ftp_login);
+            }
             StringBuilder fp = new StringBuilder();
             fp.append(config.onc_ftp_path);
             fp.append("/ftp_test_file.xml");
@@ -276,7 +279,10 @@ public class configurationResource {
         {
             ftp = new FTPClient();
             ftp.connect(config.mds_ftp_srvr);
-            ftp.login(config.mds_ftp_login, config.mds_ftp_pwd);
+            if (!ftp.login(config.mds_ftp_login, config.mds_ftp_pwd))
+            {
+                throw new Exception("Failed to login user: " + config.mds_ftp_login);
+            }
             StringBuilder fp = new StringBuilder();
             fp.append(config.mds_ftp_path);
             fp.append("/ftp_test_file.xml");

@@ -6,6 +6,8 @@
 package com.avid.central.obsplugin.datamodel;
 
 import com.avid.central.obsplugin.Configuration.ExportConfiguration;
+import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
+import org.joda.time.DateTime;
 
 import java.util.UUID;
 
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 public class ExportStoryData {
     private UUID id;
+    private DateTime date;
     private boolean mdsMode;
     private String rundownAsXml;
     private InewsResponse response;
@@ -29,6 +32,7 @@ public class ExportStoryData {
 
     public ExportStoryData(ExportConfiguration config) {
         this.id = null;
+        this.date = DateTime.now();
         this.mdsMode = false;
         this.rundownAsXml = null;
         this.response = new InewsResponse();
@@ -51,6 +55,11 @@ public class ExportStoryData {
     {
         this.id = id;
         this.response.setID(id);
+    }
+
+    public DateTime getDate()
+    {
+        return this.date;
     }
 
     public boolean getMdsMode()

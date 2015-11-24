@@ -53,7 +53,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.wshost"),
                                     allowBlank: false,
                                     labelWidth: 120,
-                                    tip: 'Hostname or IP Address of the web services server',
+                                    tip: GENSET.msg("obs.settings.tips.wshost"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -68,7 +68,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     labelWidth: 50,
                                     width: 90,
                                     allowBlank: false,
-                                    tip: 'http port used by the web services server',
+                                    tip: GENSET.msg("obs.settings.tips.wsport"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -82,7 +82,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     allowBlank: false,
                                     labelWidth: 100,
                                     width: 200,
-                                    tip: 'Hostname or IP Address of the iNEWS server',
+                                    tip: GENSET.msg("obs.settings.tips.inws"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -96,7 +96,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     allowBlank: false,
                                     labelWidth: 70,
                                     width: 190,
-                                    tip: 'Login name',
+                                    tip: GENSET.msg("obs.settings.tips.login"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -111,7 +111,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     labelWidth: 70,
                                     width: 190,
                                     allowBlank: false,
-                                    tip: 'Password',
+                                    tip: GENSET.msg("obs.settings.tips.pwd"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -124,7 +124,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     text: 'Test',
                                     margin: '1 0 0 20',
                                     width: 70,
-                                    tip: 'Tests the iNEWS connection, requires all the data to have been entered and saved',
+                                    tip: GENSET.msg("obs.settings.tips.testinws"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -171,7 +171,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.wshost"),
                                     allowBlank: false,
                                     labelWidth: 120,
-                                    tip: 'Hostname or IP Address of the web services server',
+                                    tip: GENSET.msg("obs.settings.tips.wshost"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -186,7 +186,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     labelWidth: 50,
                                     width: 90,
                                     allowBlank: false,
-                                    tip: 'http port used by the web services server',
+                                    tip: GENSET.msg("obs.settings.tips.wsport"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -199,7 +199,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     name: 'iplay_workgroup',
                                     allowBlank: false,
                                     labelWidth: 120,
-                                    tip: 'Interplay Web Services Workgroup name used identify the Interplay system',
+                                    tip: GENSET.msg("obs.settings.tips.wkgrp"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -213,7 +213,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     allowBlank: false,
                                     labelWidth: 70,
                                     width: 190,
-                                    tip: 'Login name',
+                                    tip: GENSET.msg("obs.settings.tips.login"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -228,7 +228,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     labelWidth: 70,
                                     width: 190,
                                     allowBlank: false,
-                                    tip: 'Password',
+                                    tip: GENSET.msg("obs.settings.tips.pwd"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -241,7 +241,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     text: 'Test',
                                     margin: '1 0 0 20',
                                     width: 70,
-                                    tip: 'Tests the Interplay connection, requires all the data to have been entered and saved',
+                                    tip: GENSET.msg("obs.settings.tips.testiplay"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -273,203 +273,6 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
-                            title: GENSET.msg("obs.settings.onc.title"),
-                            layout: 'column',
-                            margin: '10 0 0 0',
-                            defaults: {
-                                labelWidth: 160,
-                                labelAlign: 'right'
-                            },
-                            items: [
-                                {
-                                    xtype: 'textfield',
-                                    fieldLabel: GENSET.msg("obs.settings.prefix"),
-                                    name: 'onc_prefix',
-                                    width: 240,
-                                    allowBlank: false,
-                                    tip: 'Initial characters of text to identify ONC rundowns, leave blank to export all rundowns other than those specifically identified as MDS',
-                                    listeners: {
-                                        render: function (c) {
-                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                        }
-                                    },
-                                },
-                                {
-                                    xtype: 'checkbox',
-                                    fieldLabel: GENSET.msg("obs.settings.checkfields"),
-                                    id: 'onc_verify_fields_id',
-                                    name: 'onc_verify_fields_local',
-                                    checked: true,
-                                    uncheckedValue: "",
-                                    cls: "settings-checkbox",
-                                    height: 20,
-                                    tip: 'Checks that all mandatory fields are correctly populated',
-                                    listeners: {
-                                        render: function (c) {
-                                            Ext4.create('Ext.tip.ToolTip', {
-                                                target: c.getEl(),
-                                                html: c.tip
-                                            });
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'checkbox',
-                                    fieldLabel: GENSET.msg("obs.settings.checkgraphics"),
-                                    id: 'onc_check_graphics_id',
-                                    name: 'onc_check_graphics_local',
-                                    checked: true,
-                                    uncheckedValue: "",
-                                    cls: "settings-checkbox",
-                                    height: 20,
-                                    tip: 'Checks for the presence of graphic elements',
-                                    listeners: {
-                                        render: function (c) {
-                                            Ext4.create('Ext.tip.ToolTip', {
-                                                target: c.getEl(),
-                                                html: c.tip
-                                            });
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'checkbox',
-                                    fieldLabel: GENSET.msg("obs.settings.retainformatting"),
-                                    id: 'onc_include_tags_id',
-                                    name: 'onc_include_tags_local',
-                                    checked: true,
-                                    uncheckedValue: "",
-                                    cls: "settings-checkbox",
-                                    height: 20,
-                                    tip: 'Retains iNEWS story formatting tags',
-                                    listeners: {
-                                        render: function (c) {
-                                            Ext4.create('Ext.tip.ToolTip', {
-                                                target: c.getEl(),
-                                                html: c.tip
-                                            });
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'fieldset',
-                                    title: GENSET.msg("obs.settings.ftp"),
-                                    layout: 'column',
-                                    width: '100%',
-                                    margin: '10 0 0 0',
-                                    defaults: {
-                                        labelWidth: 80,
-                                        width: 200,
-                                        labelAlign: 'right'
-                                    },
-                                    items: [
-                                        {
-                                            xtype: 'textfield',
-                                            name: 'onc_ftp_srvr',
-                                            fieldLabel: GENSET.msg("obs.settings.mds.ftphost"),
-                                            allowBlank: false,
-                                            tip: 'Hostname or IP Address of the FTP server',
-                                            listeners: {
-                                                render: function (c) {
-                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'textfield',
-                                            fieldLabel: GENSET.msg("obs.settings.port"),
-                                            name: 'onc_ftp_port',
-                                            inputType: 'numberfield',
-                                            labelWidth: 50,
-                                            width: 90,
-                                            allowBlank: false,
-                                            tip: 'The FTP port',
-                                            listeners: {
-                                                render: function (c) {
-                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'textfield',
-                                            fieldLabel: GENSET.msg("obs.settings.path"),
-                                            name: 'onc_ftp_path',
-                                            labelWidth: 50,
-                                            width: 160,
-                                            allowBlank: false,
-                                            tip: 'The path to the FTP directory',
-                                            listeners: {
-                                                render: function (c) {
-                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'textfield',
-                                            fieldLabel: GENSET.msg("obs.settings.login"),
-                                            name: 'onc_ftp_login',
-                                            allowBlank: false,
-                                            tip: 'Login name',
-                                            listeners: {
-                                                render: function (c) {
-                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'textfield',
-                                            fieldLabel: GENSET.msg("obs.settings.password"),
-                                            name: 'onc_ftp_pwd',
-                                            inputType: 'password',
-                                            allowBlank: false,
-                                            tip: 'Password',
-                                            listeners: {
-                                                render: function (c) {
-                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                                }
-                                            }
-                                        },
-                                        {
-                                            xtype: 'button',
-                                            editable: false,
-                                            name: 'onc_test',
-                                            text: 'Test',
-                                            margin: '1 0 0 20',
-                                            width: 70,
-                                            tip: 'Tests the ONC FTP connection, requires all the data to have been entered and saved',
-                                            listeners: {
-                                                render: function (c) {
-                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                                }
-                                            },
-                                            handler: function () {
-                                                AV.messages.WaitBox.show({
-                                                    title: "Checking ONC FTP Connection",
-                                                    content: "Please wait while the ONC FTP Connection is checked",
-                                                    isDelayed: true
-                                                });
-
-                                                $.ajax("/api/obsdetails/onc/", {
-                                                        method: "GET",
-                                                        dataType: "text"
-                                                    })
-                                                    .done(function (res) {
-                                                        AV.messages.WaitBox.hide();
-                                                        AV.Utilities.showInfoMessage(res, "Test Result");
-                                                    })
-                                                    .fail(function (res) {
-                                                        AV.messages.WaitBox.hide();
-                                                        AV.Utilities.showErrorMessage("Problem performing test");
-                                                    })
-                                            }
-                                        }
-                                    ]
-                                }
-
-                            ]
-                        },
-                        {
-                            xtype: 'fieldset',
                             title: GENSET.msg("obs.settings.mds.title"),
                             layout: 'column',
                             margin: '10 0 0 0',
@@ -484,7 +287,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     name: 'mds_prefix',
                                     width: 240,
                                     allowBlank: false,
-                                    tip: 'Initial characters of text to identify MDS rundowns',
+                                    tip: GENSET.msg("obs.settings.tips.mdsid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -500,7 +303,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     uncheckedValue: "",
                                     cls: "settings-checkbox",
                                     height: 20,
-                                    tip: 'Checks that all mandatory fields are correctly populated',
+                                    tip: GENSET.msg("obs.settings.tips.checkfields"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {
@@ -519,7 +322,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     uncheckedValue: "",
                                     cls: "settings-checkbox",
                                     height: 20,
-                                    tip: 'Checks for the presence of graphic elements',
+                                    tip: GENSET.msg("obs.settings.tips.checkgraphics"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {
@@ -538,7 +341,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     uncheckedValue: "",
                                     cls: "settings-checkbox",
                                     height: 20,
-                                    tip: 'Retains iNEWS story formatting tags',
+                                    tip: GENSET.msg("obs.settings.tips.retaintags"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {
@@ -565,7 +368,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                             name: 'mds_ftp_srvr',
                                             fieldLabel: GENSET.msg("obs.settings.mds.ftphost"),
                                             allowBlank: false,
-                                            tip: 'Hostname or IP Address of the FTP server',
+                                            tip: GENSET.msg("obs.settings.tips.ftphost"),
                                             listeners: {
                                                 render: function (c) {
                                                     Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -580,7 +383,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                             labelWidth: 50,
                                             width: 90,
                                             allowBlank: false,
-                                            tip: 'The FTP port',
+                                            tip: GENSET.msg("obs.settings.tips.ftpport"),
                                             listeners: {
                                                 render: function (c) {
                                                     Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -594,7 +397,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                             labelWidth: 50,
                                             width: 160,
                                             allowBlank: false,
-                                            tip: 'The path to the FTP directory',
+                                            tip: GENSET.msg("obs.settings.tips.ftppath"),
                                             listeners: {
                                                 render: function (c) {
                                                     Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -606,7 +409,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                             fieldLabel: GENSET.msg("obs.settings.login"),
                                             name: 'mds_ftp_login',
                                             allowBlank: false,
-                                            tip: 'Login name',
+                                            tip: GENSET.msg("obs.settings.tips.login"),
                                             listeners: {
                                                 render: function (c) {
                                                     Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -619,7 +422,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                             name: 'mds_ftp_pwd',
                                             inputType: 'password',
                                             allowBlank: false,
-                                            tip: 'Password',
+                                            tip: GENSET.msg("obs.settings.tips.pwd"),
                                             listeners: {
                                                 render: function (c) {
                                                     Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -633,7 +436,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                             text: 'Test',
                                             margin: '1 0 0 20',
                                             width: 70,
-                                            tip: 'Tests the MDS FTP connection, requires all the data to have been entered and saved',
+                                            tip: GENSET.msg("obs.settings.tips.testmds"),
                                             listeners: {
                                                 render: function (c) {
                                                     Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -667,6 +470,203 @@ Ext4.define("GENSET.view.ObsDetails", {
                         },
                         {
                             xtype: 'fieldset',
+                            title: GENSET.msg("obs.settings.onc.title"),
+                            layout: 'column',
+                            margin: '10 0 0 0',
+                            defaults: {
+                                labelWidth: 160,
+                                labelAlign: 'right'
+                            },
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: GENSET.msg("obs.settings.prefix"),
+                                    name: 'onc_prefix',
+                                    width: 240,
+                                    allowBlank: false,
+                                    tip: GENSET.msg("obs.settings.tips.oncid"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                        }
+                                    },
+                                },
+                                {
+                                    xtype: 'checkbox',
+                                    fieldLabel: GENSET.msg("obs.settings.checkfields"),
+                                    id: 'onc_verify_fields_id',
+                                    name: 'onc_verify_fields_local',
+                                    checked: true,
+                                    uncheckedValue: "",
+                                    cls: "settings-checkbox",
+                                    height: 20,
+                                    tip: GENSET.msg("obs.settings.tips.checkfields"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {
+                                                target: c.getEl(),
+                                                html: c.tip
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'checkbox',
+                                    fieldLabel: GENSET.msg("obs.settings.checkgraphics"),
+                                    id: 'onc_check_graphics_id',
+                                    name: 'onc_check_graphics_local',
+                                    checked: true,
+                                    uncheckedValue: "",
+                                    cls: "settings-checkbox",
+                                    height: 20,
+                                    tip: GENSET.msg("obs.settings.tips.checkgraphics"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {
+                                                target: c.getEl(),
+                                                html: c.tip
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'checkbox',
+                                    fieldLabel: GENSET.msg("obs.settings.retainformatting"),
+                                    id: 'onc_include_tags_id',
+                                    name: 'onc_include_tags_local',
+                                    checked: true,
+                                    uncheckedValue: "",
+                                    cls: "settings-checkbox",
+                                    height: 20,
+                                    tip: GENSET.msg("obs.settings.tips.retaintags"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {
+                                                target: c.getEl(),
+                                                html: c.tip
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'fieldset',
+                                    title: GENSET.msg("obs.settings.ftp"),
+                                    layout: 'column',
+                                    width: '100%',
+                                    margin: '10 0 0 0',
+                                    defaults: {
+                                        labelWidth: 80,
+                                        width: 200,
+                                        labelAlign: 'right'
+                                    },
+                                    items: [
+                                        {
+                                            xtype: 'textfield',
+                                            name: 'onc_ftp_srvr',
+                                            fieldLabel: GENSET.msg("obs.settings.mds.ftphost"),
+                                            allowBlank: false,
+                                            tip: GENSET.msg("obs.settings.tips.ftphost"),
+                                            listeners: {
+                                                render: function (c) {
+                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: GENSET.msg("obs.settings.port"),
+                                            name: 'onc_ftp_port',
+                                            inputType: 'numberfield',
+                                            labelWidth: 50,
+                                            width: 90,
+                                            allowBlank: false,
+                                            tip: GENSET.msg("obs.settings.tips.ftpport"),
+                                            listeners: {
+                                                render: function (c) {
+                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: GENSET.msg("obs.settings.path"),
+                                            name: 'onc_ftp_path',
+                                            labelWidth: 50,
+                                            width: 160,
+                                            allowBlank: false,
+                                            tip: GENSET.msg("obs.settings.tips.ftppath"),
+                                            listeners: {
+                                                render: function (c) {
+                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: GENSET.msg("obs.settings.login"),
+                                            name: 'onc_ftp_login',
+                                            allowBlank: false,
+                                            tip: GENSET.msg("obs.settings.tips.login"),
+                                            listeners: {
+                                                render: function (c) {
+                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'textfield',
+                                            fieldLabel: GENSET.msg("obs.settings.password"),
+                                            name: 'onc_ftp_pwd',
+                                            inputType: 'password',
+                                            allowBlank: false,
+                                            tip: GENSET.msg("obs.settings.tips.pwd"),
+                                            listeners: {
+                                                render: function (c) {
+                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype: 'button',
+                                            editable: false,
+                                            name: 'onc_test',
+                                            text: 'Test',
+                                            margin: '1 0 0 20',
+                                            width: 70,
+                                            tip: GENSET.msg("obs.settings.tips.testonc"),
+                                            listeners: {
+                                                render: function (c) {
+                                                    Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                                }
+                                            },
+                                            handler: function () {
+                                                AV.messages.WaitBox.show({
+                                                    title: "Checking ONC FTP Connection",
+                                                    content: "Please wait while the ONC FTP Connection is checked",
+                                                    isDelayed: true
+                                                });
+
+                                                $.ajax("/api/obsdetails/onc/", {
+                                                        method: "GET",
+                                                        dataType: "text"
+                                                    })
+                                                    .done(function (res) {
+                                                        AV.messages.WaitBox.hide();
+                                                        AV.Utilities.showInfoMessage(res, "Test Result");
+                                                    })
+                                                    .fail(function (res) {
+                                                        AV.messages.WaitBox.hide();
+                                                        AV.Utilities.showErrorMessage("Problem performing test");
+                                                    })
+                                            }
+                                        }
+                                    ]
+                                }
+
+                            ]
+                        },
+                        {
+                            xtype: 'fieldset',
                             title: GENSET.msg("obs.settings.authorisation.title"),
                             layout: 'column',
                             margin: '10 0 0 0',
@@ -680,7 +680,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.authorisation.rundown"),
                                     name: 'obs_export_role',
                                     allowBlank: false,
-                                    tip: 'The MediaCentral|UX role which permits rundown exports',
+                                    tip: GENSET.msg("obs.settings.tips.exportrole"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -692,7 +692,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.authorisation.cuesheet"),
                                     name: 'obs_cuesheet_role',
                                     allowBlank: false,
-                                    tip: 'The MediaCentral|UX role which permits cue sheet publishing',
+                                    tip: GENSET.msg("obs.settings.tips.cuesheetrole"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -717,7 +717,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.definitions.id"),
                                     name: 'obs_channel_id',
                                     allowBlank: false,
-                                    tip: 'Info field value corresponding to the channel identifier',
+                                    tip: GENSET.msg("obs.settings.tips.channelid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -729,7 +729,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.definitions.title"),
                                     name: 'title_id',
                                     allowBlank: false,
-                                    tip: 'Info field value corresponding to the rundown title',
+                                    tip: GENSET.msg("obs.settings.tips.titleid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -741,7 +741,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.definitions.date"),
                                     name: 'date_id',
                                     allowBlank: false,
-                                    tip: 'Info field value corresponding to the rundown date',
+                                    tip: GENSET.msg("obs.settings.tips.dateid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -753,7 +753,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.definitions.day"),
                                     name: 'day_id',
                                     allowBlank: false,
-                                    tip: 'Info field value corresponding to the rundown day',
+                                    tip: GENSET.msg("obs.settings.tips.dayid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -765,7 +765,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.definitions.viz"),
                                     name: 'viz_id',
                                     allowBlank: false,
-                                    tip: 'Identifies a production cue as referring to a VizRT graphics element',
+                                    tip: GENSET.msg("obs.settings.tips.vizid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -777,7 +777,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.definitions.cuesheet"),
                                     name: 'cuesheet_id',
                                     allowBlank: false,
-                                    tip: 'Identifies the start of published cue sheet data in the iNEWS story body',
+                                    tip: GENSET.msg("obs.settings.tips.cuesheetid"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -802,7 +802,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.duration"),
                                     name: 'duration_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s duration',
+                                    tip: GENSET.msg("obs.settings.tips.durnfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -814,7 +814,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.info"),
                                     name: 'info_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s info',
+                                    tip: GENSET.msg("obs.settings.tips.infofield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -826,7 +826,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.modified"),
                                     name: 'modified_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s modification time',
+                                    tip: GENSET.msg("obs.settings.tips.modfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -838,7 +838,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.music"),
                                     name: 'music_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s music details',
+                                    tip: GENSET.msg("obs.settings.tips.musicfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -850,7 +850,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.starttime"),
                                     name: 'start_time_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s start time',
+                                    tip: GENSET.msg("obs.settings.tips.startfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -862,7 +862,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.storyid"),
                                     name: 'story_id_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s story ID',
+                                    tip: GENSET.msg("obs.settings.tips.storyidfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -874,7 +874,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.subject"),
                                     name: 'subject_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s subject',
+                                    tip: GENSET.msg("obs.settings.tips.subjectfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -886,7 +886,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.type"),
                                     name: 'type_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s type',
+                                    tip: GENSET.msg("obs.settings.tips.typefield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -898,7 +898,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.update"),
                                     name: 'update_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field which indicates whether an item has been updated',
+                                    tip: GENSET.msg("obs.settings.tips.updatefield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -910,7 +910,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.upmix"),
                                     name: 'upmix_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s upmix details',
+                                    tip: GENSET.msg("obs.settings.tips.upmixfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
@@ -922,7 +922,7 @@ Ext4.define("GENSET.view.ObsDetails", {
                                     fieldLabel: GENSET.msg("obs.settings.fields.videoid"),
                                     name: 'video_id_field',
                                     allowBlank: false,
-                                    tip: 'Identifies the form field containing an item\'s video ID',
+                                    tip: GENSET.msg("obs.settings.tips.videoidfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});

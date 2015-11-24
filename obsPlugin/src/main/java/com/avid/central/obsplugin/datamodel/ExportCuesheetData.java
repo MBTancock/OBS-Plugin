@@ -1,5 +1,7 @@
 package com.avid.central.obsplugin.datamodel;
 
+import org.joda.time.DateTime;
+
 import java.util.UUID;
 
 /**
@@ -7,10 +9,12 @@ import java.util.UUID;
  */
 public class ExportCuesheetData {
     private UUID id;
+    private DateTime date;
     private CuesheetResponse response;
 
     public ExportCuesheetData() {
         this.id = null;
+        this.date = DateTime.now();
         this.response = new CuesheetResponse();
     }
 
@@ -22,6 +26,11 @@ public class ExportCuesheetData {
     public UUID getID()
     {
         return this.id;
+    }
+
+    public DateTime getDate()
+    {
+        return this.date;
     }
 
     public void setID(UUID id)

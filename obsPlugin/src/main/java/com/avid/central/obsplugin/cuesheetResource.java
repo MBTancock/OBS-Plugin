@@ -5,11 +5,13 @@ import com.avid.central.obsplugin.datamodel.*;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Queue;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_Story;
 import com.avid.central.obsplugin.inewslibrary.iNEWS_System;
+import com.avid.central.obsplugin.inewslibrary.nsml.Nsml;
 import com.avid.central.obsplugin.interplaylibrary.assets.*;
 import com.avid.central.obsplugin.interplaylibrary.interplay_assets;
 import com.avid.central.obsplugin.timecode.Timecode;
 import com.avid.central.obsplugin.timecode.VideoSampleRate;
 import com.avid.central.services.authentication.um.UserInfo;
+import org.joda.time.DateTime;
 
 import javax.ws.rs.*;
 import java.util.*;
@@ -69,8 +71,7 @@ public class cuesheetResource {
             return response;
         }
 
-        try
-        {
+        try {
             interplay_assets assets = new interplay_assets(_configuration.iplay_ws_srvr, _configuration.iplay_ws_port, _configuration.iplay_workgroup, _configuration.iplay_login, _configuration.iplay_pwd);
 
             // first we need some details of the sequence, start frame, end frame and the frame rate
@@ -168,9 +169,7 @@ public class cuesheetResource {
             _exports.put(exportData.getID(), exportData);
             response.setMessage("Marker data retrieved");
             response.setResult(1);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             response.setMessage(ex.getMessage());
             response.setMarkers(null);
             response.setResult(0);
@@ -231,9 +230,8 @@ public class cuesheetResource {
 
             // now create a replacement story containing the cue sheet
             String replacementNSML = AddMarkers(exportData, storyAsNSML);
-            if (null == replacementNSML)
-            {
-                throw new Exception ("There was a problem publishing the cue sheet");
+            if (null == replacementNSML) {
+                throw new Exception("There was a problem publishing the cue sheet");
             }
 
             // create a story soap client
@@ -253,20 +251,40 @@ public class cuesheetResource {
                 } catch (Exception ex) {
                 }
             }
+
+            // remove the export data
+            try {
+                _exports.remove(request.getID());
+                CleanUp();
+            } catch (Exception ex) {
+            }
+
         }
 
         return response;
     }
 
-    private String AddMarkers(ExportCuesheetData exportData, String storyAsNSML)
+    // removes any old export data structures
+    private void CleanUp()
     {
+        DateTime checkDate = DateTime.now().minusHours(1);
+        for (ExportCuesheetData exportData : _exports.values())
+        {
+            if (exportData.getDate().isBefore(checkDate))
+            {
+                _exports.remove(exportData.getID());
+                break;
+            }
+        }
+    }
+
+    private String AddMarkers(ExportCuesheetData exportData, String storyAsNSML) {
         if (null == exportData ||
                 null == exportData.getResponse() ||
                 null == exportData.getResponse().getMarkers() ||
                 exportData.getResponse().getMarkers().size() < 1 ||
                 null == storyAsNSML ||
-                storyAsNSML.length() == 0)
-        {
+                storyAsNSML.length() == 0) {
             return null;
         }
 
@@ -286,8 +304,7 @@ public class cuesheetResource {
 
         String StoryFoot;
 
-        if (bodyClose < 1)
-        {
+        if (bodyClose < 1) {
             // something very wrong
             return null;
         }
@@ -295,21 +312,17 @@ public class cuesheetResource {
         // take a copy of the end of the document
         StoryFoot = storyAsNSML.substring(bodyClose);
 
-        if (cuesheet > 0)
-        {
+        if (cuesheet > 0) {
             // we have an existing cue sheet section so remove it now
             replacementNSML = new StringBuilder(storyAsNSML.substring(0, cuesheet));
-        }
-        else
-        {
+        } else {
             // no existing locators so simply remove the existing story end
             replacementNSML = new StringBuilder(storyAsNSML.substring(0, bodyClose));
 
         }
 
         // remove empty paragraphs from end of story body
-        while (replacementNSML.lastIndexOf(LocateParagraph) >= replacementNSML.length() - EmptyParagraph.length())
-        {
+        while (replacementNSML.lastIndexOf(LocateParagraph) >= replacementNSML.length() - EmptyParagraph.length()) {
             replacementNSML = replacementNSML.delete(replacementNSML.lastIndexOf(EmptyParagraph), replacementNSML.length());
         }
 
@@ -325,8 +338,7 @@ public class cuesheetResource {
         replacementNSML.append(EmptyParagraph);
 
         // the new cue sheet details
-        for (MarkerData marker : exportData.getResponse().getMarkers())
-        {
+        for (MarkerData marker : exportData.getResponse().getMarkers()) {
             // open paragraph
             replacementNSML.append(OpenParagraph);
 
@@ -345,14 +357,12 @@ public class cuesheetResource {
             // first get any line breaks
             String[] markerLines = marker.Comment.split("['\n']");
 
-            for (int i = 0; i < markerLines.length; i++ )
-            {
+            for (int i = 0; i < markerLines.length; i++) {
                 // write the text
                 replacementNSML.append(markerLines[i]);
 
                 // and a new paragraph
-                if (i < (markerLines.length - 1))
-                {
+                if (i < (markerLines.length - 1)) {
                     replacementNSML.append(TabbedParagraph);
                 }
             }

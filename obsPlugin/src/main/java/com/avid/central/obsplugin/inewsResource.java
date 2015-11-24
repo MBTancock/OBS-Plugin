@@ -10,6 +10,7 @@ import com.avid.central.obsplugin.inewslibrary.*;
 import com.avid.central.obsplugin.inewslibrary.story.Story;
 import com.avid.central.services.authentication.um.UserInfo;
 import org.apache.commons.net.ftp.FTPClient;
+import org.joda.time.DateTime;
 
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -77,13 +78,19 @@ public class inewsResource {
                 ftp = new FTPClient();
                 if (exportData.getMdsMode()) {
                     ftp.connect(_configuration.mds_ftp_srvr);
-                    ftp.login(_configuration.mds_ftp_login, _configuration.mds_ftp_pwd);
+                    if (!ftp.login(_configuration.mds_ftp_login, _configuration.mds_ftp_pwd))
+                    {
+                        throw new Exception("Failed to login user: " + _configuration.mds_ftp_login);
+                    }
                     filePath.append(_configuration.mds_ftp_path);
                 }
                 else
                 {
                     ftp.connect(_configuration.onc_ftp_srvr);
-                    ftp.login(_configuration.onc_ftp_login, _configuration.onc_ftp_pwd);
+                    if (!ftp.login(_configuration.onc_ftp_login, _configuration.onc_ftp_pwd))
+                    {
+                        throw new Exception("Failed to login user: " + _configuration.onc_ftp_login);
+                    }
                     filePath.append(_configuration.onc_ftp_path);
                 }
                 filePath.append("/");
@@ -137,8 +144,12 @@ public class inewsResource {
                 }
             }
 
-            // finished with this rundown
-            _exports.remove(id);
+            try {
+                // finished with this rundown
+                _exports.remove(id);
+                CleanUp();
+            }
+            catch (Exception ex) {}
         }
         catch (Exception ex)
         {
@@ -165,7 +176,6 @@ public class inewsResource {
 
         return response;
     }
-
 
     // this will create the xml data and return a response indicating success or failure (e.g. invalid data, not authorised)
     // also returns key parameters associated with the export data for display to the user
@@ -261,4 +271,18 @@ public class inewsResource {
 
         return response;
     }
+    // removes any old export data structures
+    private void CleanUp()
+    {
+        DateTime checkDate = DateTime.now().minusHours(1);
+        for (ExportStoryData exportData : _exports.values())
+        {
+            if (exportData.getDate().isBefore(checkDate))
+            {
+                _exports.remove(exportData.getID());
+                break;
+            }
+        }
+    }
+
 }
