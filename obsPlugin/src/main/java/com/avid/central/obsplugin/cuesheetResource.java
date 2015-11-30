@@ -346,7 +346,7 @@ public class cuesheetResource {
             replacementNSML.append(marker.Start);
             replacementNSML.append(",");
             replacementNSML.append(marker.Duration);
-            replacementNSML.append(",");
+            replacementNSML.append(",\"");
 
             // look for escape characters in the comment and encode them
             marker.Comment = marker.Comment.replace("&", "&amp;");
@@ -354,6 +354,10 @@ public class cuesheetResource {
             marker.Comment = marker.Comment.replace("<", "&lt;");
             marker.Comment = marker.Comment.replace(">", "&gt;");
             marker.Comment = marker.Comment.replace("'", "&apos;");
+
+            // add the trailing quote
+            marker.Comment += "\"";
+
             // first get any line breaks
             String[] markerLines = marker.Comment.split("['\n']");
 

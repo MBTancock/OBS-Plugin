@@ -137,23 +137,24 @@ public class ExportStories {
                         throw new Exception("The rundown is invalid: the designated start time field was not found");
                     }
 
-                    // do we have start time data?
-                    if (startTime.length() > 0) {
-                        // update the running start time
+                    // check for start and end time data
+                    if (subject.equalsIgnoreCase("START") && startTime.length() > 0) {
                         if (startTime.charAt(0) == '@') {
                             // we have an absolute start time
                             currentStartTime = Integer.parseInt(startTime.substring(1));
+                            _export.Rundown.RundownStartTime = currentStartTime;
                         } else {
                             // start time is relative to start of show
                             currentStartTime = Integer.parseInt(startTime.substring(1)) + _export.Rundown.RundownStartTime;
-                        }
-
-                        // have we set the rundown start time yet?
-                        if (-1 == _export.Rundown.RundownStartTime) {
                             _export.Rundown.RundownStartTime = currentStartTime;
+                        }
+                    } else if (subject.equalsIgnoreCase("END") && startTime.length() > 0) {
+                        if (startTime.charAt(0) == '@') {
+                            // we have an absolute end time
+                            _export.Rundown.RundownEndTime = Integer.parseInt(startTime.substring(1));
                         } else {
-                            // just update the end time
-                            _export.Rundown.RundownEndTime = currentStartTime;
+                            // start time is relative to start of show
+                            _export.Rundown.RundownEndTime = Integer.parseInt(startTime.substring(1)) + _export.Rundown.RundownStartTime;
                         }
 
                         lastStoryWasBreak = true;
@@ -213,17 +214,6 @@ public class ExportStories {
                             if (_export.Stories.size() > 0 && !lastStoryWasBreak) {
                                 // there is at least one Story
                                 currentStartTime += _export.Stories.get(_export.Stories.size() - 1).StoryDuration;
-                            }
-                        }
-
-                        // get the StoryID
-                        String storyID = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.story_id_field);
-                        if (exportData.getMdsMode()) {
-                            if (null == storyID) {
-                                throw new Exception("The rundown is invalid: the designated StoryID field was not found");
-                            }
-                            if (storyID.length() == 0 && exportData.getValidateFields()) {
-                                throw new Exception("The rundown is invalid: at least one story is missing its StoryID details");
                             }
                         }
 
@@ -322,7 +312,6 @@ public class ExportStories {
                         obsStory.VideoID = videoID;
 
                         if (exportData.getMdsMode()) {
-                            obsStory.StoryID = storyID;
                             obsStory.Upmix = upMix.equals("1");
                             obsStory.Music = music;
                             obsStory.Graphics = vizGrapics;

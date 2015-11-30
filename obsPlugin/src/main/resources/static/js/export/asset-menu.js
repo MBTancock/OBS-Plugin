@@ -69,8 +69,8 @@
             }
 
             //enable next line for testing
-            //return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
-            return selection.firstItem().type == "Queue";
+            return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
+            //return selection.firstItem().type == "Queue";
         },
 
         // handle the menu click
@@ -79,7 +79,7 @@
                 // for each selected queue perform the export
                 // there should only be one as the enable logic traps multiple selections
                 selection.getItems().forEach(function (item) {
-                    var queueToExport = item.type == "folder" ? "ONC.RUNDOWNS.00.0000" : "MDS.MX1.00";
+                    var queueToExport = item.type == "folder" ? "ONC.RUNDOWNS.00.0030" : "MDS.MX1.00";
                     if (item.type == "Queue") {
                         // strip off leading "SERVER:"
                         queueToExport = item.id.substring(item.id.indexOf(":") + 1);

@@ -123,7 +123,16 @@ public class ExportRundown {
 
         jc = JAXBContext.newInstance(com.avid.central.obsplugin.inewslibrary.rundown.Rundown.class);
         marshaller = jc.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "utf-8");
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
+        try {
+            marshaller.setProperty("com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler", new NsmlEscapeHandler());
+        }
+        catch (Exception pex)
+        {
+            String e = pex.getMessage();
+        }
         marshaller.marshal(exportRundown, sw);
 
         return sw.toString();

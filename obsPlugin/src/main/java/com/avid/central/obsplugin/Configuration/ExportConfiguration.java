@@ -86,7 +86,6 @@ public class ExportConfiguration {
     public String modified_field;
     public String music_field;
     public String start_time_field;
-    public String story_id_field;
     public String subject_field;
     public String type_field;
     public String update_field;
@@ -164,7 +163,6 @@ public class ExportConfiguration {
         config.modified_field = this.modified_field;
         config.music_field = this.music_field;
         config.start_time_field = this.start_time_field;
-        config.story_id_field = this.story_id_field;
         config.subject_field = this.subject_field;
         config.type_field = this.type_field;
         config.update_field = this.update_field;
@@ -310,7 +308,6 @@ public class ExportConfiguration {
                 this.modified_field = configuration.modified_field;
                 this.music_field = configuration.music_field;
                 this.start_time_field = configuration.start_time_field;
-                this.story_id_field = configuration.story_id_field;
                 this.subject_field = configuration.subject_field;
                 this.type_field = configuration.type_field;
                 this.update_field = configuration.update_field;

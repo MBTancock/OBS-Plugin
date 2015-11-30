@@ -859,18 +859,6 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: GENSET.msg("obs.settings.fields.storyid"),
-                                    name: 'story_id_field',
-                                    allowBlank: false,
-                                    tip: GENSET.msg("obs.settings.tips.storyidfield"),
-                                    listeners: {
-                                        render: function (c) {
-                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'textfield',
                                     fieldLabel: GENSET.msg("obs.settings.fields.subject"),
                                     name: 'subject_field',
                                     allowBlank: false,

@@ -138,7 +138,6 @@ Ext4.define("GENSET.model.ObsSettings", {
         {name: "modified_field"},
         {name: "music_field"},
         {name: "start_time_field"},
-        {name: "story_id_field"},
         {name: "subject_field"},
         {name: "type_field"},
         {name: "update_field"},

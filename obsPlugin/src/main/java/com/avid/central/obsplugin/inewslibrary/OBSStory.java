@@ -22,7 +22,6 @@ public class OBSStory
         public String Music;
         public String Type = "";
         public String VideoID;
-        public String StoryID;
         public boolean Upmix;
 
         public String ScriptInfo = "";
