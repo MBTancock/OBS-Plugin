@@ -131,6 +131,8 @@ Ext4.define("GENSET.model.ObsSettings", {
         {name: "title_id"},
         {name: "date_id"},
         {name: "day_id"},
+        {name: "start_id"},
+        {name: "end_id"},
         {name: "viz_id"},
         {name: "cuesheet_id"},
         {name: "duration_field"},

@@ -95,7 +95,7 @@ public class ExportStories {
                     }
 
                     // is it one of our "special" fields
-                    if (info.equals(config.obs_channel_id)) {
+                    if (info.equalsIgnoreCase(config.obs_channel_id)) {
                         if (subject.length() == 0) {
                             // the channelID is missing so abort the export
                             throw new Exception("The rundown is invalid: the rundown Channel ID is missing");
@@ -111,7 +111,7 @@ public class ExportStories {
                             throw new Exception("The rundown is invalid: the Channel ID was not identified as an ONC or MDS rundown");
                         }
 
-                    } else if (info.equals(config.title_id)) {
+                    } else if (info.equalsIgnoreCase(config.title_id)) {
                         if (subject.length() == 0 && exportData.getValidateFields()) {
                             // the rundown name is missing so abort the export
                             throw new Exception("The rundown is invalid: the rundown Channel Name is missing");
@@ -119,13 +119,13 @@ public class ExportStories {
 
                         // this is the Story that contains the rundown name
                         _export.Rundown.Title = subject;
-                    } else if (info.equals(config.day_id)) {
+                    } else if (info.equalsIgnoreCase(config.day_id)) {
                         // this is the Story that contains the rundown day
                         if (subject.length() > 0) {
                             _export.Rundown.Day = subject;
                         }
 
-                    } else if (info.equals(config.date_id)) {
+                    } else if (info.equalsIgnoreCase(config.date_id)) {
                         // this is the Story that contains the rundown date
                         if (subject.length() > 0) {
                             _export.Rundown.Date = subject;
@@ -138,7 +138,7 @@ public class ExportStories {
                     }
 
                     // check for start and end time data
-                    if (subject.equalsIgnoreCase("START") && startTime.length() > 0) {
+                    if (subject.equalsIgnoreCase(config.start_id) && startTime.length() > 0) {
                         if (startTime.charAt(0) == '@') {
                             // we have an absolute start time
                             currentStartTime = Integer.parseInt(startTime.substring(1));
@@ -148,7 +148,7 @@ public class ExportStories {
                             currentStartTime = Integer.parseInt(startTime.substring(1)) + _export.Rundown.RundownStartTime;
                             _export.Rundown.RundownStartTime = currentStartTime;
                         }
-                    } else if (subject.equalsIgnoreCase("END") && startTime.length() > 0) {
+                    } else if (subject.equalsIgnoreCase(config.end_id) && startTime.length() > 0) {
                         if (startTime.charAt(0) == '@') {
                             // we have an absolute end time
                             _export.Rundown.RundownEndTime = Integer.parseInt(startTime.substring(1));

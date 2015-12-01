@@ -762,6 +762,30 @@ Ext4.define("GENSET.view.ObsDetails", {
                                 },
                                 {
                                     xtype: 'textfield',
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.start"),
+                                    name: 'start_id',
+                                    allowBlank: false,
+                                    tip: GENSET.msg("obs.settings.tips.startid"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: GENSET.msg("obs.settings.definitions.end"),
+                                    name: 'end_id',
+                                    allowBlank: false,
+                                    tip: GENSET.msg("obs.settings.tips.endid"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
                                     fieldLabel: GENSET.msg("obs.settings.definitions.viz"),
                                     name: 'viz_id',
                                     allowBlank: false,

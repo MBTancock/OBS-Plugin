@@ -77,6 +77,8 @@ public class ExportConfiguration {
     public String title_id;
     public String date_id;
     public String day_id;
+    public String start_id;
+    public String end_id;
     public String viz_id;
     public String cuesheet_id;
 
@@ -154,6 +156,8 @@ public class ExportConfiguration {
         config.title_id = this.title_id;
         config.date_id = this.date_id;
         config.day_id = this.day_id;
+        config.start_id = this.start_id;
+        config.end_id = this.end_id;
         config.viz_id = this.viz_id;
         config.cuesheet_id = this.cuesheet_id;
 
@@ -299,6 +303,8 @@ public class ExportConfiguration {
                 this.title_id = configuration.title_id;
                 this.date_id = configuration.date_id;
                 this.day_id = configuration.day_id;
+                this.start_id = configuration.start_id;
+                this.end_id = configuration.end_id;
                 this.viz_id = configuration.viz_id;
                 this.cuesheet_id = configuration.cuesheet_id;
 

@@ -69,8 +69,8 @@
             }
 
             //enable next line for testing
-            return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
-            //return selection.firstItem().type == "Queue";
+            //return selection.firstItem().type == "folder" || selection.firstItem().type == "file" || selection.firstItem().type == "Queue";
+            return selection.firstItem().type == "Queue";
         },
 
         // handle the menu click
