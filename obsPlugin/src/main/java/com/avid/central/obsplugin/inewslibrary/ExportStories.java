@@ -249,6 +249,26 @@ public class ExportStories {
                             }
                         }
 
+                        if (!exportData.getMdsMode() && exportData.getValidateFields()) {
+                            // get the Endorsement details
+                            String endorseBy = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.endorse_field);
+                            if (null == endorseBy)
+                            {
+                                throw new Exception("The rundown is invalid: the designated approval field was not found");
+                            }
+                            if (endorseBy.length() == 0)
+                            {
+                                throw new Exception("The rundown is invalid: at least one story has not been approved");
+                            }
+
+                            // get the Export Approval flags
+                            int approved = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.export_field);
+                            if (approved == 0)
+                            {
+                                throw new Exception("The rundown is invalid: at least one story is not ready for export");
+                            }
+                        }
+
                         // get VIZ production cue
                         // are there any anchored elements?
                         if (exportData.getCheckGrahics()) {
@@ -352,7 +372,7 @@ public class ExportStories {
                                         cueSheet = storyBody.substring(cueSheetLocation + CueSheetLocation.length(), storyBody.length() - BodyEnd.length());
                                     }
                                 } else {
-                                    scriptInfo = storyBody;
+                                    scriptInfo = "<![CDATA[\n" + storyBody + "]]>";
                                 }
 
                             }

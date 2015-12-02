@@ -11,7 +11,7 @@ public class PublishResponse {
     @XmlElement(required = true)
     private String message;
     @XmlElement(required = true)
-    private int result; // 0 = generic error, 1 = success, 2 = not authorized, 3 = configuration missing, 4 = story locked
+    private int result; // 0 = generic error, 1 = success, 2 = not authorized, 3 = configuration missing, 4 = configuration invalid, 5 = story locked
 
     public String getMessage() {
         return this.message;

@@ -68,6 +68,13 @@ public class inewsResource {
 
         _configuration.ReloadIfChanged();
 
+        if (!_configuration.IsValid())
+        {
+            response.setResult(4);
+            response.setMessage("Invalid configuration");
+            return response;
+        }
+
         try {
             // retrieve the export data from the map
             ExportStoryData exportData = _exports.get(id);
@@ -192,6 +199,13 @@ public class inewsResource {
         }
 
         _configuration.ReloadIfChanged();
+
+        if (!_configuration.IsValid())
+        {
+            response.setResult(4);
+            response.setMessage("Invalid configuration");
+            return response;
+        }
 
         Boolean connected = false;
 

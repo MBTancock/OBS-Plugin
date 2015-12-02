@@ -35,7 +35,7 @@ public class InewsResponse {
     @XmlElement(required = true)
     private String message;
     @XmlElement(required = true)
-    private int result; // 0 = generic error, 1 = setup success, 2 = not authorized, 3 = configuration missing
+    private int result; // 0 = generic error, 1 = setup success, 2 = not authorized, 3 = configuration missing, 4 = configuration invalid
 
     public UUID getID() {
         return this.id;

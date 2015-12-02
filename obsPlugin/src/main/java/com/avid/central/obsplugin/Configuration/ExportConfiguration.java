@@ -84,6 +84,8 @@ public class ExportConfiguration {
 
     //    Field Definitions
     public String duration_field;
+    public String endorse_field;
+    public String export_field;
     public String info_field;
     public String modified_field;
     public String music_field;
@@ -103,6 +105,67 @@ public class ExportConfiguration {
     private final String IV = "198DC056DE264408";
 
     public ExportConfiguration() {
+    }
+
+    public boolean IsValid() {
+        if (null == this.inws_ws_srvr || 0 == this.inws_ws_srvr.length()) return false;
+        if (0 == this.inws_ws_port) return false;
+        if (null == this.inws_server || 0 == this.inws_server.length()) return false;
+        if (null == this.inws_login || 0 == this.inws_login.length()) return false;
+        if (null == this.inws_pwd || 0 == this.inws_pwd.length()) return false;
+
+        //    Interplay Configuration
+        if (null == this.iplay_ws_srvr || 0 == this.iplay_ws_srvr.length()) return false;
+        if (0 == this.iplay_ws_port) return false;
+        if (null == this.iplay_workgroup || 0 == this.iplay_workgroup.length()) return false;
+        if (null == this.iplay_login || 0 == this.iplay_login.length()) return false;
+        if (null == this.iplay_pwd || 0 == this.iplay_pwd.length()) return false;
+
+        //    ONC FTP Configuration
+        if (null == this.onc_ftp_srvr || 0 == this.onc_ftp_srvr.length()) return false;
+        if (0 == this.onc_ftp_port) return false;
+        if (null == this.onc_ftp_login || 0 == this.onc_ftp_login.length()) return false;
+        if (null == this.onc_ftp_pwd || 0 == this.onc_ftp_pwd.length()) return false;
+        if (null == this.onc_ftp_path || 0 == this.onc_ftp_path.length()) return false;
+        if (null == this.onc_prefix || 0 == this.onc_prefix.length()) return false;
+
+        //    MDS FTP Configuration
+        if (null == this.mds_ftp_srvr || 0 == this.mds_ftp_srvr.length()) return false;
+        if (0 == this.mds_ftp_port) return false;
+        if (null == this.mds_ftp_login || 0 == this.mds_ftp_login.length()) return false;
+        if (null == this.mds_ftp_pwd || 0 == this.mds_ftp_pwd.length()) return false;
+        if (null == this.mds_ftp_path || 0 == this.mds_ftp_path.length()) return false;
+        if (null == this.mds_prefix || 0 == this.mds_prefix.length()) return false;
+
+        //    Authorisation Definitions
+        if (null == this.obs_export_role || 0 == this.obs_export_role.length()) return false;
+        if (null == this.obs_cuesheet_role || 0 == this.obs_cuesheet_role.length()) return false;
+
+        //    XML Definitions
+        if (null == this.obs_channel_id || 0 == this.obs_channel_id.length()) return false;
+        if (null == this.title_id || 0 == this.title_id.length()) return false;
+        if (null == this.date_id || 0 == this.date_id.length()) return false;
+        if (null == this.day_id || 0 == this.day_id.length()) return false;
+        if (null == this.start_id || 0 == this.start_id.length()) return false;
+        if (null == this.end_id || 0 == this.end_id.length()) return false;
+        if (null == this.viz_id || 0 == this.viz_id.length()) return false;
+        if (null == this.cuesheet_id || 0 == this.cuesheet_id.length()) return false;
+
+        //    Field Definitions
+        if (null == this.duration_field || 0 == this.duration_field.length()) return false;
+        if (null == this.endorse_field || 0 == this.endorse_field.length()) return false;
+        if (null == this.export_field || 0 == this.export_field.length()) return false;
+        if (null == this.info_field || 0 == this.info_field.length()) return false;
+        if (null == this.modified_field || 0 == this.modified_field.length()) return false;
+        if (null == this.music_field || 0 == this.music_field.length()) return false;
+        if (null == this.start_time_field || 0 == this.start_time_field.length()) return false;
+        if (null == this.subject_field || 0 == this.subject_field.length()) return false;
+        if (null == this.type_field || 0 == this.type_field.length()) return false;
+        if (null == this.update_field || 0 == this.update_field.length()) return false;
+        if (null == this.upmix_field || 0 == this.upmix_field.length()) return false;
+        if (null == this.video_id_field || 0 == this.video_id_field.length()) return false;
+
+        return true;
     }
 
     private ExportConfiguration Clone() {
@@ -163,6 +226,8 @@ public class ExportConfiguration {
 
         //    Field Definitions
         config.duration_field = this.duration_field;
+        config.endorse_field = this.endorse_field;
+        config.export_field = this.export_field;
         config.info_field = this.info_field;
         config.modified_field = this.modified_field;
         config.music_field = this.music_field;
@@ -227,7 +292,6 @@ public class ExportConfiguration {
 
             SecretKeySpec decodeSpec = new SecretKeySpec(decodeKey, "AES");
             decode.init(Cipher.DECRYPT_MODE, decodeSpec, ivspec);
-
 
 
             inws_pwd = new String(decode.doFinal(DatatypeConverter.parseBase64Binary(inws_pwd)), "UTF-8");
@@ -310,6 +374,8 @@ public class ExportConfiguration {
 
                 //    Field Definitions
                 this.duration_field = configuration.duration_field;
+                this.endorse_field = configuration.endorse_field;
+                this.export_field = configuration.export_field;
                 this.info_field = configuration.info_field;
                 this.modified_field = configuration.modified_field;
                 this.music_field = configuration.music_field;

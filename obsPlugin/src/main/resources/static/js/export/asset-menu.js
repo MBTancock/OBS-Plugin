@@ -1,6 +1,6 @@
 (function () {
-  // Retrieve the Avid action registry so you can register your new menu item/action.
-  var registry = AV.action.Registry.getGlobal();
+    // Retrieve the Avid action registry so you can register your new menu item/action.
+    var registry = AV.action.Registry.getGlobal();
 
     /*
 
@@ -34,12 +34,10 @@
 
             // the storyline panel export cue sheet button will call here
             // selection is the story model of the story, but make certain
-            if (selection instanceof Storyline.StoryModel)
-            {
+            if (selection instanceof Storyline.StoryModel) {
                 exportCuesheet(selection);
             }
-            else
-            {
+            else {
                 AV.Utilities.showErrorMessage("Failed to obtain the story reference");
             }
         }
@@ -63,8 +61,7 @@
         // This is where you decide whether your menu item is enabled
         // or not, depending on the business logic of your plug-in.
         isEnabled: function (selection) {
-            if (!selection.isSingle())
-            {
+            if (!selection.isSingle()) {
                 return false;
             }
 
@@ -105,11 +102,11 @@
 
                     // post the request to create the export data
                     $.ajax("/api/inews/", {
-                        method: "POST",
-                        contentType: "application/json",
-                        data: inews.toJs(),
-                        dataType: "json",
-                    })
+                            method: "POST",
+                            contentType: "application/json",
+                            data: inews.toJs(),
+                            dataType: "json",
+                        })
                         .done(function (res) {
                             // the request will return an InewsResponse item which will tell us whether the queue is exportable or not
                             // if it is exportable it will provide the details of the export
@@ -118,10 +115,9 @@
                             AV.messages.WaitBox.hide();
                             var response = new AV.obsPlugin.datamodel.InewsResponse(res);
 
-                            switch (response.result)
-                            {
+                            switch (response.result) {
                                 case 1: // setup succeeded
-                                        // show the export confirmation dialog
+                                    // show the export confirmation dialog
                                     var actions = [
                                         new Ext.Action({
                                             handler: function () {
@@ -135,51 +131,59 @@
 
                                                 var path = "/api/inews/" + response.id;
                                                 $.ajax(path, {
-                                                    method: "GET",
-                                                    dataType: "json",
-                                                })
+                                                        method: "GET",
+                                                        dataType: "json",
+                                                    })
                                                     .done(function (res) {
                                                         AV.messages.WaitBox.hide();
                                                         var response = new AV.obsPlugin.datamodel.InewsResponse(res);
 
-                                                        if (0 == response.result) {
-                                                            // oh dear, we can't export it
-                                                            AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
-                                                        }
-                                                        else if (3 == response.result)
-                                                        {
-                                                            // configuration data has disappeared
-                                                            AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
-                                                        }
-                                                        else {
-                                                            var html = new String("Filename: <b>");
-                                                            html = html.concat(response.filename);
-                                                            html = html.concat("</b><BR><BR>Location: <b>")
-                                                            html = html.concat(response.location);
-                                                            html = html.concat("</b>");
-                                                            var moreActions = [
-                                                                new Ext.Action({
-                                                                    handler: function () {
-                                                                        confirmDlog.close();
-                                                                        confirmDlog = undefined;
-                                                                    },
-                                                                    text: "OK"
-                                                                })
+                                                        switch (response.result) {
+                                                            case 1: // export success
+                                                                var html = new String("Filename: <b>");
+                                                                html = html.concat(response.filename);
+                                                                html = html.concat("</b><BR><BR>Location: <b>")
+                                                                html = html.concat(response.location);
+                                                                html = html.concat("</b>");
+                                                                var moreActions = [
+                                                                    new Ext.Action({
+                                                                        handler: function () {
+                                                                            confirmDlog.close();
+                                                                            confirmDlog = undefined;
+                                                                        },
+                                                                        text: "OK"
+                                                                    })
                                                                 ];
 
                                                                 confirmDlog = AV.DialogBox.createDialogBox({
-                                                                height: 120,
-                                                                width: 350,
-                                                                title: response.rundown + " Export Complete",
-                                                                maximizable: false,
-                                                                modal: true,
-                                                                footerActions: moreActions,
-                                                                html: html,
-                                                            });
-                                                            confirmDlog.show();
+                                                                    height: 120,
+                                                                    width: 350,
+                                                                    title: response.rundown + " Export Complete",
+                                                                    maximizable: false,
+                                                                    modal: true,
+                                                                    footerActions: moreActions,
+                                                                    html: html,
+                                                                });
+                                                                confirmDlog.show();
+                                                                break;
+
+                                                            case 2: // not authorized
+                                                                AV.Utilities.showErrorMessage("Sorry but you are not permitted to export rundowns", "Export Not Allowed");
+                                                                break;
+
+                                                            case 3: // missing configuration
+                                                                AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
+                                                                break;
+
+                                                            case 4: // invalid configuration
+                                                                AV.Utilities.showErrorMessage("The OBS Configuration is incomplete.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
+                                                                break;
+
+                                                            default: // general failure
+                                                                AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
+                                                                break;
                                                         }
                                                     })
-
                                             },
                                             text: "Export"
                                         }),
@@ -189,9 +193,9 @@
                                                 dlg.close();
                                                 var path = "/api/inews/" + response.id;
                                                 $.ajax(path, {
-                                                    method: "DELETE",
-                                                    dataType: "json",
-                                                })
+                                                        method: "DELETE",
+                                                        dataType: "json",
+                                                    })
                                                     .success(function (res) {
                                                         var rtn = res;
                                                     })
@@ -223,6 +227,10 @@
                                     AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
                                     break;
 
+                                case 4: // invalid configuration
+                                    AV.Utilities.showErrorMessage("The OBS Configuration is incomplete.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
+                                    break;
+
                                 default: // generic error
                                     AV.Utilities.showErrorMessage("The export failed for the following reason:\r\n\r\n" + res.message, "Export Failed");
                                     break;
@@ -248,7 +256,7 @@
 
     // This puts your action into the pane menu and context menu of the Asset List Pane.
     binder.bind({
-        places: [ binder.PLACE_VIEW_MENU, binder.PLACE_CONTEXT_MENU ],
+        places: [binder.PLACE_VIEW_MENU, binder.PLACE_CONTEXT_MENU],
 
         // This limits where your menu item is added.
         // In this case it is limited to the Assets List pane.
@@ -264,9 +272,9 @@
 
         // This must the same action ID as defined above.
         model: [
-            { type: "separator" },
-            { actionId: "com.avid.central.obsplugin.exportrundown" },
-            { type: "separator" }
+            {type: "separator"},
+            {actionId: "com.avid.central.obsplugin.exportrundown"},
+            {type: "separator"}
         ]
     });
 

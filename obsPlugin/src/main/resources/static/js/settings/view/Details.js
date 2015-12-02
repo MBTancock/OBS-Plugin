@@ -823,10 +823,34 @@ Ext4.define("GENSET.view.ObsDetails", {
                             items: [
                                 {
                                     xtype: 'textfield',
+                                    fieldLabel: GENSET.msg("obs.settings.fields.endorse"),
+                                    name: 'endorse_field',
+                                    allowBlank: false,
+                                    tip: GENSET.msg("obs.settings.tips.endorsefield"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
                                     fieldLabel: GENSET.msg("obs.settings.fields.duration"),
                                     name: 'duration_field',
                                     allowBlank: false,
                                     tip: GENSET.msg("obs.settings.tips.durnfield"),
+                                    listeners: {
+                                        render: function (c) {
+                                            Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: GENSET.msg("obs.settings.fields.export"),
+                                    name: 'export_field',
+                                    allowBlank: false,
+                                    tip: GENSET.msg("obs.settings.tips.exportfield"),
                                     listeners: {
                                         render: function (c) {
                                             Ext4.create('Ext.tip.ToolTip', {target: c.getEl(), html: c.tip});

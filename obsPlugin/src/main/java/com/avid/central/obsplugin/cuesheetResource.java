@@ -55,6 +55,13 @@ public class cuesheetResource {
 
         _configuration.ReloadIfChanged();
 
+        if (!_configuration.IsValid())
+        {
+            response.setResult(4);
+            response.setMessage("Invalid configuration");
+            return response;
+        }
+
         // check that this user can export cue sheets
         boolean authorised = false;
         for (String role : session.getUserSession().getRoles()) {
@@ -207,6 +214,13 @@ public class cuesheetResource {
 
         _configuration.ReloadIfChanged();
 
+        if (!_configuration.IsValid())
+        {
+            response.setResult(4);
+            response.setMessage("Invalid configuration");
+            return response;
+        }
+
         Boolean connected = false;
 
         iNEWS_System inews = new iNEWS_System(_configuration.inws_ws_srvr, _configuration.inws_ws_port);
@@ -237,7 +251,7 @@ public class cuesheetResource {
             // create a story soap client
             iNEWS_Story story = new iNEWS_Story(inews.getSessionID(), _configuration.inws_ws_srvr, _configuration.inws_ws_port);
 
-            response.setResult(story.SaveStory(request.getQueueFullPath(), request.getStoryLocator(), replacementNSML) ? 1 : 4);
+            response.setResult(story.SaveStory(request.getQueueFullPath(), request.getStoryLocator(), replacementNSML) ? 1 : 5);
             response.setMessage("");
 
         } catch (Exception ex) {

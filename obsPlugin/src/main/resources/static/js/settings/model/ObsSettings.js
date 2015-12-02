@@ -136,6 +136,8 @@ Ext4.define("GENSET.model.ObsSettings", {
         {name: "viz_id"},
         {name: "cuesheet_id"},
         {name: "duration_field"},
+        {name: "endorse_field"},
+        {name: "export_field"},
         {name: "info_field"},
         {name: "modified_field"},
         {name: "music_field"},
