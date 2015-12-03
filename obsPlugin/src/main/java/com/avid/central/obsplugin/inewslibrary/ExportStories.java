@@ -52,6 +52,13 @@ public class ExportStories {
     // the rundown is the list of stories passed in as stories
     // from this identify significant parameters based on the rules defined above
     // returns the rundown as an XML string and the filename to be used in the fileName parameter
+    private void RaiseError(String message) throws Exception
+    {
+        StringBuilder sb = new StringBuilder("The rundown is invalid: ");
+        sb.append(message);
+        throw new Exception(sb.toString());
+    }
+
     public ExportStoryData ProcessRundown(List<Story> stories, ExportConfiguration config) {
         ExportStoryData exportData = new ExportStoryData(config);
 
@@ -86,19 +93,19 @@ public class ExportStories {
                     // need to get the content of the info Field
                     String info = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.info_field);
                     if (null == info) {
-                        throw new Exception("The rundown is invalid: the designated info field was not found");
+                        RaiseError(String.format("field \"%s\" was not found", config.info_field));
                     }
 
                     String subject = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.subject_field);
                     if (null == subject) {
-                        throw new Exception("The rundown is invalid: the designated subject field was not found");
+                        RaiseError(String.format("field \"%s\" was not found", config.subject_field));
                     }
 
                     // is it one of our "special" fields
                     if (info.equalsIgnoreCase(config.obs_channel_id)) {
                         if (subject.length() == 0) {
                             // the channelID is missing so abort the export
-                            throw new Exception("The rundown is invalid: the rundown Channel ID is missing");
+                            RaiseError(String.format("the rundown %s was not found", config.obs_channel_id));
                         }
 
                         // this is the Story that contains the channel ID
@@ -108,13 +115,13 @@ public class ExportStories {
                         if (subject.toUpperCase().startsWith(config.mds_prefix.toUpperCase())) {
                             exportData.setMdsMode(true);
                         } else if (!subject.toUpperCase().startsWith(config.onc_prefix.toUpperCase()) && config.onc_prefix.length() > 0) {
-                            throw new Exception("The rundown is invalid: the Channel ID was not identified as an ONC or MDS rundown");
+                            RaiseError(String.format("the %s was not identified as an ONC or MDS rundown", config.obs_channel_id));
                         }
 
                     } else if (info.equalsIgnoreCase(config.title_id)) {
                         if (subject.length() == 0 && exportData.getValidateFields()) {
                             // the rundown name is missing so abort the export
-                            throw new Exception("The rundown is invalid: the rundown Channel Name is missing");
+                            RaiseError(String.format("the rundown %s was not found", config.title_id));
                         }
 
                         // this is the Story that contains the rundown name
@@ -134,7 +141,7 @@ public class ExportStories {
 
                     String startTime = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.start_time_field);
                     if (null == startTime && exportData.getValidateFields()) {
-                        throw new Exception("The rundown is invalid: the designated start time field was not found");
+                        RaiseError(String.format("field \"%s\" was not found", config.start_time_field));
                     }
 
                     // check for start and end time data
@@ -166,7 +173,7 @@ public class ExportStories {
                         if (!headerValid) {
                             if (-1 == _export.Rundown.RundownStartTime && exportData.getValidateFields()) {
                                 // the start time has not been set so abort the export
-                                throw new Exception("The rundown is invalid: the rundown start time is missing");
+                                RaiseError("the rundown start time is missing");
                             }
 
                             headerValid = true;
@@ -179,11 +186,11 @@ public class ExportStories {
                         // get the subject
                         String subject = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.subject_field);
                         if (null == subject) {
-                            throw new Exception("The rundown is invalid: the designated subject field was not found");
+                            RaiseError(String.format("field \"%s\" was not found", config.subject_field));
                         }
 
                         if (subject.length() == 0 && exportData.getValidateFields()) {
-                            throw new Exception("The rundown is invalid: at least one story is missing its Subject details");
+                            RaiseError("at least one story is missing its Subject details");
                         }
 
                         // check for an update and retrieve modification time
@@ -221,10 +228,10 @@ public class ExportStories {
                         String videoID = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.video_id_field);
                         if (exportData.getMdsMode()) {
                             if (null == videoID) {
-                                throw new Exception("The rundown is invalid: the designated VideoID field was not found");
+                                RaiseError(String.format("field \"%s\" was not found", config.video_id_field));
                             }
                             if (videoID.length() == 0 && exportData.getValidateFields()) {
-                                throw new Exception("The rundown is invalid: at least one story is missing its VideoID details");
+                                RaiseError("at least one story is missing its VideoID details");
                             }
                         } else if (null == videoID || videoID.isEmpty()) {
                             videoID = "";
@@ -234,10 +241,10 @@ public class ExportStories {
                         String upMix = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
                         if (exportData.getMdsMode()) {
                             if (null == upMix) {
-                                throw new Exception("The rundown is invalid: the designated upmix field was not found");
+                                RaiseError(String.format("field \"%s\" was not found", config.upmix_field));
                             }
                             if (upMix.length() == 0 && exportData.getValidateFields()) {
-                                throw new Exception("The rundown is invalid: at least one story is missing its upmix details");
+                                RaiseError("at least one story is missing its upmix details");
                             }
                         }
 
@@ -254,18 +261,18 @@ public class ExportStories {
                             String endorseBy = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.endorse_field);
                             if (null == endorseBy)
                             {
-                                throw new Exception("The rundown is invalid: the designated approval field was not found");
+                                RaiseError(String.format("field \"%s\" was not found", config.endorse_field));
                             }
                             if (endorseBy.length() == 0)
                             {
-                                throw new Exception("The rundown is invalid: at least one story has not been approved");
+                                RaiseError("at least one story has not been approved");
                             }
 
                             // get the Export Approval flags
                             int approved = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.export_field);
                             if (approved == 0)
                             {
-                                throw new Exception("The rundown is invalid: at least one story is not ready for export");
+                                RaiseError("at least one story is not ready for export");
                             }
                         }
 
@@ -412,7 +419,7 @@ public class ExportStories {
             if (-1 == _export.Rundown.RundownEndTime) {
                 if (exportData.getValidateFields()) {
                     // nope, reject this one
-                    throw new Exception("The rundown is invalid: the rundown end time is missing");
+                    RaiseError("the rundown end time is missing");
                 } else {
                     _export.Rundown.RundownEndTime = _export.Rundown.RundownStartTime;
                 }
@@ -420,12 +427,12 @@ public class ExportStories {
 
             // check for Channel ID
             if (_export.Rundown.ChannelID.length() == 0 && exportData.getValidateFields()) {
-                throw new Exception("The rundown is invalid: the rundown Channel ID is missing");
+                RaiseError(String.format("the rundown %s is missing", config.obs_channel_id));
             }
 
             // check for Channel Name
             if (_export.Rundown.Title.length() == 0 && exportData.getValidateFields()) {
-                throw new Exception("The rundown is invalid: the rundown Title is missing");
+                RaiseError(String.format("the rundown %s is missing", config.title_id));
             }
 
             // check for Date

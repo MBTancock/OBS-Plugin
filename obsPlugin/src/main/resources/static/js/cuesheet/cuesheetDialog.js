@@ -104,6 +104,10 @@ function retrieveMarkers(title, queue, locator, mobID)
                         AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
                         break;
 
+                    case 4: // invalid configuration
+                        AV.Utilities.showErrorMessage("The OBS Configuration is incomplete.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
+                        break;
+
                     default: // assume an error
                         AV.Utilities.showErrorMessage("There was a problem retrieving the markers: " + res.message);
                         break;
@@ -226,7 +230,7 @@ function showDialog(res)
         var marker = res.markers[i];
         var a = marker['Start'];
         var b = marker['Duration'];
-        var c = marker['Comment'];
+        var c = Ext4.String.htmlEncode(marker['Comment']);
         markersStore.add({start: a, duration: b, comment: c});
     }
 
@@ -310,7 +314,15 @@ function publishSheet(id)
                         confirmDlog.show();
                         break;
 
-                    case 4: // locked
+                    case 3: // missing configuration
+                        AV.Utilities.showErrorMessage("The OBS Configuration could not be loaded.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
+                        break;
+
+                    case 4: // invalid configuration
+                        AV.Utilities.showErrorMessage("The OBS Configuration is incomplete.\r\n\r\nPlease check the OBS System Settings.", "OBS Export Not Configured");
+                        break;
+
+                    case 5: // locked
                         AV.Utilities.showErrorMessage("Failed to publish the Cue Sheet because the story is locked", "Story Locked");
                         break;
 
