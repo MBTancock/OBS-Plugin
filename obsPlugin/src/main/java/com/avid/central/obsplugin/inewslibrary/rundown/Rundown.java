@@ -43,7 +43,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *                             &lt;element name="Subject" type="{}Nvarchar255"/>
  *                             &lt;element name="Type" type="{}Nvarchar32"/>
  *                             &lt;element name="VideoID" type="{}Nvarchar32"/>
- *                             &lt;element name="Update" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *                             &lt;element name="Updated" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *                             &lt;element name="Modified" type="{}TimeType"/>
  *                             &lt;element name="Graphic" maxOccurs="unbounded" minOccurs="0">
  *                               &lt;complexType>
@@ -293,7 +293,7 @@ public class Rundown {
      *                   &lt;element name="Subject" type="{}Nvarchar255"/>
      *                   &lt;element name="Type" type="{}Nvarchar32"/>
      *                   &lt;element name="VideoID" type="{}Nvarchar32"/>
-     *                   &lt;element name="Update" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+     *                   &lt;element name="Updated" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
      *                   &lt;element name="Modified" type="{}TimeType"/>
      *                   &lt;element name="Graphic" maxOccurs="unbounded" minOccurs="0">
      *                     &lt;complexType>
@@ -380,7 +380,7 @@ public class Rundown {
          *         &lt;element name="Subject" type="{}Nvarchar255"/>
          *         &lt;element name="Type" type="{}Nvarchar32"/>
          *         &lt;element name="VideoID" type="{}Nvarchar32"/>
-         *         &lt;element name="Update" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+         *         &lt;element name="Updated" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
          *         &lt;element name="Modified" type="{}TimeType"/>
          *         &lt;element name="Graphic" maxOccurs="unbounded" minOccurs="0">
          *           &lt;complexType>
@@ -435,7 +435,7 @@ public class Rundown {
             protected String type;
             @XmlElement(name = "VideoID", required = true)
             protected String videoID;
-            @XmlElement(name = "Update")
+            @XmlElement(name = "Updated")
             protected boolean updated;
             @XmlElement(name = "Modified", required = true)
             protected String modified;
