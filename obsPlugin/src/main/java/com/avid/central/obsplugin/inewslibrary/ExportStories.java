@@ -237,6 +237,17 @@ public class ExportStories {
                             videoID = "";
                         }
 
+                        // get the Type
+                        String type = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.type_field);
+                        if (exportData.getMdsMode()) {
+                            if (null == type) {
+                                RaiseError(String.format("field \"%s\" was not found", config.type_field));
+                            }
+                            if (type.length() == 0 && exportData.getValidateFields()) {
+                                RaiseError("at least one story is missing its type details");
+                            }
+                        }
+
                         // get the Upmix
                         String upMix = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.upmix_field);
                         if (exportData.getMdsMode()) {
@@ -333,7 +344,7 @@ public class ExportStories {
                         // Story looks OK so add it to the export
                         OBSStory obsStory = new OBSStory();
                         obsStory.Subject = subject;
-                        obsStory.Type = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.type_field);
+                        obsStory.Type = type;
                         obsStory.StoryStartTime = currentStartTime;
                         obsStory.StoryDuration = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.duration_field);
                         obsStory.VideoID = videoID;
