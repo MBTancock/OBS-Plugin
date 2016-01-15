@@ -1,7 +1,6 @@
 var storyTitle = undefined;
 var queueFullPath = undefined;
 var storyLocator = undefined;
-var sequenceMobID = undefined;
 
 function exportCuesheet(story) {
 

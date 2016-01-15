@@ -30,6 +30,9 @@
     registry.register({
         id: 'com.avid.central.inews.ExportStory',
         text: 'ExportStory',
+        isEnabled: function (selection) {
+            return selection instanceof Storyline.StoryModel;
+        },
         handler: function (selection) {
 
             // the storyline panel export cue sheet button will call here
