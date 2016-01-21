@@ -343,6 +343,14 @@ public class ExportStories {
 
                         // Story looks OK so add it to the export
                         OBSStory obsStory = new OBSStory();
+
+                        // look for escape characters in the subject field and encode them
+                        subject = subject.replace("&", "&amp;");
+                        subject = subject.replace("\"", "&quot;");
+                        subject = subject.replace("<", "&lt;");
+                        subject = subject.replace(">", "&gt;");
+                        subject = subject.replace("'", "&apos;");
+
                         obsStory.Subject = subject;
                         obsStory.Type = type;
                         obsStory.StoryStartTime = currentStartTime;
@@ -458,7 +466,6 @@ public class ExportStories {
             }
             exportData.getResponse().setDate(_export.Rundown.Date);
 
-
             // check for Day
             if (_export.Rundown.Day.length() == 0) {
                 // log a warning here (no day specified)
@@ -469,7 +476,6 @@ public class ExportStories {
                 }
             }
             exportData.getResponse().setDay(_export.Rundown.Day);
-
 
             exportData.setRundownAsXml(_export.GenerateXML(exportData.getMdsMode()));
 
