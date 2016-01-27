@@ -344,13 +344,6 @@ public class ExportStories {
                         // Story looks OK so add it to the export
                         OBSStory obsStory = new OBSStory();
 
-                        // look for escape characters in the subject field and encode them
-                        subject = subject.replace("&", "&amp;");
-                        subject = subject.replace("\"", "&quot;");
-                        subject = subject.replace("<", "&lt;");
-                        subject = subject.replace(">", "&gt;");
-                        subject = subject.replace("'", "&apos;");
-
                         obsStory.Subject = subject;
                         obsStory.Type = type;
                         obsStory.StoryStartTime = currentStartTime;
@@ -499,7 +492,16 @@ public class ExportStories {
                 Nsml.Fields.String stringField = (Nsml.Fields.String) field;
 
                 if (id.equals(stringField.getId())) {
-                    return stringField.getValue();
+                    String value = stringField.getValue();
+
+                    // look for escape characters in the value and encode them
+                    value = value.replace("&", "&amp;");
+                    value = value.replace("\"", "&quot;");
+                    value = value.replace("<", "&lt;");
+                    value = value.replace(">", "&gt;");
+                    value = value.replace("'", "&apos;");
+
+                    return value;
                 }
             } else if (field instanceof Nsml.Fields.Boolean) {
                 Nsml.Fields.Boolean booleanField = (Nsml.Fields.Boolean) field;
