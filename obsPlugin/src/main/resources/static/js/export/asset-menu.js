@@ -41,7 +41,7 @@
                 exportCuesheet(selection);
             }
             else {
-                AV.Utilities.showErrorMessage("Failed to obtain the story reference");
+                AV.Utilities.showErrorMessage("We Failed to obtain the story reference");
             }
         }
     });
