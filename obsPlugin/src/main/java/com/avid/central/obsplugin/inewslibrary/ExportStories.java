@@ -382,10 +382,11 @@ public class ExportStories {
 
                                 // look for a Cue Sheet section
                                 if (cueSheetLocation >= 0) {
-                                    scriptInfo = storyBody.substring(0, cueSheetLocation);
+                                    String script = storyBody.substring(0, cueSheetLocation);
 
                                     // add back the body end tag
-                                    scriptInfo += BodyEnd;
+                                    script += BodyEnd;
+                                    scriptInfo = "<![CDATA[\n" + script + "]]>";
 
                                     if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + CueSheetLocation.length())) {
                                         cueSheet = storyBody.substring(cueSheetLocation + CueSheetLocation.length(), storyBody.length() - BodyEnd.length());

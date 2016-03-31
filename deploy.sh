@@ -1,5 +1,5 @@
 #!/bin/bash
-SERVER="media-central"
+SERVER="media-central.wysdom.local"
 PORT="22"
 USER=root
 
