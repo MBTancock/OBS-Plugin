@@ -405,6 +405,7 @@
       <properties maven-id="com.fasterxml.jackson.core:jackson-annotations:2.0.5" />
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.0.5/jackson-annotations-2.0.5.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.0.5/jackson-annotations-2.0.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -420,6 +421,7 @@
       <properties maven-id="joda-time:joda-time:2.8.2" />
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/joda-time/joda-time/2.8.2/joda-time-2.8.2.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/joda-time/joda-time/2.8.2/joda-time-2.8.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -428,6 +430,7 @@
       <properties maven-id="org.apache.axis:axis-jaxrpc:1.4" />
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/axis/axis-jaxrpc/1.4/axis-jaxrpc-1.4.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/axis/axis-jaxrpc/1.4/axis-jaxrpc-1.4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -435,6 +438,7 @@
     <library name="org.apache.axis:axis:1.4" type="repository">
       <properties maven-id="org.apache.axis:axis:1.4" />
       <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/axis/axis/1.4/axis-1.4.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/org/apache/axis/axis/1.4/axis-1.4.jar!/" />
       </CLASSES>
       <JAVADOC />

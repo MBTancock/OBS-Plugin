@@ -388,8 +388,15 @@ public class ExportStories {
                                     script += BodyEnd;
                                     scriptInfo = "<![CDATA[\n" + script + "]]>";
 
-                                    if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + CueSheetLocation.length())) {
-                                        cueSheet = storyBody.substring(cueSheetLocation + CueSheetLocation.length(), storyBody.length() - BodyEnd.length());
+                                    // we need the cues sheet without formatting
+                                    String unformattedBody = GetStoryBody(story.Story);
+
+                                    cueSheetLocation = unformattedBody.indexOf(config.cuesheet_id);
+                                    if (cueSheetLocation >= 0) {
+
+                                        if (exportData.getMdsMode() && unformattedBody.length() > (cueSheetLocation + config.cuesheet_id.length())) {
+                                            cueSheet = unformattedBody.substring(cueSheetLocation + config.cuesheet_id.length());
+                                        }
                                     }
                                 } else {
                                     scriptInfo = "<![CDATA[\n" + storyBody + "]]>";
