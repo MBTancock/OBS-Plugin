@@ -27,21 +27,21 @@ import org.w3c.dom.Element;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SearchType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="InterplayPathURI" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="SearchGroup" type="{http://avid.com/interplay/ws/assets/types}SearchGroupType"/>
- *         &lt;element name="ReturnAttributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType" minOccurs="0"/>
- *         &lt;element name="MaxResults" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/>
- *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;anyAttribute processContents='lax'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="SearchType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="InterplayPathURI" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="SearchGroup" type="{http://avid.com/interplay/ws/assets/types}SearchGroupType"/&gt;
+ *         &lt;element name="ReturnAttributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType" minOccurs="0"/&gt;
+ *         &lt;element name="MaxResults" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/&gt;
+ *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;anyAttribute processContents='lax'/&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

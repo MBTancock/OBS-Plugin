@@ -26,19 +26,19 @@ import org.w3c.dom.Element;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SetAttributesType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="InterplayURIs" type="{http://avid.com/interplay/ws/assets/types}InterplayURIListType"/>
- *         &lt;element name="Attributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType"/>
- *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/>
- *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;anyAttribute processContents='lax'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="SetAttributesType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="InterplayURIs" type="{http://avid.com/interplay/ws/assets/types}InterplayURIListType"/&gt;
+ *         &lt;element name="Attributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType"/&gt;
+ *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/&gt;
+ *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;anyAttribute processContents='lax'/&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

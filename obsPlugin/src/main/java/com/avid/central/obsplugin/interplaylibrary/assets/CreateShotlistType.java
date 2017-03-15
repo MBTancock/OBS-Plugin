@@ -28,23 +28,24 @@ import org.w3c.dom.Element;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="CreateShotlistType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="DestinationFolderURI" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="ShotlistName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="StartTimecode" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="ShotlistElements" type="{http://avid.com/interplay/ws/assets/types}ShotlistElementListType"/>
- *         &lt;element name="Attributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType" minOccurs="0"/>
- *         &lt;element name="Locators" type="{http://avid.com/interplay/ws/assets/types}UMIDLocatorListType" minOccurs="0"/>
- *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/>
- *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;anyAttribute processContents='lax'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="CreateShotlistType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="DestinationFolderURI" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="ShotlistName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="StartTimecode" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="ShotlistMobID" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="ShotlistElements" type="{http://avid.com/interplay/ws/assets/types}ShotlistElementListType"/&gt;
+ *         &lt;element name="Attributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType" minOccurs="0"/&gt;
+ *         &lt;element name="Locators" type="{http://avid.com/interplay/ws/assets/types}UMIDLocatorListType" minOccurs="0"/&gt;
+ *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/&gt;
+ *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;anyAttribute processContents='lax'/&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -54,6 +55,7 @@ import org.w3c.dom.Element;
     "destinationFolderURI",
     "shotlistName",
     "startTimecode",
+    "shotlistMobID",
     "shotlistElements",
     "attributes",
     "locators",
@@ -68,6 +70,8 @@ public class CreateShotlistType {
     protected String shotlistName;
     @XmlElement(name = "StartTimecode", required = true)
     protected String startTimecode;
+    @XmlElement(name = "ShotlistMobID")
+    protected String shotlistMobID;
     @XmlElement(name = "ShotlistElements", required = true)
     protected ShotlistElementListType shotlistElements;
     @XmlElement(name = "Attributes")
@@ -151,6 +155,30 @@ public class CreateShotlistType {
      */
     public void setStartTimecode(String value) {
         this.startTimecode = value;
+    }
+
+    /**
+     * Gets the value of the shotlistMobID property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getShotlistMobID() {
+        return shotlistMobID;
+    }
+
+    /**
+     * Sets the value of the shotlistMobID property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setShotlistMobID(String value) {
+        this.shotlistMobID = value;
     }
 
     /**

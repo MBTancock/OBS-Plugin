@@ -125,7 +125,7 @@ public class ExportRundown {
         marshaller = jc.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "utf-8");
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
+/*
         try {
             marshaller.setProperty("com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler", new NsmlEscapeHandler());
         }
@@ -133,6 +133,7 @@ public class ExportRundown {
         {
             String e = pex.getMessage();
         }
+*/
         marshaller.marshal(exportRundown, sw);
 
         return sw.toString();

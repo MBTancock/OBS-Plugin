@@ -28,35 +28,35 @@ import org.w3c.dom.Element;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="CreateMasterClipType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="DestinationFolderURI" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="ClipID" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="ClipName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Timebase" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="TapeName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="StartTimecode" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Duration" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
- *         &lt;element name="EndTimecode" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="Video" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
- *         &lt;element name="AudioTracks" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="SourceID" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="SourceMobType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="SourceMobOffset" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="BoxX" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="BoxY" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="BoxHeight" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="BoxWidth" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="Attributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType" minOccurs="0"/>
- *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/>
- *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;anyAttribute processContents='lax'/>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="CreateMasterClipType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="DestinationFolderURI" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="ClipID" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="ClipName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="Timebase" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="TapeName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="StartTimecode" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="Duration" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *         &lt;element name="EndTimecode" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="Video" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
+ *         &lt;element name="AudioTracks" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
+ *         &lt;element name="SourceID" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="SourceMobType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="SourceMobOffset" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="BoxX" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="BoxY" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="BoxHeight" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="BoxWidth" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="Attributes" type="{http://avid.com/interplay/ws/assets/types}AttributeListType" minOccurs="0"/&gt;
+ *         &lt;element name="Extension" type="{http://avid.com/interplay/ws/assets/types}ExtensionType" minOccurs="0"/&gt;
+ *         &lt;any processContents='lax' namespace='##other' maxOccurs="unbounded" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;anyAttribute processContents='lax'/&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 

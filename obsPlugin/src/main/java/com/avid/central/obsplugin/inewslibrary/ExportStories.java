@@ -270,19 +270,17 @@ public class ExportStories {
                         if (!exportData.getMdsMode() && exportData.getValidateFields()) {
                             // get the Endorsement details
                             String endorseBy = GetFieldStringValue(story.Story.getFields().getStringOrBooleanOrDate(), config.endorse_field);
-                            if (null == endorseBy)
-                            {
+                            if (null == endorseBy) {
                                 RaiseError(String.format("field \"%s\" was not found", config.endorse_field));
                             }
-                            if (endorseBy.length() == 0)
-                            {
-                                RaiseError("at least one story has not been approved");
+                            if (endorseBy.length() == 0) {
+                                exportData.getResponse().setMessage("At least one story has not been approved");
+//                                RaiseError("at least one story has not been approved");
                             }
 
                             // get the Export Approval flags
                             int approved = GetFieldIntegerValue(story.Story.getFields().getStringOrBooleanOrDate(), config.export_field);
-                            if (approved == 0)
-                            {
+                            if (approved == 0) {
                                 RaiseError("at least one story is not ready for export");
                             }
                         }
@@ -351,7 +349,7 @@ public class ExportStories {
                         obsStory.VideoID = videoID;
 
                         if (exportData.getMdsMode()) {
-                            obsStory.Upmix = upMix.equals("1");
+                            obsStory.Upmix = upMix.equals("1") || upMix.equals("true");
                             obsStory.Music = music;
                             obsStory.Graphics = vizGrapics;
                         } else {
@@ -361,66 +359,80 @@ public class ExportStories {
                             }
                         }
 
-                        String storyBody;
+                        // the story body as NSML
+                        String formattedBody;
+
+                        // unformatted version of the story body
+                        String unformattedBody;
+
+                        // the contents of the script info tag
                         String scriptInfo = null;
+
+                        // the contents of the cue sheet tag
                         String cueSheet = null;
 
-                        if (exportData.getRetainFormatting()) {
-                            // need to get the story body complete with tags
-                            storyBody = "";
+                        int cueSheetLocation = -1;
 
-                            // get offsets to body tags
+                        // get the story body free of all formatting
+                        unformattedBody = GetStoryBody(story.Story);
+
+                        // look for escape characters in the value and encode them
+                        unformattedBody = unformattedBody.replace("&", "&amp;");
+                        unformattedBody = unformattedBody.replace("\"", "&quot;");
+                        unformattedBody = unformattedBody.replace("<", "&lt;");
+                        unformattedBody = unformattedBody.replace(">", "&gt;");
+                        unformattedBody = unformattedBody.replace("'", "&apos;");
+
+                        // now look for a cue sheet
+                        cueSheetLocation = unformattedBody.indexOf(config.cuesheet_id);
+
+                        if (cueSheetLocation >= 0) {
+                            // there is a cue sheet so extract it from the unformatted body if MDS mode
+                            if (exportData.getMdsMode() && unformattedBody.length() > (cueSheetLocation + config.cuesheet_id.length())) {
+                                cueSheet = unformattedBody.substring(cueSheetLocation + config.cuesheet_id.length());
+                            }
+
+                            // crop the cue sheet from the unformatted body
+                            unformattedBody = unformattedBody.substring(0, cueSheetLocation);
+                        }
+
+                        // we now have the unformatted body free of cue sheet data together with the cue sheet if it exists
+
+                        // are we exporting the story in its formatted version?
+                        if (exportData.getRetainFormatting()) {
+                            formattedBody = "";
+
+                            // get the formatted story body
+                            // first get offsets to body tags
                             int storyStart = story.StoryAsNSML.indexOf(BodyStart);
                             int storyEnd = story.StoryAsNSML.indexOf(BodyEnd);
 
-                            // check for empty body
+                            // check for non-empty body
                             if (-1 != storyEnd) {
+                                // make sure we extract the end tag
                                 storyEnd += BodyEnd.length();
-                                storyBody = story.StoryAsNSML.substring(storyStart, storyEnd);
+                                formattedBody = story.StoryAsNSML.substring(storyStart, storyEnd);
+                                // now we have the formatted story body
 
-                                int cueSheetLocation = storyBody.indexOf(CueSheetLocation);
+                                // if the story is not empty and has a cue sheet section we need to remove it
+                                cueSheetLocation = formattedBody.indexOf(CueSheetLocation);
 
-                                // look for a Cue Sheet section
-                                if (cueSheetLocation >= 0) {
-                                    String script = storyBody.substring(0, cueSheetLocation);
-
+                                if (cueSheetLocation >= 0 && unformattedBody.length() > 0) {
+                                    // there is a cue sheet and the story isn't empty so we need to remove the cue sheet from the formatted body
+                                    String script = formattedBody.substring(0, cueSheetLocation);
                                     // add back the body end tag
                                     script += BodyEnd;
                                     scriptInfo = "<![CDATA[\n" + script + "]]>";
 
-                                    // we need the cues sheet without formatting
-                                    String unformattedBody = GetStoryBody(story.Story);
-
-                                    cueSheetLocation = unformattedBody.indexOf(config.cuesheet_id);
-                                    if (cueSheetLocation >= 0) {
-
-                                        if (exportData.getMdsMode() && unformattedBody.length() > (cueSheetLocation + config.cuesheet_id.length())) {
-                                            cueSheet = unformattedBody.substring(cueSheetLocation + config.cuesheet_id.length());
-                                        }
-                                    }
-                                } else {
-                                    scriptInfo = "<![CDATA[\n" + storyBody + "]]>";
+                                } else if (unformattedBody.length() > 0) {
+                                    scriptInfo = "<![CDATA[\n" + formattedBody + "]]>";
                                 }
 
                             }
 
                         } else {
-                            // need to get the story body free of all formatting
-                            storyBody = GetStoryBody(story.Story);
-
-                            int cueSheetLocation = storyBody.indexOf(config.cuesheet_id);
-
-                            // look for a Cue Sheet section
-                            if (cueSheetLocation >= 0) {
-                                scriptInfo = storyBody.substring(0, cueSheetLocation);
-
-                                if (exportData.getMdsMode() && storyBody.length() > (cueSheetLocation + config.cuesheet_id.length())) {
-                                    cueSheet = storyBody.substring(cueSheetLocation + config.cuesheet_id.length());
-                                }
-                            } else {
-                                scriptInfo = storyBody;
-                            }
-
+                            // simply export the unformatted body
+                            scriptInfo = unformattedBody;
                         }
 
                         obsStory.ScriptInfo = scriptInfo;

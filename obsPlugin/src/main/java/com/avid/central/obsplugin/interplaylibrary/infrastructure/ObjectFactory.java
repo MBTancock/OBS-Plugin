@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the com.avid.central.obsplugin.interplaylibrary.infrastructure package. 
+ * generated in the interplaylibrary.infrastructure package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -24,25 +24,17 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _GetConfigurationInformation_QNAME = new QName("http://avid.com/interplay/ws/infrastructure/types", "GetConfigurationInformation");
+    private final static QName _GetConfigurationInformationResponse_QNAME = new QName("http://avid.com/interplay/ws/infrastructure/types", "GetConfigurationInformationResponse");
     private final static QName _GetVersionInformation_QNAME = new QName("http://avid.com/interplay/ws/infrastructure/types", "GetVersionInformation");
     private final static QName _GetVersionInformationResponse_QNAME = new QName("http://avid.com/interplay/ws/infrastructure/types", "GetVersionInformationResponse");
-    private final static QName _GetConfigurationInformationResponse_QNAME = new QName("http://avid.com/interplay/ws/infrastructure/types", "GetConfigurationInformationResponse");
     private final static QName _UserCredentials_QNAME = new QName("http://avid.com/interplay/ws/assets/types", "UserCredentials");
-    private final static QName _GetConfigurationInformation_QNAME = new QName("http://avid.com/interplay/ws/infrastructure/types", "GetConfigurationInformation");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.avid.central.obsplugin.interplaylibrary.infrastructure
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: interplaylibrary.infrastructure
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link GetConfigurationInformationResponseType }
-     * 
-     */
-    public GetConfigurationInformationResponseType createGetConfigurationInformationResponseType() {
-        return new GetConfigurationInformationResponseType();
     }
 
     /**
@@ -51,6 +43,14 @@ public class ObjectFactory {
      */
     public GetConfigurationInformationType createGetConfigurationInformationType() {
         return new GetConfigurationInformationType();
+    }
+
+    /**
+     * Create an instance of {@link GetConfigurationInformationResponseType }
+     * 
+     */
+    public GetConfigurationInformationResponseType createGetConfigurationInformationResponseType() {
+        return new GetConfigurationInformationResponseType();
     }
 
     /**
@@ -126,35 +126,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FileLocationListType }
+     * Create an instance of {@link FileLocationDetailsListType }
      * 
      */
-    public FileLocationListType createFileLocationListType() {
-        return new FileLocationListType();
-    }
-
-    /**
-     * Create an instance of {@link AttributeConditionType }
-     * 
-     */
-    public AttributeConditionType createAttributeConditionType() {
-        return new AttributeConditionType();
-    }
-
-    /**
-     * Create an instance of {@link ErrorListType }
-     * 
-     */
-    public ErrorListType createErrorListType() {
-        return new ErrorListType();
-    }
-
-    /**
-     * Create an instance of {@link SearchGroupType }
-     * 
-     */
-    public SearchGroupType createSearchGroupType() {
-        return new SearchGroupType();
+    public FileLocationDetailsListType createFileLocationDetailsListType() {
+        return new FileLocationDetailsListType();
     }
 
     /**
@@ -166,43 +142,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ResolutionConditionType }
+     * Create an instance of {@link FileLocationListType }
      * 
      */
-    public ResolutionConditionType createResolutionConditionType() {
-        return new ResolutionConditionType();
+    public FileLocationListType createFileLocationListType() {
+        return new FileLocationListType();
     }
 
     /**
-     * Create an instance of {@link FileLocationDetailsListType }
+     * Create an instance of {@link FileLocationType }
      * 
      */
-    public FileLocationDetailsListType createFileLocationDetailsListType() {
-        return new FileLocationDetailsListType();
-    }
-
-    /**
-     * Create an instance of {@link InterplayURIListType }
-     * 
-     */
-    public InterplayURIListType createInterplayURIListType() {
-        return new InterplayURIListType();
-    }
-
-    /**
-     * Create an instance of {@link AttributeListType }
-     * 
-     */
-    public AttributeListType createAttributeListType() {
-        return new AttributeListType();
-    }
-
-    /**
-     * Create an instance of {@link ErrorType }
-     * 
-     */
-    public ErrorType createErrorType() {
-        return new ErrorType();
+    public FileLocationType createFileLocationType() {
+        return new FileLocationType();
     }
 
     /**
@@ -214,6 +166,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link AssetDescriptionType }
+     * 
+     */
+    public AssetDescriptionType createAssetDescriptionType() {
+        return new AssetDescriptionType();
+    }
+
+    /**
      * Create an instance of {@link AttributeType }
      * 
      */
@@ -222,11 +182,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AssetDescriptionType }
+     * Create an instance of {@link AttributeListType }
      * 
      */
-    public AssetDescriptionType createAssetDescriptionType() {
-        return new AssetDescriptionType();
+    public AttributeListType createAttributeListType() {
+        return new AttributeListType();
+    }
+
+    /**
+     * Create an instance of {@link AttributeConditionType }
+     * 
+     */
+    public AttributeConditionType createAttributeConditionType() {
+        return new AttributeConditionType();
     }
 
     /**
@@ -246,11 +214,61 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FileLocationType }
+     * Create an instance of {@link ResolutionConditionType }
      * 
      */
-    public FileLocationType createFileLocationType() {
-        return new FileLocationType();
+    public ResolutionConditionType createResolutionConditionType() {
+        return new ResolutionConditionType();
+    }
+
+    /**
+     * Create an instance of {@link ErrorType }
+     * 
+     */
+    public ErrorType createErrorType() {
+        return new ErrorType();
+    }
+
+    /**
+     * Create an instance of {@link ErrorListType }
+     * 
+     */
+    public ErrorListType createErrorListType() {
+        return new ErrorListType();
+    }
+
+    /**
+     * Create an instance of {@link InterplayURIListType }
+     * 
+     */
+    public InterplayURIListType createInterplayURIListType() {
+        return new InterplayURIListType();
+    }
+
+    /**
+     * Create an instance of {@link SearchGroupType }
+     * 
+     */
+    public SearchGroupType createSearchGroupType() {
+        return new SearchGroupType();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetConfigurationInformationType }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://avid.com/interplay/ws/infrastructure/types", name = "GetConfigurationInformation")
+    public JAXBElement<GetConfigurationInformationType> createGetConfigurationInformation(GetConfigurationInformationType value) {
+        return new JAXBElement<GetConfigurationInformationType>(_GetConfigurationInformation_QNAME, GetConfigurationInformationType.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetConfigurationInformationResponseType }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://avid.com/interplay/ws/infrastructure/types", name = "GetConfigurationInformationResponse")
+    public JAXBElement<GetConfigurationInformationResponseType> createGetConfigurationInformationResponse(GetConfigurationInformationResponseType value) {
+        return new JAXBElement<GetConfigurationInformationResponseType>(_GetConfigurationInformationResponse_QNAME, GetConfigurationInformationResponseType.class, null, value);
     }
 
     /**
@@ -272,30 +290,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetConfigurationInformationResponseType }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://avid.com/interplay/ws/infrastructure/types", name = "GetConfigurationInformationResponse")
-    public JAXBElement<GetConfigurationInformationResponseType> createGetConfigurationInformationResponse(GetConfigurationInformationResponseType value) {
-        return new JAXBElement<GetConfigurationInformationResponseType>(_GetConfigurationInformationResponse_QNAME, GetConfigurationInformationResponseType.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link UserCredentialsType }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://avid.com/interplay/ws/assets/types", name = "UserCredentials")
     public JAXBElement<UserCredentialsType> createUserCredentials(UserCredentialsType value) {
         return new JAXBElement<UserCredentialsType>(_UserCredentials_QNAME, UserCredentialsType.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetConfigurationInformationType }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://avid.com/interplay/ws/infrastructure/types", name = "GetConfigurationInformation")
-    public JAXBElement<GetConfigurationInformationType> createGetConfigurationInformation(GetConfigurationInformationType value) {
-        return new JAXBElement<GetConfigurationInformationType>(_GetConfigurationInformation_QNAME, GetConfigurationInformationType.class, null, value);
     }
 
 }

@@ -3,7 +3,7 @@ package com.avid.central.obsplugin.inewslibrary;
 /**
  * Created by Broadcast Media Solutions on 30/11/2015.
  */
-
+/*
 import com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler;
 import java.io.IOException;
 import java.io.Writer;
@@ -12,17 +12,28 @@ public class NsmlEscapeHandler implements CharacterEscapeHandler {
     public void escape(char[] buf, int start, int len, boolean isAttValue, Writer out) throws IOException {
         for (int i = start; i < start + len; i++) {
             char ch = buf[i];
-/*
+
             if (ch == '&') {
                 out.write("&amp;");
                 continue;
             }
 
-            if (ch == '"' && isAttValue) {
+            if (ch == '"') {
                 out.write("&quot;");
                 continue;
             }
-            if (ch == '\'' && isAttValue) {
+
+            if (ch == '<') {
+                out.write("&lt;");
+                continue;
+            }
+
+            if (ch == '>') {
+                out.write("&gt;");
+                continue;
+            }
+
+            if (ch == '\'') {
                 out.write("&apos;");
                 continue;
             }
@@ -37,9 +48,10 @@ public class NsmlEscapeHandler implements CharacterEscapeHandler {
                 out.write(";");
                 continue;
             }
-            */
+
             // otherwise print normally
             out.write(ch);
         }
     }
 }
+                    */

@@ -17,23 +17,23 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SegmentDescriptionType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="AssetDescription" type="{http://avid.com/interplay/ws/assets/types}AssetDescriptionType"/>
- *         &lt;element name="SegmentMarkIn" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="SegmentDuration" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="SegmentTrack" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="SegmentFileMOB" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="SegmentStartOffset" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="CompositionPosition" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="CompositionTrack" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="CompositionDuration" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="SegmentDescriptionType"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="AssetDescription" type="{http://avid.com/interplay/ws/assets/types}AssetDescriptionType"/&gt;
+ *         &lt;element name="SegmentMarkIn" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="SegmentDuration" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="SegmentTrack" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="SegmentFileMOB" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="SegmentStartOffset" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="CompositionPosition" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="CompositionTrack" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="CompositionDuration" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
